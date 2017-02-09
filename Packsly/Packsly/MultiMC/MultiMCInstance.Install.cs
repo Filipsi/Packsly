@@ -109,15 +109,33 @@ namespace Packsly.MultiMC {
             string[] shouldHaveFiles = shouldHaveMods.Select(m => m.Value<string>("file")).ToArray();
 
             // Download config
+            // TODO: Add support for relative paths
             foreach(JObject info in shouldHaveMods) {
                 JProperty configProp = info.Property("config");
 
                 if(configProp != null) {
                     using(WebClient client = new WebClient()) {
                         foreach(JToken entry in configProp.Value) {
+                            const string key = "config";
                             string url = entry.Value<string>();
-                            Console.WriteLine("   > Downloading configuration {0}", Path.GetFileName(url));
-                            client.DownloadFile(url, Path.Combine(configDirectory.FullName, Path.GetFileName(url)));
+
+                            if(!url.Contains(key)) {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine("   Warning: Url for configuration file {0} does not contain '{1}' folder in it's path", Path.GetFileName(url), key);
+                                Console.WriteLine("            This is error, check if download url is valid and meets Packsly standard");
+                                Console.WriteLine("            File won't be downloaded. Skipping.");
+                                Console.ResetColor();
+                                continue;
+                            }
+
+                            string urlConfDestEnd = url.Substring(url.IndexOf(key) + key.Length + 1);
+                            string urlConfDestDir = Path.Combine(configDirectory.FullName, Path.GetDirectoryName(urlConfDestEnd));
+
+                            if(!Directory.Exists(urlConfDestDir) && urlConfDestDir != string.Empty)
+                                Directory.CreateDirectory(urlConfDestDir);
+
+                            Console.WriteLine("   > Downloading configuration {0} as {1}", Path.GetFileName(url), urlConfDestEnd);
+                            client.DownloadFile(url, Path.Combine(configDirectory.FullName, urlConfDestEnd));
                         }
                     }
                 }
