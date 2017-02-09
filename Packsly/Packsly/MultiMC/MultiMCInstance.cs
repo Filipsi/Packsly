@@ -92,6 +92,13 @@ namespace Packsly.MultiMC {
             Icon = newIcon;
         }
 
+        public string EnsureDirectory(string path) {
+            if(!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            return path;
+        }
+
         public static MultiMCInstance FromFile(string path) {
             if(!File.Exists(path))
                 throw new Exception("Packsly's file describing MultiMC instance does not exit");

@@ -19,24 +19,27 @@ namespace Packsly.MultiMC {
             if(!Directory.Exists(InstancePath))
                 throw new Exception("Cound not install Forge because MultiMC instance directory does not exist");
 
-            string version = UpdateInfo.Value<string>("forge");
-            string patchDir = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "patches");
-            string patchFile = Path.Combine(patchDir, version + ".json");
+            string forgeVersion = UpdateInfo.Value<string>("forge");
+            string myDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            string myPatchesDirectory = EnsureDirectory(Path.Combine(myDirectory, "patches"));
+            string myPatch = Path.Combine(myPatchesDirectory, forgeVersion + ".json");
+            bool missingPatch = !File.Exists(myPatch);
 
-            if(!Directory.Exists(patchDir))
-                Directory.CreateDirectory(patchDir);
+            if(missingPatch) {
+                string tempDir = EnsureDirectory(Path.Combine(myDirectory, "temp"));
+                string forgeJar = DownloadForgeUniversal(forgeVersion, tempDir);
 
-            if(!File.Exists(patchFile)) {
-                Console.WriteLine("   > Patch file for " + version + " not found, building one");
-                JObject patchRaw = BuildForgePatch(
-                    ResolveForgeLibraries(version), version
-                );
+                Console.WriteLine("   > Patch file for " + forgeVersion + " not found, building one");
+                JObject patchRaw = BuildForgePatch(ResolveForgeLibraries(forgeJar), forgeVersion);
 
-                Console.WriteLine("   > Saving patch file for " + version + " for later usage");
-                using(FileStream writer = File.Open(patchFile, FileMode.Create)) {
+                Console.WriteLine("   > Saving patch file for " + forgeVersion + " for later usage");
+                using(FileStream writer = File.Open(myPatch, FileMode.Create)) {
                     byte[] buffer = Encoding.UTF8.GetBytes(patchRaw.ToString(Formatting.Indented));
                     writer.Write(buffer, 0, buffer.Length);
                 }
+                
+
+                Directory.Delete(tempDir, true);
             }
 
             string paches = Path.Combine(InstancePath, "patches");
@@ -45,40 +48,41 @@ namespace Packsly.MultiMC {
                 Directory.CreateDirectory(paches);
             }
 
-            string dest = Path.Combine(paches, "net.minecraftforge.json");
-            if(File.Exists(dest))
-                File.Delete(dest);
+            string patchDestination = Path.Combine(paches, "net.minecraftforge.json");
+            if(File.Exists(patchDestination))
+                File.Delete(patchDestination);
 
             Console.WriteLine("   > Saving forge patch file as patches/net.minecraftforge.json");
-            File.Copy(patchFile, dest);
+            File.Copy(myPatch, patchDestination);
         }
 
-        private JArray ResolveForgeLibraries(string version) {
-            string file = "forge-" + version + "-universal.jar";
-            string tempDir = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "temp");
-            string tempJar = Path.Combine(tempDir, file);
-            Uri url = new Uri("http://files.minecraftforge.net/maven/net/minecraftforge/forge/" + version + "/" + file);
+        private string DownloadForgeUniversal(string version, string destination) {
+            string fileName = "forge-" + version + "-universal.jar";
+            string jarPath = Path.Combine(destination, fileName);
 
-            Directory.CreateDirectory(tempDir);
-
-            Console.WriteLine("   > Downloading " + file);
+            Console.WriteLine("   > Downloading " + fileName);
             using(WebClient client = new WebClient())
-                client.DownloadFile(url, tempJar);
+                client.DownloadFile(
+                    new Uri("http://files.minecraftforge.net/maven/net/minecraftforge/forge/" + version + "/" + fileName),
+                    jarPath
+                );
+
+            return jarPath;
+        }
+
+        private JArray ResolveForgeLibraries(string forgeJar) {
+            string root = Path.GetDirectoryName(forgeJar);
 
             Console.WriteLine("   > Extracting universal jar");
-            using(ZipFile jar = new ZipFile(tempJar))
-                jar.ExtractAll(tempDir);
+            using(ZipFile jar = new ZipFile(forgeJar))
+                jar.ExtractAll(root);
 
             Console.WriteLine("   > Reading 'version.json'");
             string versionInfo;
-            using(StreamReader reader = File.OpenText(Path.Combine(tempDir, "version.json")))
+            using(StreamReader reader = File.OpenText(Path.Combine(root, "version.json")))
                 versionInfo = reader.ReadToEnd();
 
-            JArray libs = JObject.Parse(versionInfo).Value<JArray>("libraries");
-
-            Directory.Delete(tempDir, true);
-
-            return libs;
+            return JObject.Parse(versionInfo).Value<JArray>("libraries");
         }
 
         private JObject BuildForgePatch(JArray libraries, string version) {
@@ -92,13 +96,20 @@ namespace Packsly.MultiMC {
                 JToken server = entry.GetValue("serverreq");
 
                 if((client == null || client.Value<bool>()) || (server == null || !server.Value<bool>())) {
-                    string name = entry.Value<string>("name");
-                    JToken url = entry.GetValue("url");
-
                     JObject libroot = new JObject();
+
+                    if(entry.GetValue("checksums") != null)
+                        libroot.Add(new JProperty("MMC-hint", "forge-pack-xz"));
+
+                    string name = entry.Value<string>("name");
+                    if(name.Contains("net.minecraftforge:forge"))
+                        name += ":universal";
                     libroot.Add(new JProperty("name", name));
+
+                    JToken url = entry.GetValue("url");
                     if(url != null)
                         libroot.Add(new JProperty("url", url.Value<string>()));
+
                     libs.Add(libroot);
                 }
             }
