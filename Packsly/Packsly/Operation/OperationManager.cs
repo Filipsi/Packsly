@@ -46,7 +46,8 @@ namespace Packsly.Operation {
                 .WithArguments("seek [packname]", "Install specified modpack from last seeked url to local MultiMC instance", OperationCollection.InstallFromSeek);
 
             RegisterCommand("update")
-                .WithArguments("[instance]", "Update instance using it's 'instance.packsly' file", OperationCollection.UpdateFromDesciptor);
+                .WithArguments("[instance]", "Update instance using it's 'instance.packsly' file at specified absolute path", OperationCollection.UpdateFromDesciptor)
+                .WithArguments("instance [name]", "Will search for instance with specified name and update it", OperationCollection.UpdateInstace);
         }
 
     }

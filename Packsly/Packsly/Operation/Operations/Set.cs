@@ -17,7 +17,7 @@ namespace Packsly.Operation.Operations {
             switch(prop) {
                 case "multimc":
                     if(!Directory.Exists(val))
-                        throw new Exception("Directory does not exits");
+                        throw new Exception("Directory does not exits or path is not valid");
 
                     Config.Current.MultiMC = val;
                     Config.Save();
