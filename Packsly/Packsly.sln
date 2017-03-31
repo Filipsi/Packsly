@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Packsly\Cli.csproj", "{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E992C311-F8F1-424A-AD76-A5E502817F83} = {E992C311-F8F1-424A-AD76-A5E502817F83}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{E992C311-F8F1-424A-AD76-A5E502817F83}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E992C311-F8F1-424A-AD76-A5E502817F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E992C311-F8F1-424A-AD76-A5E502817F83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E992C311-F8F1-424A-AD76-A5E502817F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E992C311-F8F1-424A-AD76-A5E502817F83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
