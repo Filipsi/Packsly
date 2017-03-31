@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Packsly.Core.Instance {
@@ -31,6 +33,26 @@ namespace Packsly.Core.Instance {
             }
         }
 
+        public string Icon {
+            set {
+                string name = value;
+
+                if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
+                    name = Regex.Match(name, @"(\w+)\.png").Groups[1].ToString();
+                    string iconPath = GetIconPath(name);
+
+                    if(!File.Exists(iconPath))
+                        using(WebClient client = new WebClient())
+                            client.DownloadFile(value, iconPath);
+                }
+
+                ConfigFile.Set("iconKey", name);
+            }
+            get {
+                return ConfigFile.Get("iconKey");
+            }
+        }
+
         public MultimcConfigFile ConfigFile { private set; get; }
 
         #endregion
@@ -38,7 +60,7 @@ namespace Packsly.Core.Instance {
         #region Constructors
 
         public MultimcInstance(string name, string mcversion) {
-            string location = GetPath(name);
+            string location = GetInstancePath(name);
 
             if(Directory.Exists(location)) {
                 throw new Exception($"MultiMC instance with name '{name}' already exists.");
@@ -68,18 +90,20 @@ namespace Packsly.Core.Instance {
         #region Factory
 
         public static MultimcInstance FromExisting(string name) {
-            return new MultimcInstance(GetPath(name));
+            return new MultimcInstance(GetInstancePath(name));
         }
 
         #endregion
 
         #region Util
 
-        private static string GetPath(string name) {
+        private static string GetInstancePath(string name) {
             return Path.Combine(Config.Current.MultiMC, "instances", name);
         }
 
-
+        private static string GetIconPath(string name) {
+            return Path.Combine(Config.Current.MultiMC, "icons", name + ".png");
+        }
 
         #endregion
 
