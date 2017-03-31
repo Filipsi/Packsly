@@ -35,18 +35,26 @@ namespace Packsly.Core.Instance {
 
         public string Icon {
             set {
-                string name = value;
+                Regex patten = new Regex(@"(?:\/(\w+)\.png)|(?:^(\w+)$)");
 
                 if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
-                    name = Regex.Match(name, @"(\w+)\.png").Groups[1].ToString();
+                    string name = patten.Match(value).Groups[1].ToString();
                     string iconPath = GetIconPath(name);
 
                     if(!File.Exists(iconPath))
                         using(WebClient client = new WebClient())
                             client.DownloadFile(value, iconPath);
+
+                    ConfigFile.Set("iconKey", name);
+                    return;
                 }
 
-                ConfigFile.Set("iconKey", name);
+                if(patten.IsMatch(value)) {
+                    ConfigFile.Set("iconKey", value);
+                    return;
+                }
+
+                throw new Exception($"'{value}' is not valid value for MultimcInstance icon");
             }
             get {
                 return ConfigFile.Get("iconKey");
