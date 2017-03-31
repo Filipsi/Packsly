@@ -46,8 +46,8 @@
   <ItemGroup>
     <Compile Include="Configuration\Config.cs" />
     <Compile Include="Instance\MinecraftInstance.cs" />
-    <Compile Include="Instance\MultiMC\MultimcConfigFile.cs" />
-    <Compile Include="Instance\MultiMC\MultimcInstance.cs" />
+    <Compile Include="Instance\MultimcConfigFile.cs" />
+    <Compile Include="Instance\MultimcInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +56,7 @@
     </Compile>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

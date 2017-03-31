@@ -8,17 +8,15 @@ namespace Packsly.Core.Instance {
 
     public abstract class MinecraftInstance {
 
-        public string Name { private set; get; }
+        public abstract string Name { get; }
 
-        public string Location { private set; get; }
+        public abstract string Location { get; }
 
-        public string MinecraftVersion { private set; get; }
+        public abstract string MinecraftVersion { get; }
 
-        public MinecraftInstance(string name, string location, string mcversion) {
-            Name = name;
-            Location = location;
-            MinecraftVersion = mcversion;
-        }
+        public abstract void Save();
+
+        public abstract void Delete();
 
     }
 

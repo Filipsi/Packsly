@@ -1,6 +1,5 @@
-﻿using Core.Instance.MultiMC;
-using Packsly.Core.Configuration;
-using Packsly.Core.Instance.MultiMC;
+﻿using Packsly.Core.Configuration;
+using Packsly.Core.Instance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +13,12 @@ namespace Packsly.Cli {
         static void Main(string[] args) {
             Config.Load();
 
-            MultimcInstance mmcInstnace = new MultimcInstance("muchkek", "1.11");
-            mmcInstnace.ConfigFile.Save();
-        
+            //MultimcInstance mmcInstnace = new MultimcInstance("muchkek", "1.11");
+            //mmcInstnace.Save();
+
+            //MultimcInstance mmcInstnace = MultimcInstance.FromExisting("muchkek");
+            //mmcInstnace.Delete();
+
             Console.ReadKey();
 
         }
