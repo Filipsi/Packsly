@@ -1,44 +1,23 @@
-﻿using Core.MmcInstance;
+﻿using Packsly.Common;
 using Packsly.Core.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Packsly.Core.MultiMc {
 
-    public class MmcInstance : McInstanceTemplate {
+    public class MmcInstance : IMinecraftInstance {
 
-        #region Public
+        #region Properties
 
-        public override string Name {
-            get {
-                return ConfigFile.Get("name");
-            }
-        }
-
-        public override string Location {
-            get {
-                return ConfigFile.Location;
-            }
-        }
-
-        public override string MinecraftVersion {
-            get {
-                return ConfigFile.Get("IntendedVersion");
-            }
-        }
+        private string _id;
 
         public string Icon {
             set {
                 Regex patten = new Regex(@"(?:\/(\w+)\.png)|(?:^(\w+)$)");
 
                 if(patten.IsMatch(value)) {
-
                     string name = value;
 
                     if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
@@ -59,29 +38,64 @@ namespace Packsly.Core.MultiMc {
             }
         }
 
-        public MmcConfigFile ConfigFile { private set; get; }
+        public MmcConfigFile ConfigFile {
+            private set;
+            get;
+        }
 
         #endregion
 
         #region Constructors
 
         public MmcInstance(string id, string mcversion) {
-            ConfigFile = new MmcConfigFile(id, GetConfigPath(id), mcversion);
+            _id = id;
+            ConfigFile = new MmcConfigFile(id, Path.Combine(Location, "instance.cfg"), mcversion);
         }
 
         public MmcInstance(string id) {
-            ConfigFile = new MmcConfigFile(GetConfigPath(id)).Load();
+            _id = id;
+            ConfigFile = new MmcConfigFile(Path.Combine(Location, "instance.cfg")).Load();
         }
 
         #endregion
 
-        #region MinecraftInstance implementation
+        #region IMinecraftInstance implementation
 
-        public override void Save() {
+        public string Id {
+            get {
+                return _id;
+            }
+        }
+
+        public string Name {
+            get {
+                return ConfigFile.Get("name");
+            }
+        }
+
+        public string Location {
+            get {
+                return Path.Combine(LauncherLocation, "instances", Id);
+            }
+        }
+
+        public string LauncherLocation {
+            get {
+                return Settings.Instance.MultiMC;
+            }
+        }
+
+        public string MinecraftVersion {
+            get {
+                return ConfigFile.Get("IntendedVersion");
+            }
+        }
+
+        public void Save() {
             ConfigFile.Save();
         }
 
-        public override void Delete() {
+        public void Delete() {
             Directory.Delete(Location, true);
         }
 
@@ -89,16 +103,8 @@ namespace Packsly.Core.MultiMc {
 
         #region Util
 
-        private static string GetInstancePath(string id) {
-            return Path.Combine(Config.Instance.MultiMC, "instances", id);
-        }
-
-        private static string GetConfigPath(string id) {
-            return Path.Combine(GetInstancePath(id), "instance.cfg");
-        }
-
         private static string GetIconPath(string name) {
-            return Path.Combine(Config.Instance.MultiMC, "icons", name + ".png");
+            return Path.Combine(Settings.Instance.MultiMC, "icons", name + ".png");
         }
 
         #endregion

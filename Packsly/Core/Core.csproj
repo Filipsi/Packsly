@@ -30,8 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -44,27 +48,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Config1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Config.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Forge\IForgeInstallationSchema.cs" />
+    <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Configuration\DirectoryInfoJsonConverter.cs" />
     <Compile Include="FileSystem\DataPairFile.cs" />
     <Compile Include="FileSystem\FileTemplate.cs" />
-    <Compile Include="Instance\MinecraftInstance.cs" />
-    <Compile Include="Instance\MultimcConfigFile.cs" />
-    <Compile Include="Instance\MultimcInstance.cs" />
+    <Compile Include="Forge\ForgeInstaller.cs" />
+    <Compile Include="Common\IMinecraftInstance.cs" />
+    <Compile Include="Forge\ForgeLibrary.cs" />
+    <Compile Include="Forge\ForgePatchFile.cs" />
+    <Compile Include="MultiMc\MmcConfigFile.cs" />
+    <Compile Include="MultiMc\MmcForgeInstallationSchema.cs" />
+    <Compile Include="MultiMc\MmcInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Config.cs">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Config1.Designer.cs</LastGenOutput>
-    </Compile>
-    <None Include="packages.config" />
+    <Compile Include="FileSystem\JsonFile.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileSystem\JsonFile.cs" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

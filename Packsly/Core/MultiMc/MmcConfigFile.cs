@@ -14,9 +14,8 @@ namespace Packsly.Core.MultiMc {
         #region Constructor
 
         public MmcConfigFile(string location) : base(location) {
-            if(!_file.Exists) {
+            if(!_file.Exists)
                 throw new Exception($"MultiMC instance configuration file does not exist at location {Location}");
-            }
         }
 
         public MmcConfigFile(string name, string location, string mcversion) : base(location) {
@@ -38,7 +37,7 @@ namespace Packsly.Core.MultiMc {
         #region IO
 
         public override MmcConfigFile Load() {
-            using(StreamReader reader = _file.OpenText()) {
+            using(StreamReader reader = _file.OpenText())
                 while(!reader.EndOfStream) {
                     string line = reader.ReadLine();
                     if(!line.Contains('='))
@@ -47,7 +46,6 @@ namespace Packsly.Core.MultiMc {
                     string[] parts = line.Split(new char[] { '=' }, 2);
                     _data.Add(parts[0], parts[1]);
                 }
-            }
 
             return this;
         }
