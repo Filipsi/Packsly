@@ -7,19 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Instance {
+namespace Packsly.Core.MultiMc {
 
-    public class MultimcConfigFile : DataPairFile<MultimcConfigFile> {
+    public class MmcConfigFile : DataPairFile<MmcConfigFile> {
 
         #region Constructor
 
-        public MultimcConfigFile(string location) : base(location) {
+        public MmcConfigFile(string location) : base(location) {
             if(!_file.Exists) {
                 throw new Exception($"MultiMC instance configuration file does not exist at location {Location}");
             }
         }
 
-        public MultimcConfigFile(string name, string location, string mcversion) : base(location) {
+        public MmcConfigFile(string name, string location, string mcversion) : base(location) {
             Set("InstanceType", "OneSix");
             Set("IntendedVersion", mcversion);
             Set("OverrideCommands", "false");
@@ -30,20 +30,19 @@ namespace Core.Instance {
             Set("OverrideWindow", "false");
             Set("iconKey", "default");
             Set("name", name);
-            Set("notes", "");
+            Set("notes", string.Empty);
         }
 
         #endregion
 
         #region IO
 
-        public override MultimcConfigFile Load() {
+        public override MmcConfigFile Load() {
             using(StreamReader reader = _file.OpenText()) {
                 while(!reader.EndOfStream) {
                     string line = reader.ReadLine();
-                    if(line.IndexOf('=') == -1) {
+                    if(!line.Contains('='))
                         throw new Exception("Error while reading MultiMC instance configuration file. Equal sign is missing.");
-                    }
 
                     string[] parts = line.Split(new char[] { '=' }, 2);
                     _data.Add(parts[0], parts[1]);
@@ -53,7 +52,7 @@ namespace Core.Instance {
             return this;
         }
 
-        public override MultimcConfigFile Save() {
+        public override MmcConfigFile Save() {
             if(!IsDirty)
                 return this;
 

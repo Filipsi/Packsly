@@ -1,4 +1,4 @@
-﻿using Core.Instance;
+﻿using Core.MmcInstance;
 using Packsly.Core.Configuration;
 using System;
 using System.Collections.Generic;
@@ -9,9 +9,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Packsly.Core.Instance {
+namespace Packsly.Core.MultiMc {
 
-    public class MultimcInstance : MinecraftInstance {
+    public class MmcInstance : McInstanceTemplate {
 
         #region Public
 
@@ -59,24 +59,18 @@ namespace Packsly.Core.Instance {
             }
         }
 
-        public MultimcConfigFile ConfigFile { private set; get; }
+        public MmcConfigFile ConfigFile { private set; get; }
 
         #endregion
 
         #region Constructors
 
-        public MultimcInstance(string name, string mcversion) {
-            string location = GetInstancePath(name);
-
-            if(Directory.Exists(location)) {
-                throw new Exception($"MultiMC instance with name '{name}' already exists");
-            }
-
-            ConfigFile = new MultimcConfigFile(name, Path.Combine(location, "instance.cfg"), mcversion);
+        public MmcInstance(string id, string mcversion) {
+            ConfigFile = new MmcConfigFile(id, GetConfigPath(id), mcversion);
         }
 
-        private MultimcInstance(string location) {
-            ConfigFile = new MultimcConfigFile(Path.Combine(location, "instance.cfg")).Load();
+        public MmcInstance(string id) {
+            ConfigFile = new MmcConfigFile(GetConfigPath(id)).Load();
         }
 
         #endregion
@@ -93,18 +87,14 @@ namespace Packsly.Core.Instance {
 
         #endregion
 
-        #region Factory
-
-        public static MultimcInstance FromExisting(string name) {
-            return new MultimcInstance(GetInstancePath(name));
-        }
-
-        #endregion
-
         #region Util
 
-        private static string GetInstancePath(string name) {
-            return Path.Combine(Config.Instance.MultiMC, "instances", name);
+        private static string GetInstancePath(string id) {
+            return Path.Combine(Config.Instance.MultiMC, "instances", id);
+        }
+
+        private static string GetConfigPath(string id) {
+            return Path.Combine(GetInstancePath(id), "instance.cfg");
         }
 
         private static string GetIconPath(string name) {

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Packsly.Core.Instance {
+namespace Packsly.Core.MultiMc {
 
-    public abstract class MinecraftInstance {
+    public abstract class McInstanceTemplate {
 
         #region Public
 
