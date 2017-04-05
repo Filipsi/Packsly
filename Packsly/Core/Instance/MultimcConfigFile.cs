@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Packsly.Core;
+using Packsly.Core.FileSystem;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,40 +9,17 @@ using System.Threading.Tasks;
 
 namespace Core.Instance {
 
-    public class MultimcConfigFile {
-
-        #region Public
-
-        public string Location { private set; get; }
-
-        public bool isDirty { private set; get; }
-
-        #endregion
-
-        #region Private
-
-        private FileInfo _file;
-        private Dictionary<string, string> _data;
-
-        #endregion
+    public class MultimcConfigFile : DataPairFile<MultimcConfigFile> {
 
         #region Constructor
 
-        public MultimcConfigFile(string location) {
-            Location = location;
-            _file = new FileInfo(Path.Combine(Location, "instance.cfg"));
-            _data = new Dictionary<string, string>();
-
+        public MultimcConfigFile(string location) : base(location) {
             if(!_file.Exists) {
                 throw new Exception($"MultiMC instance configuration file does not exist at location {Location}");
             }
         }
 
-        public MultimcConfigFile(string name, string location, string mcversion) {
-            Location = location;
-            _file = new FileInfo(Path.Combine(Location, "instance.cfg"));
-            _data = new Dictionary<string, string>();
-
+        public MultimcConfigFile(string name, string location, string mcversion) : base(location) {
             Set("InstanceType", "OneSix");
             Set("IntendedVersion", mcversion);
             Set("OverrideCommands", "false");
@@ -56,37 +35,9 @@ namespace Core.Instance {
 
         #endregion
 
-        #region Interaction
-
-        public bool HasKey(string key) {
-            return _data.ContainsKey(key);
-        }
-
-        public string Get(string key) {
-            if(HasKey(key)) {
-                return _data[key];
-            }
-
-            throw new Exception($"MultiMC instance configuration file at location {Location} does not have '{key}' key.");
-        }
-
-        public MultimcConfigFile Set(string key, string value) {
-            if(HasKey(key) && _data[key] != value) {
-                _data[key] = value;
-                isDirty = true;
-                return this;
-            }
-
-            _data.Add(key, value);
-            isDirty = true;
-            return this;
-        }
-
-        #endregion
-
         #region IO
 
-        public MultimcConfigFile Load() {
+        public override MultimcConfigFile Load() {
             using(StreamReader reader = _file.OpenText()) {
                 while(!reader.EndOfStream) {
                     string line = reader.ReadLine();
@@ -102,12 +53,13 @@ namespace Core.Instance {
             return this;
         }
 
-        public MultimcConfigFile Save() {
-            if(!isDirty)
+        public override MultimcConfigFile Save() {
+            if(!IsDirty)
                 return this;
 
-            if(!Directory.Exists(Location))
-                Directory.CreateDirectory(Location);
+            string directoryPath = Path.GetDirectoryName(Location);
+            if(!Directory.Exists(directoryPath))
+                Directory.CreateDirectory(directoryPath);
 
             StringBuilder builder = new StringBuilder();
 

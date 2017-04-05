@@ -44,19 +44,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Config.cs" />
+    <Compile Include="Configuration\Config1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Config.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FileSystem\DataPairFile.cs" />
+    <Compile Include="FileSystem\FileTemplate.cs" />
     <Compile Include="Instance\MinecraftInstance.cs" />
     <Compile Include="Instance\MultimcConfigFile.cs" />
     <Compile Include="Instance\MultimcInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Config.Settings.cs">
+    <Compile Include="Configuration\Config.cs">
       <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Config1.Designer.cs</LastGenOutput>
     </Compile>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="FileSystem\JsonFile.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

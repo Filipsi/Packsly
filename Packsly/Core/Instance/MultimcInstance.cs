@@ -37,24 +37,22 @@ namespace Packsly.Core.Instance {
             set {
                 Regex patten = new Regex(@"(?:\/(\w+)\.png)|(?:^(\w+)$)");
 
-                if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
-                    string name = patten.Match(value).Groups[1].ToString();
-                    string iconPath = GetIconPath(name);
+                if(patten.IsMatch(value)) {
 
-                    if(!File.Exists(iconPath))
-                        using(WebClient client = new WebClient())
-                            client.DownloadFile(value, iconPath);
+                    string name = value;
+
+                    if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
+                        name=  patten.Match(value).Groups[1].ToString();
+                        string iconPath = GetIconPath(name);
+
+                        if(!File.Exists(iconPath))
+                            using(WebClient client = new WebClient())
+                                client.DownloadFile(value, iconPath);
+                    }
 
                     ConfigFile.Set("iconKey", name);
-                    return;
-                }
 
-                if(patten.IsMatch(value)) {
-                    ConfigFile.Set("iconKey", value);
-                    return;
-                }
-
-                throw new Exception($"'{value}' is not valid value for MultimcInstance icon");
+                } else throw new Exception($"'{value}' is not valid value for MultimcInstance icon");
             }
             get {
                 return ConfigFile.Get("iconKey");
@@ -71,14 +69,14 @@ namespace Packsly.Core.Instance {
             string location = GetInstancePath(name);
 
             if(Directory.Exists(location)) {
-                throw new Exception($"MultiMC instance with name '{name}' already exists.");
+                throw new Exception($"MultiMC instance with name '{name}' already exists");
             }
 
-            ConfigFile = new MultimcConfigFile(name, location, mcversion);
+            ConfigFile = new MultimcConfigFile(name, Path.Combine(location, "instance.cfg"), mcversion);
         }
 
         private MultimcInstance(string location) {
-            ConfigFile = new MultimcConfigFile(location).Load();
+            ConfigFile = new MultimcConfigFile(Path.Combine(location, "instance.cfg")).Load();
         }
 
         #endregion
@@ -106,11 +104,11 @@ namespace Packsly.Core.Instance {
         #region Util
 
         private static string GetInstancePath(string name) {
-            return Path.Combine(Config.Current.MultiMC, "instances", name);
+            return Path.Combine(Config.Instance.MultiMC, "instances", name);
         }
 
         private static string GetIconPath(string name) {
-            return Path.Combine(Config.Current.MultiMC, "icons", name + ".png");
+            return Path.Combine(Config.Instance.MultiMC, "icons", name + ".png");
         }
 
         #endregion

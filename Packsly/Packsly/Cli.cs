@@ -11,18 +11,11 @@ namespace Packsly.Cli {
     class Cli {
 
         static void Main(string[] args) {
-            Config.Load();
-
-            //MultimcInstance mmcInstnace = new MultimcInstance("muchkek", "1.11");
-            //mmcInstnace.Icon = "http://i.imgur.com/Be877im.png";
-            //mmcInstnace.Icon = "iron";
-            //mmcInstnace.Save();
-
-            //MultimcInstance mmcInstnace = MultimcInstance.FromExisting("muchkek");
-            //mmcInstnace.Delete();
+            MultimcInstance mmc = new MultimcInstance("tut", "1.11");
+            mmc.Icon = "http://i.imgur.com/Be877im.png";
+            mmc.Save();
 
             Console.ReadKey();
-
         }
 
     }
