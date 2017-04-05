@@ -1,14 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Packsly.Core.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.Configuration {
+namespace Core.JsonConverters {
 
     public class DirectoryInfoJsonConverter : JsonConverter {
 

@@ -50,16 +50,13 @@
   <ItemGroup>
     <Compile Include="Forge\IForgeInstallationSchema.cs" />
     <Compile Include="Configuration\Settings.cs" />
-    <Compile Include="Configuration\DirectoryInfoJsonConverter.cs" />
+    <Compile Include="JsonConverters\DirectoryInfoJsonConverter.cs" />
     <Compile Include="FileSystem\DataPairFile.cs" />
     <Compile Include="FileSystem\FileTemplate.cs" />
     <Compile Include="Forge\ForgeInstaller.cs" />
     <Compile Include="Common\IMinecraftInstance.cs" />
     <Compile Include="Forge\ForgeLibrary.cs" />
     <Compile Include="Forge\ForgePatchFile.cs" />
-    <Compile Include="MultiMc\MmcConfigFile.cs" />
-    <Compile Include="MultiMc\MmcForgeInstallationSchema.cs" />
-    <Compile Include="MultiMc\MmcInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

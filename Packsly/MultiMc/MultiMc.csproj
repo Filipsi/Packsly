@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{EB2DFB65-6B81-46A9-AC92-26652F89F2BB}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Packsly</RootNamespace>
-    <AssemblyName>Packsly</AssemblyName>
+    <RootNamespace>MultiMc</RootNamespace>
+    <AssemblyName>MultiMc</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,20 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cli.cs" />
+    <Compile Include="MmcInstallationSchema.cs" />
+    <Compile Include="MmcConfigFile.cs" />
+    <Compile Include="MmcInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{E992C311-F8F1-424A-AD76-A5E502817F83}</Project>
       <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MultiMc\MultiMc.csproj">
-      <Project>{EB2DFB65-6B81-46A9-AC92-26652F89F2BB}</Project>
-      <Name>MultiMc</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

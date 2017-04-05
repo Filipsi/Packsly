@@ -1,6 +1,7 @@
 ﻿using Packsly.Core.Configuration;
 using Packsly.Core.Forge;
 using Packsly.Core.MultiMc;
+using Packsly.MultiMc;
 using System;
 using System.Collections.Generic;
 using System.Linq;

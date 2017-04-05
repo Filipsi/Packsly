@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Packsly.Common;
 using System.IO;
 
-namespace Packsly.Core.MultiMc {
+namespace Packsly.MultiMc {
 
     public class MmcForgeInstallationSchema : IForgeInstallationSchema {
 
@@ -39,7 +39,7 @@ namespace Packsly.Core.MultiMc {
             string patchDirectory = Path.Combine(mcinstance.Location, "patches");
             if(!Directory.Exists(patchDirectory))
                 Directory.CreateDirectory(patchDirectory);
-            File.Copy(installer.GetCachedPatch(forgeVersion), Path.Combine(patchDirectory, "net.minecraftforge.json"));
+            File.Copy(installer.GetCachedPatch(forgeVersion), Path.Combine(patchDirectory, "net.minecraftforge.json"), true);
 
             return true;
         }

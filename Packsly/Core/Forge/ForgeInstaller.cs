@@ -26,11 +26,11 @@ namespace Packsly.Core.Forge {
 
         public readonly DirectoryInfo Temp = Settings.Instance.Temp;
 
-        internal string ForgeUniversalFormat = "forge-{0}-universal.jar";
+        public string ForgeUniversalFormat = "forge-{0}-universal.jar";
 
-        internal string ForgeVersionFile = "version.json";
+        public string ForgeVersionFile = "version.json";
 
-        internal string ForgeFilesUrl = "http://files.minecraftforge.net/maven/net/minecraftforge/forge";
+        public string ForgeFilesUrl = "http://files.minecraftforge.net/maven/net/minecraftforge/forge";
 
         #endregion
 
@@ -56,13 +56,13 @@ namespace Packsly.Core.Forge {
             schema.Install(this, mcinsntace, version);
         }
 
-        internal void DownloadForgeUniversal(string version) {
+        public void DownloadForgeUniversal(string version) {
             string jarPath = GetCachedForge(version);
             using(WebClient client = new WebClient())
                 client.DownloadFile(Path.Combine(ForgeFilesUrl, version, string.Format(ForgeUniversalFormat, version)).Replace("\\", "/"), jarPath);
         }
 
-        internal ForgeLibrary[] ExtractLibraries(string version) {
+        public ForgeLibrary[] ExtractLibraries(string version) {
             if(Temp.Exists)
                 Temp.Delete(true);
 
@@ -90,11 +90,11 @@ namespace Packsly.Core.Forge {
 
         #region Cache
 
-        internal string GetCachedForge(string version) {
+        public string GetCachedForge(string version) {
             return Path.Combine(Cache.FullName, string.Format(ForgeUniversalFormat, version));
         }
 
-        internal string GetCachedPatch(string version) {
+        public string GetCachedPatch(string version) {
             return Path.Combine(Cache.FullName, string.Format(ForgePatchFile.FileFormat, version));
         }
 
