@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
-namespace Core.JsonConverters {
+namespace Packsly.Core.JsonConverters {
 
     public class DirectoryInfoJsonConverter : JsonConverter {
 

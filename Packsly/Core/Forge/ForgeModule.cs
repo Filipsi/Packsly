@@ -1,60 +1,55 @@
 ﻿using Ionic.Zip;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Packsly.Common;
 using Packsly.Core.Configuration;
-using System;
+using Packsly.Core.Forge;
+using Packsly.Core.Module;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
-namespace Packsly.Core.Forge {
+namespace Core.Forge {
 
-    public class ForgeInstaller {
+    public class ForgeModuleArgs {
 
-        #region Properties
+        [JsonProperty("version")]
+        public string Version { private set; get; }
 
-        private IForgeInstallationSchema[] Schemas { set; get; }
+        public ForgeModuleArgs(string version) {
+            Version = version;
+        }
 
-        #endregion
+    }
+
+    public abstract class ForgeModule<T> : Module<T, ForgeModuleArgs> where T : IMinecraftInstance {
 
         #region Constants
 
-        public readonly DirectoryInfo Cache = Settings.Instance.Cache;
+        protected readonly DirectoryInfo Cache = Settings.Instance.Cache;
 
-        public readonly DirectoryInfo Temp = Settings.Instance.Temp;
+        protected readonly DirectoryInfo Temp = Settings.Instance.Temp;
 
-        public string ForgeUniversalFormat = "forge-{0}-universal.jar";
+        protected const string ForgeUniversalFormat = "forge-{0}-universal.jar";
 
-        public string ForgeVersionFile = "version.json";
+        protected const string ForgeVersionFile = "version.json";
 
-        public string ForgeFilesUrl = "http://files.minecraftforge.net/maven/net/minecraftforge/forge";
+        protected const string ForgeFilesUrl = "http://files.minecraftforge.net/maven/net/minecraftforge/forge";
 
         #endregion
 
-        #region Constructor
+        #region Module
 
-        public ForgeInstaller(params IForgeInstallationSchema[] schemas) {
-            if(!Cache.Exists)
-                Cache.Create();
-
-            Schemas = schemas;
+        public override string Id {
+            get {
+                return "forge";
+            }
         }
 
         #endregion
 
         #region Logic
-
-        public void Install(IMinecraftInstance mcinsntace, string version) {
-            IForgeInstallationSchema schema = Schemas.FirstOrDefault(s => s.Type.Equals(mcinsntace.GetType()));
-
-            if(schema == null)
-                throw new Exception($"Forge instalation schema for Minecraft instance type '{mcinsntace.GetType()}' does not exist");
-
-            schema.Install(this, mcinsntace, version);
-        }
 
         public void DownloadForgeUniversal(string version) {
             string jarPath = GetCachedForge(version);
@@ -79,7 +74,7 @@ namespace Packsly.Core.Forge {
 
             JArray raw = JObject.Parse(fileContent).Value<JArray>("libraries");
 
-            List <ForgeLibrary> libs = new List<ForgeLibrary>();
+            List<ForgeLibrary> libs = new List<ForgeLibrary>();
             foreach(JObject entry in raw)
                 libs.Add(ForgeLibrary.FromJson(entry));
 
@@ -90,19 +85,19 @@ namespace Packsly.Core.Forge {
 
         #region Cache
 
-        public string GetCachedForge(string version) {
+        protected string GetCachedForge(string version) {
             return Path.Combine(Cache.FullName, string.Format(ForgeUniversalFormat, version));
         }
 
-        public string GetCachedPatch(string version) {
+        protected string GetCachedPatch(string version) {
             return Path.Combine(Cache.FullName, string.Format(ForgePatchFile.FileFormat, version));
         }
 
-        public bool isForgeCached(string version) {
+        protected bool isForgeCached(string version) {
             return File.Exists(GetCachedForge(version));
         }
 
-        public bool isPatchCached(string version) {
+        protected bool isPatchCached(string version) {
             return File.Exists(GetCachedPatch(version));
         }
 

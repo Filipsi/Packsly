@@ -18,7 +18,9 @@ namespace Packsly.Core.Forge {
         public ForgeLibrary[] Libraries { private set; get; }
 
         [JsonProperty("+tweakers")]
-        public string[] Tweakers { private set; get; }
+        public string[] Tweakers { private set; get; } = new string[] {
+            "net.minecraftforge.fml.common.launcher.FMLTweaker"
+        };
 
         [JsonProperty("fileId")]
         public readonly string FileId = "net.minecraftforge";
@@ -52,9 +54,6 @@ namespace Packsly.Core.Forge {
             Version = version;
             MinecraftVersion = Version.Split('-')[0];
             Libraries = libs;
-            Tweakers = new string[] {
-                "net.minecraftforge.fml.common.launcher.FMLTweaker"
-            };
         }
 
         #endregion

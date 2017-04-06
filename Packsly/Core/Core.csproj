@@ -48,16 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forge\IForgeInstallationSchema.cs" />
+    <Compile Include="Forge\ForgeModule.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Module\Module.cs" />
+    <Compile Include="Module\ModuleRegistry.cs" />
     <Compile Include="JsonConverters\DirectoryInfoJsonConverter.cs" />
     <Compile Include="FileSystem\DataPairFile.cs" />
     <Compile Include="FileSystem\FileTemplate.cs" />
-    <Compile Include="Forge\ForgeInstaller.cs" />
     <Compile Include="Common\IMinecraftInstance.cs" />
     <Compile Include="Forge\ForgeLibrary.cs" />
     <Compile Include="Forge\ForgePatchFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Module\IModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystem\JsonFile.cs" />

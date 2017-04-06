@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MmcInstallationSchema.cs" />
+    <Compile Include="MmcForgeModule.cs" />
     <Compile Include="MmcConfigFile.cs" />
     <Compile Include="MmcInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

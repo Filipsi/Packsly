@@ -51,12 +51,11 @@ namespace Packsly.MultiMc {
             }
         }
 
-        private MmcConfigFile ConfigFile {
-            set;
-            get;
+        public MmcConfigFile ConfigFile {
+           private set; get;
         }
 
-        private string _id;
+        private readonly string _id;
 
         #endregion
 
@@ -92,7 +91,7 @@ namespace Packsly.MultiMc {
 
                 if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
                     name = patten.Match(value).Groups[1].ToString();
-                    string iconPath = GetIconPath(name);
+                    string iconPath = Path.Combine(LauncherLocation, "icons", name + ".png");
 
                     if(!File.Exists(iconPath))
                         using(WebClient client = new WebClient())
@@ -103,10 +102,6 @@ namespace Packsly.MultiMc {
 
             } else
                 throw new Exception($"'{value}' is not valid value for MultimcInstance icon");
-        }
-
-        private static string GetIconPath(string name) {
-            return Path.Combine(Settings.Instance.MultiMC, "icons", name + ".png");
         }
 
         #endregion

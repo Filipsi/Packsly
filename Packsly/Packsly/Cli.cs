@@ -1,12 +1,8 @@
-﻿using Packsly.Core.Configuration;
-using Packsly.Core.Forge;
-using Packsly.Core.MultiMc;
+﻿using Core.Forge;
+using Packsly.Core.Module;
 using Packsly.MultiMc;
+using PackslyMultiMc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Packsly.Cli {
 
@@ -18,11 +14,11 @@ namespace Packsly.Cli {
             mmcTest.Icon = "http://i.imgur.com/Be877im.png";
             mmcTest.Save();
 
-            ForgeInstaller installer = new ForgeInstaller(
-                new MmcForgeInstallationSchema()
+            ModuleRegistry tr = new ModuleRegistry(
+                new MmcForgeModule()
             );
 
-            installer.Install(mmcTest, "1.10.2-12.18.3.2221");
+            tr.Execute(mmcTest, new ForgeModuleArgs("1.10.2-12.18.3.2221"));
 
             Console.ReadKey();
         }
