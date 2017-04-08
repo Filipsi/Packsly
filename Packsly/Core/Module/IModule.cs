@@ -1,18 +1,16 @@
-﻿using Newtonsoft.Json;
-using Packsly.Common;
+﻿using Packsly.Core.Module;
+using Packsly.Minecraft;
 using System;
 
 namespace Packsly.Core.Module {
 
     public interface IModule {
 
-        string Id { get; }
+        string Type { get; }
 
-        Type InstanceType { get; }
+        Type MinecraftInstanceType { get; }
 
-        Type ArgumentType { get; }
-
-        void Execute(IMinecraftInstance instance,  object args);
+        void Execute(IMinecraftInstance instance, IModuleArguments args);
 
     }
 

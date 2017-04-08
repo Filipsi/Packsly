@@ -1,4 +1,5 @@
-﻿using Packsly.Common;
+﻿using Packsly.Core.Module;
+using Packsly.Minecraft;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,10 @@ namespace Packsly.Core.Module {
             return this;
         }
 
-        public void Execute(IMinecraftInstance instance, object args) {
+        public void Execute(IMinecraftInstance instance, IModuleArguments args) {
             _modules
-                .Where(m => m.InstanceType.Equals(instance.GetType()))
-                .Where(m => m.ArgumentType.Equals(args.GetType()))
+                .Where(m => m.MinecraftInstanceType.Equals(instance.GetType()))
+                .Where(m => args.IsCompatible(m))
                 .ToList()
                 .ForEach(e => e.Execute(instance, args));
         }

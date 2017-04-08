@@ -30,10 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -50,14 +46,19 @@
   <ItemGroup>
     <Compile Include="Forge\ForgeModule.cs" />
     <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Forge\ForgeModuleArgs.cs" />
+    <Compile Include="Modpack\IModpackProvider.cs" />
+    <Compile Include="Modpack\Mod.cs" />
+    <Compile Include="Modpack\Modpack.cs" />
+    <Compile Include="Modpack\ModpackFactory.cs" />
+    <Compile Include="Module\IModuleArguments.cs" />
     <Compile Include="Module\Module.cs" />
     <Compile Include="Module\ModuleRegistry.cs" />
     <Compile Include="JsonConverters\DirectoryInfoJsonConverter.cs" />
     <Compile Include="FileSystem\DataPairFile.cs" />
     <Compile Include="FileSystem\FileTemplate.cs" />
-    <Compile Include="Common\IMinecraftInstance.cs" />
+    <Compile Include="Minecraft\IMinecraftInstance.cs" />
     <Compile Include="Forge\ForgeLibrary.cs" />
-    <Compile Include="Forge\ForgePatchFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Module\IModule.cs" />
   </ItemGroup>

@@ -1,14 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Packsly.Core.FileSystem;
-using System;
-using System.Collections.Generic;
+using Packsly.Core.Forge;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Packsly.Core.Forge {
+namespace Packsly.MultiMc {
 
     public class ForgePatchFile : JsonFile<ForgePatchFile> {
 

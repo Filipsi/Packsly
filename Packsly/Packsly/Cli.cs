@@ -1,5 +1,7 @@
-﻿using Core.Forge;
+﻿using Packsly.Core.Forge;
+using Packsly.Core.Modpack;
 using Packsly.Core.Module;
+using Packsly.Curse;
 using Packsly.MultiMc;
 using PackslyMultiMc;
 using System;
@@ -10,6 +12,7 @@ namespace Packsly.Cli {
 
         static void Main(string[] args) {
 
+            /*
             MmcInstance mmcTest = new MmcInstance("tut", "1.10.2");
             mmcTest.Icon = "http://i.imgur.com/Be877im.png";
             mmcTest.Save();
@@ -19,6 +22,11 @@ namespace Packsly.Cli {
             );
 
             tr.Execute(mmcTest, new ForgeModuleArgs("1.10.2-12.18.3.2221"));
+            */
+
+            ModpackFactory.RegisterProvider(new CurseLatestModpackProvider());
+            ModpackFactory.RegisterProvider(new CurseModpackProvider());
+            ModpackFactory.FromSource("https://minecraft.curseforge.com/projects/invasion");
 
             Console.ReadKey();
         }

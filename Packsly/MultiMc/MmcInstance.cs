@@ -1,4 +1,4 @@
-﻿using Packsly.Common;
+﻿using Packsly.Minecraft;
 using Packsly.Core.Configuration;
 using Packsly.Core.MultiMc;
 using System;

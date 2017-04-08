@@ -3,7 +3,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Packsly.Core.Forge {
 
-
     [JsonObject(MemberSerialization.OptIn)]
     public class ForgeLibrary {
 

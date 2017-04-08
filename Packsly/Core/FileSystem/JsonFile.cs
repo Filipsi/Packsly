@@ -23,7 +23,7 @@ namespace Packsly.Core.FileSystem {
         public override T Load() {
             if(!_file.Exists) {
                 Save();
-                return (T)Convert.ChangeType(this, typeof(T));
+                return (T) Convert.ChangeType(this, typeof(T));
             }
 
             using(StreamReader reader = _file.OpenText())
