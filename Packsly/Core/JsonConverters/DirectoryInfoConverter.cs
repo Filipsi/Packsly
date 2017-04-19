@@ -5,7 +5,8 @@ using System.IO;
 
 namespace Packsly.Core.JsonConverters {
 
-    public class DirectoryInfoJsonConverter : JsonConverter {
+    // TODO: Allow usage of relative paths
+    public class DirectoryInfoConverter : JsonConverter {
 
         public override bool CanConvert(Type objectType) {
             return objectType.Equals(typeof(DirectoryInfo));

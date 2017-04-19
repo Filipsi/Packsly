@@ -1,5 +1,5 @@
 ﻿using Packsly.Core.Module;
-using Packsly.Minecraft;
+using Packsly.Launcher;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +8,17 @@ using System.Threading.Tasks;
 
 namespace Packsly.Core.Module {
 
-    public class ModuleRegistry {
+    public static class ModuleRegistry {
 
-        private List<IModule> _modules;
+        private static List<IModule> _modules = new List<IModule>();
 
-        public ModuleRegistry(params IModule[] modules) {
-            _modules = new List<IModule>(modules);
-        }
 
-        public ModuleRegistry Register(IModule module) {
+        public static void Register(IModule module) {
             if(!_modules.Contains(module) || !_modules.Any(m => m.GetType().Equals(module.GetType())))
                 _modules.Add(module);
-
-            return this;
         }
 
-        public void Execute(IMinecraftInstance instance, IModuleArguments args) {
+        public static void Execute(IMinecraftInstance instance, IModuleArguments args) {
             _modules
                 .Where(m => m.MinecraftInstanceType.Equals(instance.GetType()))
                 .Where(m => args.IsCompatible(m))

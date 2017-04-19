@@ -12,14 +12,14 @@ namespace Packsly.Core.Configuration {
         #region Settings
 
         [JsonProperty]
-        public string MultiMC { get; set; } = string.Empty;
+        public string Launcher { get; set; } = string.Empty;
 
         [JsonProperty]
-        [JsonConverter(typeof(DirectoryInfoJsonConverter))]
+        [JsonConverter(typeof(DirectoryInfoConverter))]
         public DirectoryInfo Temp { get; set; } = new DirectoryInfo("temp");
 
         [JsonProperty]
-        [JsonConverter(typeof(DirectoryInfoJsonConverter))]
+        [JsonConverter(typeof(DirectoryInfoConverter))]
         public DirectoryInfo Cache { get; set; } = new DirectoryInfo("cache");
 
         #endregion

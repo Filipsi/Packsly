@@ -1,12 +1,13 @@
-﻿using Packsly.Minecraft;
+﻿using Packsly.Launcher;
 using Packsly.Core.Configuration;
-using Packsly.Core.MultiMc;
 using System;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using Packsly.Core.Content;
+using Packsly.Core.Module;
 
-namespace Packsly.MultiMc {
+namespace Packsly.MultiMc.Launcher {
 
     public class MmcInstance : IMinecraftInstance {
 
@@ -32,7 +33,7 @@ namespace Packsly.MultiMc {
 
         public string LauncherLocation {
             get {
-                return Settings.Instance.MultiMC;
+                return Settings.Instance.Launcher;
             }
         }
 
@@ -51,24 +52,54 @@ namespace Packsly.MultiMc {
             }
         }
 
-        public MmcConfigFile ConfigFile {
-           private set; get;
+        private MmcConfigFile ConfigFile {
+           set; get;
         }
 
-        private readonly string _id;
+        private string _id;
 
         #endregion
 
         #region Constructors
 
-        public MmcInstance(string id, string mcversion) {
-            _id = id;
-            ConfigFile = new MmcConfigFile(id, Path.Combine(Location, "instance.cfg"), mcversion);
-        }
-
         public MmcInstance(string id) {
             _id = id;
             ConfigFile = new MmcConfigFile(Path.Combine(Location, "instance.cfg")).Load();
+        }
+
+        private MmcInstance() {
+        }
+
+        public static MmcInstance FromModpack(Modpack modpack) {
+            MmcInstance instnace = new MmcInstance();
+            instnace._id = modpack.Id;
+            instnace.ConfigFile = new MmcConfigFile(modpack.Name, Path.Combine(instnace.Location, "instance.cfg"), modpack.MinecraftVersion);
+            instnace.Icon = modpack.Icon;
+
+            DirectoryInfo Temp = Settings.Instance.Temp;
+            string mc = Path.Combine(instnace.Location, "minecraft");
+            string mcMods = Path.Combine(mc, "mods");
+
+            // Create the instnace
+            instnace.Save();
+
+            //Download mods
+            foreach(Mod mod in modpack.Mods)
+                mod.Download(mcMods);
+
+            // Run modules
+            foreach(IModuleArguments args in modpack.Modules)
+                ModuleRegistry.Execute(instnace, args);
+
+            // Apply overrides
+            foreach(string file in modpack.OverrideFiles) {
+                string destination = Path.Combine(mc, file.Replace(Settings.Instance.Temp.FullName + @"\", string.Empty));
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                File.Copy(Path.Combine(modpack.OverrideSource, file), destination);
+            }
+
+            if(Temp.Exists) Temp.Delete(true);
+            return instnace;
         }
 
         #endregion

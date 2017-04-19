@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Packsly.Core.MultiMc {
+namespace Packsly.MultiMc.Launcher {
 
     public class MmcConfigFile : DataPairFile<MmcConfigFile> {
 

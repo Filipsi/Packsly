@@ -1,5 +1,5 @@
 ﻿using Packsly.Core.Module;
-using Packsly.Minecraft;
+using Packsly.Launcher;
 using System;
 
 namespace Packsly.Core.Module {

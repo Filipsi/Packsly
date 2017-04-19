@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Packsly.Core.FileSystem {
 
-    public abstract class FileTemplate<T> {
+    public abstract class FileBase<T> {
 
         #region Properties
 
@@ -19,7 +19,7 @@ namespace Packsly.Core.FileSystem {
 
         #region Constructor
 
-        public FileTemplate(string location) {
+        public FileBase(string location) {
             Location = location;
             _file = new FileInfo(Location);
         }
@@ -31,6 +31,11 @@ namespace Packsly.Core.FileSystem {
         public abstract T Load();
 
         public abstract T Save();
+
+        public T Delete() {
+            if(_file.Exists) _file.Delete();
+            return (T) Convert.ChangeType(this, typeof(T));
+        }
 
         #endregion
 

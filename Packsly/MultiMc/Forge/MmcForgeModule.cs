@@ -1,7 +1,7 @@
 ﻿using Ionic.Zip;
 using Newtonsoft.Json.Linq;
 using Packsly.Core.Forge;
-using Packsly.MultiMc;
+using Packsly.MultiMc.Launcher;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PackslyMultiMc {
+namespace Packsly.MultiMc.Forge {
 
     public class MmcForgeModule : ForgeModule<MmcInstance> {
 
@@ -38,7 +38,7 @@ namespace PackslyMultiMc {
             if(!Directory.Exists(patchDirectory))
                 Directory.CreateDirectory(patchDirectory);
 
-            // TODO: Copy if version changed
+            // TODO: Copy only if version changed
             File.Copy(GetCachedPatch(version), Path.Combine(patchDirectory, "net.minecraftforge.json"), true);
         }
 

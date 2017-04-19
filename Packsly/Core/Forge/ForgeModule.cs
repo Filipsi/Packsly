@@ -1,4 +1,4 @@
-﻿using Packsly.Minecraft;
+﻿using Packsly.Launcher;
 using Packsly.Core.Configuration;
 using Packsly.Core.Module;
 using System.IO;

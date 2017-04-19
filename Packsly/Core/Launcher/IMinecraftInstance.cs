@@ -1,4 +1,6 @@
-﻿namespace Packsly.Minecraft {
+﻿using Packsly.Core.Content;
+
+namespace Packsly.Launcher {
 
     public interface IMinecraftInstance {
 

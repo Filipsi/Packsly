@@ -3,7 +3,7 @@ using Packsly.Core.FileSystem;
 using Packsly.Core.Forge;
 using System.IO;
 
-namespace Packsly.MultiMc {
+namespace Packsly.MultiMc.Forge {
 
     public class ForgePatchFile : JsonFile<ForgePatchFile> {
 

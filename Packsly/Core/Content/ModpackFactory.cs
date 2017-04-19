@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Packsly.Core.Modpack {
+namespace Packsly.Core.Content {
 
     public static class ModpackFactory {
 
@@ -15,9 +15,13 @@ namespace Packsly.Core.Modpack {
                 _providers.Add(provider);
         }
 
-        public static Modpack FromSource(string source) {
+        public static Modpack Acquire(string source) {
             IModpackProvider provider = _providers.Find(m => m.CanUseSource(source));
-            return provider == null ? null : provider.Create(source);
+
+            if(provider == null)
+                throw new Exception($"Failed while processing source from '{source}'. No usable provider found.");
+
+            return provider.Create(source);
         }
 
     }

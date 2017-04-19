@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Packsly.Core.Modpack {
+namespace Packsly.Core.Content {
 
     public interface IModpackProvider {
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Packsly.Core.FileSystem {
     
-    public abstract class DataPairFile<T> : FileTemplate<T>{
+    public abstract class DataPairFile<T> : FileBase<T>{
 
         #region Properties
 

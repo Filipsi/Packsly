@@ -7,8 +7,8 @@
     <ProjectGuid>{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Packsly</RootNamespace>
-    <AssemblyName>Packsly</AssemblyName>
+    <RootNamespace>Packsly.Cli</RootNamespace>
+    <AssemblyName>Cli</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -7,7 +7,7 @@
     <ProjectGuid>{E992C311-F8F1-424A-AD76-A5E502817F83}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Core</RootNamespace>
+    <RootNamespace>Packsly.Core</RootNamespace>
     <AssemblyName>Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,17 +47,17 @@
     <Compile Include="Forge\ForgeModule.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Forge\ForgeModuleArgs.cs" />
-    <Compile Include="Modpack\IModpackProvider.cs" />
-    <Compile Include="Modpack\Mod.cs" />
-    <Compile Include="Modpack\Modpack.cs" />
-    <Compile Include="Modpack\ModpackFactory.cs" />
+    <Compile Include="Content\IModpackProvider.cs" />
+    <Compile Include="Content\Mod.cs" />
+    <Compile Include="Content\Modpack.cs" />
+    <Compile Include="Content\ModpackFactory.cs" />
     <Compile Include="Module\IModuleArguments.cs" />
     <Compile Include="Module\Module.cs" />
     <Compile Include="Module\ModuleRegistry.cs" />
-    <Compile Include="JsonConverters\DirectoryInfoJsonConverter.cs" />
+    <Compile Include="JsonConverters\DirectoryInfoConverter.cs" />
     <Compile Include="FileSystem\DataPairFile.cs" />
-    <Compile Include="FileSystem\FileTemplate.cs" />
-    <Compile Include="Minecraft\IMinecraftInstance.cs" />
+    <Compile Include="FileSystem\FileBase.cs" />
+    <Compile Include="Launcher\IMinecraftInstance.cs" />
     <Compile Include="Forge\ForgeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Module\IModule.cs" />

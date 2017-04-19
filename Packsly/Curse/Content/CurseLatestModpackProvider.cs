@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using Packsly.Core.Modpack;
+using Packsly.Core.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +9,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Packsly.Curse {
+namespace Packsly.Curse.Content {
 
     public class CurseLatestModpackProvider : IModpackProvider {
 
-        private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/(\w+)");
+        private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/(\w+)$");
+
+        #region IModpackProvider
 
         public bool CanUseSource(string source) {
             return Uri.IsWellFormedUriString(source, UriKind.Absolute) && _patten.IsMatch(source);
@@ -26,16 +28,16 @@ namespace Packsly.Curse {
                 page.LoadHtml(client.DownloadString(source + "/files"));
 
             string latest = page.DocumentNode
-                .SelectNodes("//tr[contains(@class, 'project-file-list-item')]")
-                .First()
-                .SelectNodes("//div[contains(@class, 'project-file-name-container')]/a[contains(@class, 'overflow-tip')]")
-                .First()
+                .SelectSingleNode("//tr[contains(@class, 'project-file-list-item')]")
+                .SelectSingleNode("//div[contains(@class, 'project-file-name-container')]/a[contains(@class, 'overflow-tip')]")
                 .GetAttributeValue("href", null);
 
             latest = _patten.Match(source).Groups[1] + latest;
 
-            return ModpackFactory.FromSource(latest);
+            return ModpackFactory.Acquire(latest);
         }
+
+        #endregion
 
     }
 
