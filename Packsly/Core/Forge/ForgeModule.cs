@@ -1,8 +1,8 @@
-﻿using Packsly.Launcher;
-using Packsly.Core.Configuration;
+﻿using Packsly.Core.Configuration;
 using Packsly.Core.Module;
 using System.IO;
 using System.Net;
+using Packsly.Core.Launcher;
 
 namespace Packsly.Core.Forge {
 

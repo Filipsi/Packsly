@@ -12,7 +12,8 @@ namespace Packsly.Core.Configuration {
         #region Settings
 
         [JsonProperty]
-        public string Launcher { get; set; } = string.Empty;
+        [JsonConverter(typeof(DirectoryInfoConverter))]
+        public DirectoryInfo Launcher { get; set; } = new DirectoryInfo("launcher");
 
         [JsonProperty]
         [JsonConverter(typeof(DirectoryInfoConverter))]

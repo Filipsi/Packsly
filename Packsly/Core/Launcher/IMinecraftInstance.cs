@@ -1,6 +1,4 @@
-﻿using Packsly.Core.Content;
-
-namespace Packsly.Launcher {
+﻿namespace Packsly.Core.Launcher {
 
     public interface IMinecraftInstance {
 
@@ -9,8 +7,6 @@ namespace Packsly.Launcher {
         string Name { get; }
 
         string Location { get; }
-
-        string LauncherLocation { get; }
 
         string MinecraftVersion { get; }
 

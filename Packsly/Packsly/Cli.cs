@@ -1,4 +1,5 @@
 ﻿using Packsly.Core.Content;
+using Packsly.Core.Launcher;
 using Packsly.Core.Module;
 using Packsly.Curse.Content;
 using Packsly.MultiMc.Forge;
@@ -10,14 +11,17 @@ namespace Packsly.Cli {
     class Cli {
 
         static void Main(string[] args) {
-            ModuleRegistry.Register(new MmcForgeModule());
-
+            // Register modpack providers
             ModpackFactory.RegisterProvider(new CurseLatestModpackProvider());
             ModpackFactory.RegisterProvider(new CurseModpackProvider());
 
-            MmcInstance.FromModpack(
-                ModpackFactory.Acquire("https://minecraft.curseforge.com/projects/invasion")
-            );
+            // Register modules
+            ModuleRegistry.Register(new MmcForgeModule());
+
+            // Register launcher schemas
+            MinecraftInstanceFactory.RegisterSchema(new MmcLauncherSchema());
+
+            MinecraftInstanceFactory.CreateFrom("https://minecraft.curseforge.com/projects/invasion");
 
             Console.ReadKey();
         }

@@ -51,6 +51,8 @@
     <Compile Include="Content\Mod.cs" />
     <Compile Include="Content\Modpack.cs" />
     <Compile Include="Content\ModpackFactory.cs" />
+    <Compile Include="Launcher\ILauncherSchema.cs" />
+    <Compile Include="Launcher\MinecraftInstanceFactory.cs" />
     <Compile Include="Module\IModuleArguments.cs" />
     <Compile Include="Module\Module.cs" />
     <Compile Include="Module\ModuleRegistry.cs" />

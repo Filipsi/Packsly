@@ -1,5 +1,4 @@
-﻿using Packsly.Core.Module;
-using Packsly.Launcher;
+﻿using Packsly.Core.Launcher;
 using System;
 
 namespace Packsly.Core.Module {

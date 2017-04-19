@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Packsly.Core.Configuration;
+using Packsly.Core.Launcher;
 using Packsly.Core.Module;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,8 @@ namespace Packsly.Core.Content {
 
     [JsonObject(MemberSerialization.OptIn)]
     public class Modpack {
+
+        #region Properties
 
         public string Id { private set; get; }
 
@@ -36,6 +39,10 @@ namespace Packsly.Core.Content {
         [JsonProperty("overrides", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] OverrideFiles { private set; get; }
 
+        #endregion
+
+        #region Constructors
+
         public Modpack(string id, string name, string icon, string mcversion, params Mod[] mods) {
             Id = id;
             Name = name;
@@ -44,6 +51,10 @@ namespace Packsly.Core.Content {
             Modules = new List<IModuleArguments>();
             Mods = mods;
         }
+
+        #endregion
+
+        #region Logic
 
         public Modpack AddOverrides(string source, params string[] files) {
             OverrideSource = source;
@@ -55,6 +66,32 @@ namespace Packsly.Core.Content {
             Modules.AddRange(modules);
             return this;
         }
+
+        public Modpack ExecuteModules(IMinecraftInstance instance) {
+            foreach(IModuleArguments args in Modules)
+                ModuleRegistry.Execute(instance, args);
+
+            return this;
+        }
+
+        public Modpack DownloadMods(string destination) {
+            foreach(Mod mod in Mods)
+                mod.Download(destination);
+
+            return this;
+        }
+
+        public Modpack ApplyOverrides(string path) {
+            foreach(string file in OverrideFiles) {
+                string destination = Path.Combine(path, file.Replace(Settings.Instance.Temp.FullName + @"\", string.Empty));
+                Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                File.Copy(Path.Combine(OverrideSource, file), destination);
+            }
+
+            return this;
+        }
+
+        #endregion
 
     }
 

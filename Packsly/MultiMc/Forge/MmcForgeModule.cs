@@ -1,5 +1,6 @@
 ﻿using Ionic.Zip;
 using Newtonsoft.Json.Linq;
+using Packsly.Core.Configuration;
 using Packsly.Core.Forge;
 using Packsly.MultiMc.Launcher;
 using System;
@@ -21,7 +22,7 @@ namespace Packsly.MultiMc.Forge {
                 DownloadForgeUniversal(args.Url, version);
 
             // Copy Forge to MultiMC libs if missing
-            string forgeDestination = Path.Combine(instance.LauncherLocation, @"libraries\net\minecraftforge\forge", version, string.Format(ForgeUniversalFormat, version));
+            string forgeDestination = Path.Combine(Settings.Instance.Launcher.FullName, @"libraries\net\minecraftforge\forge", version, string.Format(ForgeUniversalFormat, version));
             if(!File.Exists(forgeDestination)) {
                 Directory.CreateDirectory(Path.GetDirectoryName(forgeDestination));
                 File.Copy(GetCachedForge(version), forgeDestination);
