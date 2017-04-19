@@ -12,9 +12,11 @@ namespace Packsly.Core.Launcher {
 
         string Name { get; }
 
-        Type Instance { get; }
+        Type MinecraftInstanceType { get; }
 
         bool Check(DirectoryInfo location);
+
+        string[] GetInstances(DirectoryInfo location);
 
         IMinecraftInstance Create(Modpack modpack);
 

@@ -29,7 +29,12 @@ namespace Packsly.Core.Launcher {
             if(launcher == null)
                 throw new Exception("Was not able to create Minecraft instance from source, no compatible launcher found");
 
-            return launcher.Create(ModpackFactory.Acquire(source));
+            Modpack modpack = ModpackFactory.Acquire(source);
+
+            if(launcher.GetInstances(Settings.Instance.Launcher).Any(i => i.Contains(modpack.Id)))
+                throw new Exception("Minecraft instance with the same id allready exists");
+
+            return launcher.Create(modpack);
         }
 
     }

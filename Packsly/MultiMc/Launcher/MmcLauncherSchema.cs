@@ -12,20 +12,24 @@ namespace Packsly.MultiMc.Launcher {
 
     public class MmcLauncherSchema : ILauncherSchema {
 
-        public Type Instance {
-            get {
-                return typeof(MmcInstance);
-            }
-        }
-
         public string Name {
             get {
                 return "MultiMc";
             }
         }
 
+        public Type MinecraftInstanceType {
+            get {
+                return typeof(MmcInstance);
+            }
+        }
+
         public bool Check(DirectoryInfo location) {
             return location.EnumerateFiles("MultiMC.exe").Any();
+        }
+
+        public string[] GetInstances(DirectoryInfo location) {
+            return Directory.EnumerateDirectories(Path.Combine(location.FullName, "instances")).ToArray();
         }
 
         public IMinecraftInstance Create(Modpack modpack) {
