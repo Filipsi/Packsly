@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Packsly.Core.Common;
+using Packsly.Core.Common.Factory;
 using Packsly.Core.Modpack;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace Packsly.Curse.Content {
 
             latest = _patten.Match(source).Groups[1] + latest;
 
-            return PackslyManager.BuildModpackInfo(latest);
+            return PackslyFactory.Modpack.BuildFrom(latest);
         }
 
         #endregion

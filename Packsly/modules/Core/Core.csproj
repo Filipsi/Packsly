@@ -45,7 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Factory\IFactory.cs" />
-    <Compile Include="Common\PackslyManager.cs" />
+    <Compile Include="Common\Factory\PackslyFactory.cs" />
+    <Compile Include="Common\Registry\PackslyManager.cs" />
     <Compile Include="Common\Registry\IRegistry.cs" />
     <Compile Include="Common\Registry\SingleTypeRegistry.cs" />
     <Compile Include="Forge\ForgeTweak.cs" />
