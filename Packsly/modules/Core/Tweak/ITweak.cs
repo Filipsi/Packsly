@@ -9,7 +9,7 @@ namespace Packsly.Core.Tweak {
 
         Type MinecraftInstanceType { get; }
 
-        void Execute(IMinecraftInstance instance, ITweakArguments args);
+        void Execute(ILauncherInstance instance, ITweakArguments args);
 
     }
 

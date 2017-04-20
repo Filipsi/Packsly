@@ -9,7 +9,7 @@ using System.IO;
 namespace Packsly.Core.Modpack {
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class Modpack {
+    public class ModpackInfo {
 
         #region Properties
 
@@ -28,7 +28,7 @@ namespace Packsly.Core.Modpack {
         public string MinecraftVersion { private set; get; }
 
         [JsonProperty("mods")]
-        public Mod[] Mods { private set; get; }
+        public ModInfo[] Mods { private set; get; }
 
         [JsonProperty("tweaks", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public List<ITweakArguments> Tweaks { private set; get; }
@@ -43,7 +43,7 @@ namespace Packsly.Core.Modpack {
 
         #region Constructors
 
-        public Modpack(string id, string name, string icon, string mcversion, params Mod[] mods) {
+        public ModpackInfo(string id, string name, string icon, string mcversion, params ModInfo[] mods) {
             Id = id;
             Name = name;
             Icon = icon;
@@ -56,32 +56,32 @@ namespace Packsly.Core.Modpack {
 
         #region Logic
 
-        public Modpack AddOverrides(string source, params string[] files) {
+        public ModpackInfo AddOverrides(string source, params string[] files) {
             OverrideSource = source;
             OverrideFiles = files;
             return this;
         }
 
-        public Modpack AddTweaks(params ITweakArguments[] tweaks) {
+        public ModpackInfo AddTweaks(params ITweakArguments[] tweaks) {
             Tweaks.AddRange(tweaks);
             return this;
         }
 
-        public Modpack ExecuteTweaks(IMinecraftInstance instance) {
+        public ModpackInfo ExecuteTweaks(ILauncherInstance instance) {
             foreach(ITweakArguments args in Tweaks)
                 TweakRegistry.Execute(instance, args);
 
             return this;
         }
 
-        public Modpack DownloadMods(string destination) {
-            foreach(Mod mod in Mods)
+        public ModpackInfo DownloadMods(string destination) {
+            foreach(ModInfo mod in Mods)
                 mod.Download(destination);
 
             return this;
         }
 
-        public Modpack ApplyOverrides(string path) {
+        public ModpackInfo ApplyOverrides(string path) {
             foreach(string file in OverrideFiles) {
                 string destination = Path.Combine(path, file.Replace(Settings.Instance.Temp.FullName + @"\", string.Empty));
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));

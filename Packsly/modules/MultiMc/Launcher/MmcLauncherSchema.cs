@@ -26,8 +26,8 @@ namespace Packsly.MultiMc.Launcher {
             return Directory.EnumerateDirectories(Path.Combine(location.FullName, "instances")).ToArray();
         }
 
-        public IMinecraftInstance Create(Modpack modpack) {
-            MmcInstance instance = new MmcInstance(
+        public ILauncherInstance Create(ModpackInfo modpack) {
+            MmcLauncherInstance instance = new MmcLauncherInstance(
                 modpack.Id,
                 modpack.Name,
                 modpack.Icon,

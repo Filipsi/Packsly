@@ -4,7 +4,7 @@ using System;
 
 namespace Packsly.Core.Tweak {
 
-    public abstract class Tweak<T, A> : ITweak where T : IMinecraftInstance where A : ITweakArguments {
+    public abstract class Tweak<T, A> : ITweak where T : ILauncherInstance where A : ITweakArguments {
 
         #region ITweak
 
@@ -14,7 +14,7 @@ namespace Packsly.Core.Tweak {
             }
         }
 
-        void ITweak.Execute(IMinecraftInstance instance, ITweakArguments args) {
+        void ITweak.Execute(ILauncherInstance instance, ITweakArguments args) {
             Execute((T)instance, (A)args);
         }
 

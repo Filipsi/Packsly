@@ -6,7 +6,7 @@ using Packsly.Core.Common.Configuration;
 
 namespace Packsly.Core.Forge {
 
-    public abstract class ForgeTweak<T> : Tweak<T, ForgeTweakArgs> where T : IMinecraftInstance {
+    public abstract class ForgeTweak<T> : Tweak<T, ForgeTweakArgs> where T : ILauncherInstance {
 
         #region Constants
 

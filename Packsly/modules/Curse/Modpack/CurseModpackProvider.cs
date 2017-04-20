@@ -26,7 +26,7 @@ namespace Packsly.Curse.Content {
             return Uri.IsWellFormedUriString(source, UriKind.Absolute) && _patten.IsMatch(source);
         }
 
-        public Modpack Create(string source) {
+        public ModpackInfo Create(string source) {
             HtmlDocument page = new HtmlDocument();
 
             using(WebClient client = new WebClient())
@@ -42,7 +42,7 @@ namespace Packsly.Curse.Content {
 
             CurseModpackManifestFile manifest = new CurseModpackManifestFile(Path.Combine(Temp.FullName, "manifest.json")).Load();
 
-            Modpack modpack = new Modpack(
+            ModpackInfo modpack = new ModpackInfo(
                 modpackId,
                 manifest.Name,
                 project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),

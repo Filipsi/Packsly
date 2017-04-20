@@ -51,7 +51,7 @@
     <Compile Include="Forge\ForgePatchFile.cs" />
     <Compile Include="Forge\MmcForgeTweak.cs" />
     <Compile Include="Launcher\MmcConfigFile.cs" />
-    <Compile Include="Launcher\MmcInstance.cs" />
+    <Compile Include="Launcher\MmcLauncherInstance.cs" />
     <Compile Include="Launcher\MmcLauncherSchema.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

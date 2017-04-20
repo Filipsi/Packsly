@@ -10,7 +10,7 @@ namespace Packsly.Core.Modpack {
 
         bool CanUseSource(string source);
 
-        Modpack Create(string source);
+        ModpackInfo Create(string source);
 
     }
 

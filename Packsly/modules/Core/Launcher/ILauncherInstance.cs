@@ -1,6 +1,6 @@
 ﻿namespace Packsly.Core.Launcher {
 
-    public interface IMinecraftInstance {
+    public interface ILauncherInstance {
 
         string Id { get; }
 

@@ -21,6 +21,9 @@ namespace Packsly.Core.Common.FileSystem {
         #region IO
 
         public override T Load() {
+            if(!_file.Exists)
+                return (T) Convert.ChangeType(this, typeof(T));
+
             using(StreamReader reader = _file.OpenText())
                 JsonConvert.PopulateObject(reader.ReadToEnd(), this);
 

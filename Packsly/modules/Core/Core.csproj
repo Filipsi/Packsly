@@ -44,22 +44,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Factory\IFactory.cs" />
+    <Compile Include="Common\PackslyManager.cs" />
+    <Compile Include="Common\Registry\IRegistry.cs" />
+    <Compile Include="Common\Registry\SingleTypeRegistry.cs" />
     <Compile Include="Forge\ForgeTweak.cs" />
     <Compile Include="Common\Configuration\Settings.cs" />
     <Compile Include="Forge\ForgeTweakArgs.cs" />
     <Compile Include="Modpack\IModpackProvider.cs" />
-    <Compile Include="Modpack\Mod.cs" />
-    <Compile Include="Modpack\Modpack.cs" />
+    <Compile Include="Modpack\ModInfo.cs" />
+    <Compile Include="Modpack\ModpackInfo.cs" />
     <Compile Include="Modpack\ModpackFactory.cs" />
     <Compile Include="Launcher\ILauncherSchema.cs" />
-    <Compile Include="Launcher\MinecraftInstanceFactory.cs" />
+    <Compile Include="Launcher\LauncherInstanceFactory.cs" />
     <Compile Include="Tweak\ITweakArguments.cs" />
     <Compile Include="Tweak\Tweak.cs" />
     <Compile Include="Tweak\TweakRegistry.cs" />
     <Compile Include="Common\JsonConverters\DirectoryInfoConverter.cs" />
     <Compile Include="Common\FileSystem\DataPairFile.cs" />
     <Compile Include="Common\FileSystem\FileBase.cs" />
-    <Compile Include="Launcher\IMinecraftInstance.cs" />
+    <Compile Include="Launcher\ILauncherInstance.cs" />
     <Compile Include="Forge\ForgeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tweak\ITweak.cs" />

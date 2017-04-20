@@ -104,11 +104,11 @@ namespace Packsly.Curse.Content {
 
         #region Utils
 
-        public Mod[] GetMods() {
-            Mod[] mods = new Mod[Files.Length];
+        public ModInfo[] GetMods() {
+            ModInfo[] mods = new ModInfo[Files.Length];
 
             for(ushort i = 0; i < mods.Length; i++)
-                mods[i] = new Mod {
+                mods[i] = new ModInfo {
                     Url = string.Format("http://minecraft.curseforge.com/{0}/download", Files[i])
                 };
 

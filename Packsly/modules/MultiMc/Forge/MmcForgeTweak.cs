@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace Packsly.MultiMc.Forge {
 
-    public class MmcForgeTweak : ForgeTweak<MmcInstance> {
+    public class MmcForgeTweak : ForgeTweak<MmcLauncherInstance> {
 
-        public override void Execute(MmcInstance instance, ForgeTweakArgs args) {
+        public override void Execute(MmcLauncherInstance instance, ForgeTweakArgs args) {
             string version = args.Version;
 
             // Download Forge if needed

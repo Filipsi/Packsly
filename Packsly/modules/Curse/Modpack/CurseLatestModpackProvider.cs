@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using Packsly.Core.Common;
 using Packsly.Core.Modpack;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Packsly.Curse.Content {
             return Uri.IsWellFormedUriString(source, UriKind.Absolute) && _patten.IsMatch(source);
         }
 
-        public Modpack Create(string source) {
+        public ModpackInfo Create(string source) {
             HtmlDocument page = new HtmlDocument();
 
             using(WebClient client = new WebClient())
@@ -34,7 +35,7 @@ namespace Packsly.Curse.Content {
 
             latest = _patten.Match(source).Groups[1] + latest;
 
-            return ModpackFactory.Acquire(latest);
+            return PackslyManager.BuildModpackInfo(latest);
         }
 
         #endregion

@@ -8,7 +8,7 @@ using System.Net.Mime;
 namespace Packsly.Core.Modpack {
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class Mod {
+    public class ModInfo {
 
         [JsonProperty("url")]
         public string Url { set; get; }
@@ -16,15 +16,15 @@ namespace Packsly.Core.Modpack {
         [JsonProperty("filename", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FileName { set; get; }
 
-        public Mod() {
+        public ModInfo() {
         }
 
-        public Mod(string url, string filename = null) {
+        public ModInfo(string url, string filename = null) {
             Url = url;
             FileName = filename;
         }
 
-        public Mod Download(string path) {
+        public ModInfo Download(string path) {
             string location = Url;
 
             do {
