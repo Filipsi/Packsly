@@ -3,18 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "Packsly\Cli.csproj", "{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cli", "modules\Cli\Cli.csproj", "{0AF44D28-BC70-4BE7-B679-851D0FCC6EA5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E992C311-F8F1-424A-AD76-A5E502817F83} = {E992C311-F8F1-424A-AD76-A5E502817F83}
 		{EB2DFB65-6B81-46A9-AC92-26652F89F2BB} = {EB2DFB65-6B81-46A9-AC92-26652F89F2BB}
 		{206A3F8B-C475-4752-A39D-7B2D1D094ED5} = {206A3F8B-C475-4752-A39D-7B2D1D094ED5}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{E992C311-F8F1-424A-AD76-A5E502817F83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "modules\Core\Core.csproj", "{E992C311-F8F1-424A-AD76-A5E502817F83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMc", "MultiMc\MultiMc.csproj", "{EB2DFB65-6B81-46A9-AC92-26652F89F2BB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiMc", "modules\MultiMc\MultiMc.csproj", "{EB2DFB65-6B81-46A9-AC92-26652F89F2BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Curse", "Curse\Curse.csproj", "{206A3F8B-C475-4752-A39D-7B2D1D094ED5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Curse", "modules\Curse\Curse.csproj", "{206A3F8B-C475-4752-A39D-7B2D1D094ED5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
