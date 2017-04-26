@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Packsly.Core.Tweak;
+using Packsly.Core.Tweaker;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Packsly.Core.Forge {
 
-    public class ForgeTweakArgs : ITweakArguments {
+    public class ForgeTweakArgs : IExecutionContext {
 
         [JsonProperty("version")]
         public string Version { private set; get; }
@@ -18,10 +18,6 @@ namespace Packsly.Core.Forge {
 
         public ForgeTweakArgs(string version) {
             Version = version;
-        }
-
-        public bool IsCompatible(ITweak tweak) {
-            return tweak.Type.Equals("forge");
         }
 
     }

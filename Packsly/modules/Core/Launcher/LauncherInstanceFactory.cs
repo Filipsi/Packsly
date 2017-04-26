@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Packsly.Core.Launcher {
 
-    public class LauncherInstanceFactory : SingleTypeRegistry<ILauncherSchema>, IFactory<ILauncherInstance, string> {
+    public class LauncherInstanceFactory : SingleTypeRegistry<ILauncherSchema>, IFactory<IMinecraftInstance, string> {
 
         public ILauncherSchema CurrentLauncher {
             get {
@@ -16,7 +16,7 @@ namespace Packsly.Core.Launcher {
             }
         }
 
-        public ILauncherInstance BuildFrom(string source) {
+        public IMinecraftInstance BuildFrom(string source) {
             ILauncherSchema launcher = CurrentLauncher;
 
             if(launcher == null)

@@ -1,4 +1,4 @@
-﻿using Packsly.Core.Tweak;
+﻿using Packsly.Core.Tweaker;
 using System.IO;
 using System.Net;
 using Packsly.Core.Launcher;
@@ -6,7 +6,7 @@ using Packsly.Core.Common.Configuration;
 
 namespace Packsly.Core.Forge {
 
-    public abstract class ForgeTweak<T> : Tweak<T, ForgeTweakArgs> where T : ILauncherInstance {
+    public abstract class ForgeTweak<T> : Adapter<T, ForgeTweakArgs> where T : IMinecraftInstance {
 
         #region Constants
 
@@ -17,16 +17,6 @@ namespace Packsly.Core.Forge {
         protected const string ForgeUniversalFormat = "forge-{0}-universal.jar";
 
         protected const string ForgeVersionFile = "version.json";
-
-        #endregion
-
-        #region Tweak
-
-        public override string Type {
-            get {
-                return "forge";
-            }
-        }
 
         #endregion
 

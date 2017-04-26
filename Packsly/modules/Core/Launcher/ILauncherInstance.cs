@@ -1,6 +1,8 @@
 ﻿namespace Packsly.Core.Launcher {
 
-    public interface ILauncherInstance {
+    public interface IMinecraftInstance {
+
+        #region Properties
 
         string Id { get; }
 
@@ -10,9 +12,15 @@
 
         string MinecraftVersion { get; }
 
+        #endregion
+
+        #region Logic
+
         void Save();
 
         void Delete();
+
+        #endregion
 
     }
 

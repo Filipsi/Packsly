@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Launcher;
-using Packsly.Core.Tweak;
+using Packsly.Core.Tweaker;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +31,7 @@ namespace Packsly.Core.Modpack {
         public ModInfo[] Mods { private set; get; }
 
         [JsonProperty("tweaks", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<ITweakArguments> Tweaks { private set; get; }
+        public List<IExecutionContext> Tweaks { private set; get; }
 
         [JsonProperty("overrideSource", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string OverrideSource { private set; get; }
@@ -48,7 +48,7 @@ namespace Packsly.Core.Modpack {
             Name = name;
             Icon = icon;
             MinecraftVersion = mcversion;
-            Tweaks = new List<ITweakArguments>();
+            Tweaks = new List<IExecutionContext>();
             Mods = mods;
         }
 
@@ -62,14 +62,14 @@ namespace Packsly.Core.Modpack {
             return this;
         }
 
-        public ModpackInfo AddTweaks(params ITweakArguments[] tweaks) {
+        public ModpackInfo AddTweaks(params IExecutionContext[] tweaks) {
             Tweaks.AddRange(tweaks);
             return this;
         }
 
-        public ModpackInfo ExecuteTweaks(ILauncherInstance instance) {
-            foreach(ITweakArguments args in Tweaks)
-                TweakRegistry.Execute(instance, args);
+        public ModpackInfo ExecuteTweaks(IMinecraftInstance instance) {
+            foreach(IExecutionContext args in Tweaks)
+                AdapterRegistry.Execute(instance, args);
 
             return this;
         }

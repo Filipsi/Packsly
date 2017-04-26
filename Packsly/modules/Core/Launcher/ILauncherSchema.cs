@@ -11,7 +11,7 @@ namespace Packsly.Core.Launcher {
 
         string[] GetInstances(DirectoryInfo location);
 
-        ILauncherInstance Create(Modpack.ModpackInfo modpack);
+        IMinecraftInstance Create(Modpack.ModpackInfo modpack);
 
     }
 

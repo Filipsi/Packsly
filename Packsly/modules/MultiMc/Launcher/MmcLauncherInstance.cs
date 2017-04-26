@@ -3,13 +3,11 @@ using System;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
-using Packsly.Core.Modpack;
-using Packsly.Core.Tweak;
 using Packsly.Core.Launcher;
 
 namespace Packsly.MultiMc.Launcher {
 
-    public class MmcLauncherInstance : ILauncherInstance {
+    public class MmcLauncherInstance : IMinecraftInstance {
 
         #region Properties
 

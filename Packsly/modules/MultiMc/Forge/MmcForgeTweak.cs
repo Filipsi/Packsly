@@ -3,18 +3,14 @@ using Newtonsoft.Json.Linq;
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Forge;
 using Packsly.MultiMc.Launcher;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Packsly.MultiMc.Forge {
 
     public class MmcForgeTweak : ForgeTweak<MmcLauncherInstance> {
 
-        public override void Execute(MmcLauncherInstance instance, ForgeTweakArgs args) {
+        protected override void Execute(MmcLauncherInstance instance, ForgeTweakArgs args) {
             string version = args.Version;
 
             // Download Forge if needed
