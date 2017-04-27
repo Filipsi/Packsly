@@ -16,9 +16,6 @@ namespace Packsly.Core.Modpack {
         [JsonProperty("filename", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string FileName { set; get; }
 
-        public ModInfo() {
-        }
-
         public ModInfo(string url, string filename = null) {
             Url = url;
             FileName = filename;

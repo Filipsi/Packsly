@@ -27,7 +27,7 @@ namespace Packsly.MultiMc.Launcher {
         }
 
         public IMinecraftInstance Create(ModpackInfo modpack) {
-            MmcLauncherInstance instance = new MmcLauncherInstance(
+            MmcMinecraftInstance instance = new MmcMinecraftInstance(
                 modpack.Id,
                 modpack.Name,
                 modpack.Icon,
@@ -36,14 +36,16 @@ namespace Packsly.MultiMc.Launcher {
 
             instance.Save();
 
-            DirectoryInfo Temp = Settings.Instance.Temp;
-            string mcInstnace = Path.Combine(instance.Location, "minecraft");
-
-            modpack.DownloadMods(Path.Combine(mcInstnace, "mods"));
+            string mcInstnacePath = Path.Combine(instance.Location, "minecraft");
+            string mcModsPath = Path.Combine(mcInstnacePath, "mods");
+            modpack.DownloadMods(mcModsPath);
             modpack.ExecuteTweaks(instance);
-            modpack.ApplyOverrides(mcInstnace);
+            modpack.ApplyOverrides(mcInstnacePath);
 
-            if(Temp.Exists) Temp.Delete(true);
+            DirectoryInfo Temp = Settings.Instance.Temp;
+            if(Temp.Exists)
+                Temp.Delete(true);
+
             return instance;
         }
 

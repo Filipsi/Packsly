@@ -8,9 +8,9 @@ using System.IO;
 
 namespace Packsly.MultiMc.Forge {
 
-    public class MmcForgeTweak : ForgeTweak<MmcLauncherInstance> {
+    public class MmcForgeTweak : ForgeAdapter<MmcMinecraftInstance> {
 
-        protected override void Execute(MmcLauncherInstance instance, ForgeTweakArgs args) {
+        protected override void Execute(MmcMinecraftInstance instance, ForgeAdapterContext args) {
             string version = args.Version;
 
             // Download Forge if needed

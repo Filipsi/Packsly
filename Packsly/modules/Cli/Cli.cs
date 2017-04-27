@@ -4,6 +4,12 @@ using Packsly.MultiMc.Launcher;
 using System;
 using Packsly.Core.Common.Registry;
 using Packsly.Core.Common.Factory;
+using Packsly.Core.Modpack;
+using Packsly.Core.Forge;
+using Newtonsoft.Json;
+using System.IO;
+using System.Text;
+using Packsly.Core.Modpack.Provider;
 
 namespace Packsly.Cli {
 
@@ -12,6 +18,8 @@ namespace Packsly.Cli {
         static void Main(string[] args) {
             // Register modpack providers
             // IModpackProvider creates Modpack instance from string source
+            PackslyRegistry.Register(new JsonFileModpackProvider());
+            PackslyRegistry.Register(new JsonModpackProvider());
             PackslyRegistry.Register(new CurseLatestModpackProvider());
             PackslyRegistry.Register(new CurseModpackProvider());
 
@@ -24,9 +32,25 @@ namespace Packsly.Cli {
             PackslyRegistry.Register(new MmcForgeTweak());
 
             // Create MinecraftInstance from source
-            PackslyFactory.LauncherInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
+            // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
+            // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
 
             Console.ReadKey();
+        }
+
+        static void CreateTestJson() {
+            ModpackInfo mi = new ModpackInfo("testxy", "TestXY", "iron", "1.11.2", "0.0.xy",
+                new ModInfo("https://minecraft.curseforge.com/projects/just-enough-items-jei/files/2408687/download"),
+                new ModInfo("https://minecraft.curseforge.com/projects/iron-chests/files/2389224/download")
+            );
+
+            mi.AddTweaks(new ForgeAdapterContext("1.11.2-13.20.0.2284"));
+
+            string raw = JsonConvert.SerializeObject(mi, Formatting.Indented);
+            using(FileStream writer = File.OpenWrite("modpack-testxy.json")) {
+                byte[] buffer = Encoding.UTF8.GetBytes(raw);
+                writer.Write(buffer, 0, buffer.Length);
+            }
         }
 
     }

@@ -108,9 +108,9 @@ namespace Packsly.Curse.Content {
             ModInfo[] mods = new ModInfo[Files.Length];
 
             for(ushort i = 0; i < mods.Length; i++)
-                mods[i] = new ModInfo {
-                    Url = string.Format("http://minecraft.curseforge.com/{0}/download", Files[i])
-                };
+                mods[i] = new ModInfo(
+                    string.Format("http://minecraft.curseforge.com/{0}/download", Files[i])
+                );
 
             return mods;
         }

@@ -2,7 +2,6 @@
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Launcher;
 using Packsly.Core.Tweaker;
-using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -30,8 +29,8 @@ namespace Packsly.Core.Modpack {
         [JsonProperty("mods")]
         public ModInfo[] Mods { private set; get; }
 
-        [JsonProperty("tweaks", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<IExecutionContext> Tweaks { private set; get; }
+        [JsonProperty("tweaks", ItemTypeNameHandling = TypeNameHandling.All, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<IExecutionContext> Tweaks { private set; get; } = new List<IExecutionContext>();
 
         [JsonProperty("overrideSource", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string OverrideSource { private set; get; }
@@ -43,13 +42,19 @@ namespace Packsly.Core.Modpack {
 
         #region Constructors
 
-        public ModpackInfo(string id, string name, string icon, string mcversion, params ModInfo[] mods) {
+        public ModpackInfo(string id, string name, string icon, string mcVersion, string modpackVersion, params ModInfo[] mods) {
             Id = id;
             Name = name;
             Icon = icon;
-            MinecraftVersion = mcversion;
-            Tweaks = new List<IExecutionContext>();
+            MinecraftVersion = mcVersion;
+            Version = modpackVersion;
             Mods = mods;
+        }
+
+        [JsonConstructor]
+        private ModpackInfo(string name) {
+            Id = name.ToLower();
+            Name = name;
         }
 
         #endregion
@@ -82,6 +87,9 @@ namespace Packsly.Core.Modpack {
         }
 
         public ModpackInfo ApplyOverrides(string path) {
+            if(OverrideFiles == null)
+                return this;
+
             foreach(string file in OverrideFiles) {
                 string destination = Path.Combine(path, file.Replace(Settings.Instance.Temp.FullName + @"\", string.Empty));
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));

@@ -1,16 +1,14 @@
 ﻿using HtmlAgilityPack;
-using Ionic.Zip;
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Modpack;
 using Packsly.Core.Forge;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using ICSharpCode.SharpZipLib.Zip;
+using Packsly.Core.Modpack.Provider;
 
 namespace Packsly.Curse.Content {
 
@@ -47,11 +45,12 @@ namespace Packsly.Curse.Content {
                 manifest.Name,
                 project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),
                 manifest.MinecraftVersion,
+                manifest.Version,
                 manifest.GetMods()
             );
 
             if(manifest.ForgeVersion != null)
-                modpack.AddTweaks(new ForgeTweakArgs(manifest.ForgeVersion));
+                modpack.AddTweaks(new ForgeAdapterContext(manifest.ForgeVersion));
 
             if(manifest.Overrides != null) {
                 string overrideSource = Path.Combine(Temp.FullName, manifest.Overrides);
@@ -78,9 +77,8 @@ namespace Packsly.Curse.Content {
             using(WebClient client = new WebClient())
                 client.DownloadFile(url, filepath);
 
-            using(ZipFile zip = new ZipFile(filepath))
-                zip.ExtractAll(Temp.FullName);
-
+            FastZip zip = new FastZip();
+            zip.ExtractZip(filepath, Temp.FullName, "");
             File.Delete(filepath);
         }
 

@@ -1,5 +1,4 @@
-﻿using Packsly.Core.Common;
-using Packsly.Core.Common.Configuration;
+﻿using Packsly.Core.Common.Configuration;
 using Packsly.Core.Common.Factory;
 using Packsly.Core.Common.Registry;
 using Packsly.Core.Modpack;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace Packsly.Core.Launcher {
 
-    public class LauncherInstanceFactory : SingleTypeRegistry<ILauncherSchema>, IFactory<IMinecraftInstance, string> {
+    public class MinecraftInstanceFactory : SingleTypeRegistry<ILauncherSchema>, IFactory<IMinecraftInstance, string> {
 
         public ILauncherSchema CurrentLauncher {
             get {
@@ -20,12 +19,12 @@ namespace Packsly.Core.Launcher {
             ILauncherSchema launcher = CurrentLauncher;
 
             if(launcher == null)
-                throw new Exception("Was not able to create Minecraft instance from source, no compatible launcher found");
+                throw new Exception("Launcher not found");
 
             ModpackInfo modpack = PackslyFactory.Modpack.BuildFrom(source);
 
             if(launcher.GetInstances(Settings.Instance.Launcher).Any(i => i.Contains(modpack.Id)))
-                throw new Exception("Minecraft instance with the same id allready exists");
+                throw new Exception($"Minecraft instance with id '{modpack.Id}' allready exists");
 
             return launcher.Create(modpack);
         }

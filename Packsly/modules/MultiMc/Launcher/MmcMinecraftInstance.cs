@@ -7,7 +7,7 @@ using Packsly.Core.Launcher;
 
 namespace Packsly.MultiMc.Launcher {
 
-    public class MmcLauncherInstance : IMinecraftInstance {
+    public class MmcMinecraftInstance : IMinecraftInstance {
 
         #region Properties
 
@@ -52,12 +52,12 @@ namespace Packsly.MultiMc.Launcher {
 
         #region Constructors
 
-        public MmcLauncherInstance(string id) {
+        public MmcMinecraftInstance(string id) {
             _id = id;
             ConfigFile = new MmcConfigFile(Path.Combine(Location, "instance.cfg")).Load();
         }
 
-        public MmcLauncherInstance(string id, string name, string icon, string mcversion) {
+        public MmcMinecraftInstance(string id, string name, string icon, string mcversion) {
             _id = id;
             ConfigFile = new MmcConfigFile(name, Path.Combine(Location, "instance.cfg"), mcversion);
             Icon = icon;

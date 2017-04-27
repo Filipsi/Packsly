@@ -1,10 +1,7 @@
 ﻿using Packsly.Core.Common.Factory;
 using Packsly.Core.Common.Registry;
+using Packsly.Core.Modpack.Provider;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Packsly.Core.Modpack {
 

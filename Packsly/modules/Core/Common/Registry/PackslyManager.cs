@@ -1,6 +1,7 @@
 ﻿using Packsly.Core.Common.Factory;
 using Packsly.Core.Launcher;
 using Packsly.Core.Modpack;
+using Packsly.Core.Modpack.Provider;
 using Packsly.Core.Tweaker;
 
 namespace Packsly.Core.Common.Registry {
@@ -24,7 +25,7 @@ namespace Packsly.Core.Common.Registry {
         }
 
         public static void Register(params ILauncherSchema[] elements) {
-            PackslyFactory.LauncherInstance.Register(elements);
+            PackslyFactory.MinecraftInstance.Register(elements);
         }
 
         #endregion

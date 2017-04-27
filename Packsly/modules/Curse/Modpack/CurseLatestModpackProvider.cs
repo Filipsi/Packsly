@@ -1,15 +1,10 @@
 ﻿using HtmlAgilityPack;
-using Packsly.Core.Common;
 using Packsly.Core.Common.Factory;
 using Packsly.Core.Modpack;
+using Packsly.Core.Modpack.Provider;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Packsly.Curse.Content {
 
