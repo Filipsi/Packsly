@@ -5,9 +5,9 @@ using System.IO;
 
 namespace Packsly.Core.Common.Configuration {
 
-    public class Settings : JsonFile<Settings> {
+    public class Settings : JsonFile {
 
-        public static readonly Settings Instance = new Settings().Load();
+        public static readonly Settings Instance = new Settings();
 
         #region Settings
 
@@ -28,6 +28,7 @@ namespace Packsly.Core.Common.Configuration {
         #region Constructor
 
         private Settings(string filename = "config.json") : base(filename) {
+            Load();
         }
 
         #endregion

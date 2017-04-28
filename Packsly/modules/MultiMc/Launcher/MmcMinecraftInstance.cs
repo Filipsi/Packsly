@@ -54,7 +54,8 @@ namespace Packsly.MultiMc.Launcher {
 
         public MmcMinecraftInstance(string id) {
             _id = id;
-            ConfigFile = new MmcConfigFile(Path.Combine(Location, "instance.cfg")).Load();
+            ConfigFile = new MmcConfigFile(Path.Combine(Location, "instance.cfg"));
+            ConfigFile.Load();
         }
 
         public MmcMinecraftInstance(string id, string name, string icon, string mcversion) {

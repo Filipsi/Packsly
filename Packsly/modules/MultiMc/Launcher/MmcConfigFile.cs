@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Packsly.MultiMc.Launcher {
 
-    public class MmcConfigFile : DataPairFile<MmcConfigFile> {
+    public class MmcConfigFile : DataPairFile {
 
         #region Constructor
 
@@ -36,7 +36,7 @@ namespace Packsly.MultiMc.Launcher {
 
         #region IO
 
-        public override MmcConfigFile Load() {
+        public override void Load() {
             using(StreamReader reader = _file.OpenText())
                 while(!reader.EndOfStream) {
                     string line = reader.ReadLine();
@@ -46,13 +46,11 @@ namespace Packsly.MultiMc.Launcher {
                     string[] parts = line.Split(new char[] { '=' }, 2);
                     _data.Add(parts[0], parts[1]);
                 }
-
-            return this;
         }
 
-        public override MmcConfigFile Save() {
+        public override void Save() {
             if(!IsDirty)
-                return this;
+                return;
 
             string directoryPath = Path.GetDirectoryName(Location);
             if(!Directory.Exists(directoryPath))
@@ -67,8 +65,6 @@ namespace Packsly.MultiMc.Launcher {
                 byte[] raw = Encoding.UTF8.GetBytes(builder.ToString());
                 writer.Write(raw, 0, raw.Length);
             }
-
-            return this;
         }
 
         #endregion

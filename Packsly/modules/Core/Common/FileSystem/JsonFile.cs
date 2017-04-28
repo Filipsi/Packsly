@@ -9,32 +9,26 @@ using System.Threading.Tasks;
 namespace Packsly.Core.Common.FileSystem {
 
     [JsonObject(MemberSerialization.OptIn)]
-    public abstract class JsonFile<T> : FileBase<T> {
+    public abstract class JsonFile : FileInfoWrapper {
 
         #region Constructor
 
-        public JsonFile(string location) : base(location) {
+        public JsonFile(string path) : base(path) {
         }
 
         #endregion
 
         #region IO
 
-        public override T Load() {
-            if(!_file.Exists)
-                return (T) Convert.ChangeType(this, typeof(T));
-
-            using(StreamReader reader = _file.OpenText())
-                JsonConvert.PopulateObject(reader.ReadToEnd(), this);
-
-            return (T) Convert.ChangeType(this, typeof(T));
+        public override void Load() {
+            if(_file.Exists)
+                using(StreamReader reader = _file.OpenText())
+                    JsonConvert.PopulateObject(reader.ReadToEnd(), this);
         }
 
-        public override T Save() {
+        public override void Save() {
             using(StreamWriter writer = _file.CreateText())
                 writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
-
-            return (T) Convert.ChangeType(this, typeof(T));
         }
 
         #endregion

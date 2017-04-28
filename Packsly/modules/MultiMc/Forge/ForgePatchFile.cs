@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Packsly.MultiMc.Forge {
 
-    public class ForgePatchFile : JsonFile<ForgePatchFile> {
+    public class ForgePatchFile : JsonFile {
 
         #region Properties
 

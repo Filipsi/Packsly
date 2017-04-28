@@ -2,14 +2,13 @@
 using Packsly.MultiMc.Forge;
 using Packsly.MultiMc.Launcher;
 using System;
-using Packsly.Core.Common.Registry;
-using Packsly.Core.Common.Factory;
 using Packsly.Core.Modpack;
 using Packsly.Core.Forge;
 using Newtonsoft.Json;
 using System.IO;
 using System.Text;
 using Packsly.Core.Modpack.Provider;
+using Packsly.Core.Common;
 
 namespace Packsly.Cli {
 
@@ -33,7 +32,8 @@ namespace Packsly.Cli {
 
             // Create MinecraftInstance from source
             // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
-            // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
+            CreateTestJson();
+            PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
 
             Console.ReadKey();
         }
@@ -45,9 +45,10 @@ namespace Packsly.Cli {
             );
 
             mi.AddTweaks(new ForgeAdapterContext("1.11.2-13.20.0.2284"));
+            mi.AddOverrides(string.Empty, @"config\jei\jei.cfg");
 
             string raw = JsonConvert.SerializeObject(mi, Formatting.Indented);
-            using(FileStream writer = File.OpenWrite("modpack-testxy.json")) {
+            using(FileStream writer = File.Open("modpack-testxy.json", FileMode.Create)) {
                 byte[] buffer = Encoding.UTF8.GetBytes(raw);
                 writer.Write(buffer, 0, buffer.Length);
             }

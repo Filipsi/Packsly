@@ -44,9 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\Factory\IFactory.cs" />
-    <Compile Include="Common\Factory\PackslyFactory.cs" />
-    <Compile Include="Common\Registry\PackslyManager.cs" />
+    <Compile Include="Common\FileSystem\FileInfoWrapper.cs" />
+    <Compile Include="Common\Model\IFactory.cs" />
+    <Compile Include="Common\PackslyFactory.cs" />
+    <Compile Include="Common\PackslyManager.cs" />
     <Compile Include="Common\Registry\IRegistry.cs" />
     <Compile Include="Common\Registry\SingleTypeRegistry.cs" />
     <Compile Include="Forge\ForgeAdapter.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="Tweaker\AdapterRegistry.cs" />
     <Compile Include="Common\JsonConverters\DirectoryInfoConverter.cs" />
     <Compile Include="Common\FileSystem\DataPairFile.cs" />
-    <Compile Include="Common\FileSystem\FileBase.cs" />
     <Compile Include="Launcher\IMinecraftInstance.cs" />
     <Compile Include="Forge\ForgeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,7 +1,7 @@
 ﻿using Packsly.Core.Modpack;
 using Packsly.Core.Launcher;
 
-namespace Packsly.Core.Common.Factory {
+namespace Packsly.Core.Common {
 
     public static class PackslyFactory {
 

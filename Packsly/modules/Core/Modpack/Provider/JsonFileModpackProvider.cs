@@ -1,4 +1,5 @@
-﻿using Packsly.Core.Common.Factory;
+﻿using Packsly.Core.Common;
+using Packsly.Core.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;

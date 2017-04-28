@@ -33,7 +33,7 @@ namespace Packsly.Core.Modpack {
         public List<IExecutionContext> Tweaks { private set; get; } = new List<IExecutionContext>();
 
         [JsonProperty("overrideSource", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string OverrideSource { private set; get; }
+        public string OverrideSource { private set; get; } = string.Empty;
 
         [JsonProperty("overrides", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string[] OverrideFiles { private set; get; }

@@ -1,10 +1,9 @@
-﻿using Packsly.Core.Common.Factory;
+﻿using Packsly.Core.Common.Registry;
 using Packsly.Core.Launcher;
-using Packsly.Core.Modpack;
 using Packsly.Core.Modpack.Provider;
 using Packsly.Core.Tweaker;
 
-namespace Packsly.Core.Common.Registry {
+namespace Packsly.Core.Common {
 
     public static class PackslyRegistry {
 

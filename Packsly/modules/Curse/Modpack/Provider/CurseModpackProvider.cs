@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Zip;
 using Packsly.Core.Modpack.Provider;
 
-namespace Packsly.Curse.Content {
+namespace Packsly.Curse.Content.Provider {
 
     public class CurseModpackProvider : IModpackProvider {
 
@@ -38,7 +38,7 @@ namespace Packsly.Curse.Content {
            
             DownloadModpack(pattenMatch.Groups[1] + relativeDownloadUrl, modpackId);
 
-            CurseModpackManifestFile manifest = new CurseModpackManifestFile(Path.Combine(Temp.FullName, "manifest.json")).Load();
+            CurseModpackManifestFile manifest = new CurseModpackManifestFile(Path.Combine(Temp.FullName, "manifest.json"));
 
             ModpackInfo modpack = new ModpackInfo(
                 modpackId,
@@ -46,7 +46,7 @@ namespace Packsly.Curse.Content {
                 project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),
                 manifest.MinecraftVersion,
                 manifest.Version,
-                manifest.GetMods()
+                manifest.BuildModInfo()
             );
 
             if(manifest.ForgeVersion != null)

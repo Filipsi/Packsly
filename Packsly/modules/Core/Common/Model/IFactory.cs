@@ -1,4 +1,4 @@
-﻿namespace Packsly.Core.Common.Factory {
+﻿namespace Packsly.Core.Common.Model {
 
     public interface IFactory<T, S> {
 

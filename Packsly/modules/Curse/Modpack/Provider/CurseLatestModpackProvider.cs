@@ -1,12 +1,12 @@
 ﻿using HtmlAgilityPack;
-using Packsly.Core.Common.Factory;
+using Packsly.Core.Common;
 using Packsly.Core.Modpack;
 using Packsly.Core.Modpack.Provider;
 using System;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace Packsly.Curse.Content {
+namespace Packsly.Curse.Content.Provider {
 
     public class CurseLatestModpackProvider : IModpackProvider {
 

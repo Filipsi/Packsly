@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Packsly.Core.Common.FileSystem {
     
-    public abstract class DataPairFile<T> : FileBase<T>{
+    public abstract class DataPairFile : FileInfoWrapper {
 
         #region Properties
 
@@ -19,13 +19,13 @@ namespace Packsly.Core.Common.FileSystem {
 
         #region Constructor
 
-        public DataPairFile(string location) : base(location) {
+        public DataPairFile(string path) : base(path) {
             _data = new Dictionary<string, string>();
         }
 
         #endregion
 
-        #region Interaction
+        #region Logic
 
         protected void MarkDirty() {
             IsDirty = true;
@@ -36,23 +36,19 @@ namespace Packsly.Core.Common.FileSystem {
         }
 
         public string Get(string key) {
-            if(HasKey(key)) {
+            if(HasKey(key))
                 return _data[key];
-            }
 
             throw new Exception($"'{key}' key does not exist");
         }
 
-        public T Set(string key, string value) {
-            if(HasKey(key) && _data[key] != value) {
+        public void Set(string key, string value) {
+            if(HasKey(key) && _data[key] != value)
                 _data[key] = value;
-                MarkDirty();
-                return (T) Convert.ChangeType(this, typeof(T));
-            }
+            else 
+                _data.Add(key, value);
 
-            _data.Add(key, value);
             MarkDirty();
-            return (T) Convert.ChangeType(this, typeof(T));
         }
 
         #endregion

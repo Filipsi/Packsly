@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Packsly.Curse.Content {
 
-    public class CurseModpackManifestFile : JsonFile<CurseModpackManifestFile> {
+    public class CurseModpackManifestFile : JsonFile {
 
         #region Properties
 
@@ -38,13 +38,14 @@ namespace Packsly.Curse.Content {
         #region Constructors
 
         public CurseModpackManifestFile(string location) : base(location) {
+            Load();
         }
 
         #endregion
 
         #region JsonFile
 
-        public override CurseModpackManifestFile Load() {
+        public override void Load() {
             string raw = string.Empty;
 
             using(StreamReader reader = _file.OpenText())
@@ -59,17 +60,12 @@ namespace Packsly.Curse.Content {
             sbyte version = root.Value<sbyte>("manifestVersion");
 
             switch(version) {
-                case 1:
-                    parseVersion1(root);
-                    break;
-                default:
-                    throw new Exception($"Unexpected manifest version {version}");
+                case 1: ParseVersion1(root); break;
+                default: throw new Exception($"Unexpected manifest version {version}");
             }
-
-            return this;
         }
 
-        public override CurseModpackManifestFile Save() {
+        public override void Save() {
             throw new NotImplementedException();
         }
 
@@ -77,7 +73,7 @@ namespace Packsly.Curse.Content {
 
         #region Versions
 
-        private void parseVersion1(JObject root) {
+        private void ParseVersion1(JObject root) {
             Name = root.Value<string>("name");
             Version = root.Value<string>("version");
             Author = root.Value<string>("author");
@@ -104,7 +100,7 @@ namespace Packsly.Curse.Content {
 
         #region Utils
 
-        public ModInfo[] GetMods() {
+        public ModInfo[] BuildModInfo() {
             ModInfo[] mods = new ModInfo[Files.Length];
 
             for(ushort i = 0; i < mods.Length; i++)

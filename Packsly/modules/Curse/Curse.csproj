@@ -52,9 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Modpack\CurseLatestModpackProvider.cs" />
+    <Compile Include="Modpack\Provider\CurseLatestModpackProvider.cs" />
     <Compile Include="Modpack\CurseModpackManifestFile.cs" />
-    <Compile Include="Modpack\CurseModpackProvider.cs" />
+    <Compile Include="Modpack\Provider\CurseModpackProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
