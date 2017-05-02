@@ -1,6 +1,5 @@
 ﻿using Packsly.Core.Common;
 using Packsly.Core.Common.Configuration;
-using Packsly.Core.Common.Model;
 using Packsly.Core.Common.Registry;
 using Packsly.Core.Modpack;
 using System;
@@ -8,7 +7,7 @@ using System.Linq;
 
 namespace Packsly.Core.Launcher {
 
-    public class MinecraftInstanceFactory : SingleTypeRegistry<ILauncherSchema>, IFactory<IMinecraftInstance, string> {
+    public class MinecraftInstanceFactory : SingleTypeRegistry<ILauncherSchema> {
 
         public ILauncherSchema CurrentLauncher {
             get {

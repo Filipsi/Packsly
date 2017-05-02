@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Packsly.MultiMc.Forge {
 
-    public class MmcForgeTweak : ForgeAdapter<MmcMinecraftInstance> {
+    public class MmcForgeAdapter : ForgeAdapter<MmcMinecraftInstance> {
 
         protected override void Execute(MmcMinecraftInstance instance, ForgeAdapterContext args) {
             string version = args.Version;

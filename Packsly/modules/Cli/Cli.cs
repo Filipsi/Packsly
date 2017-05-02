@@ -9,6 +9,7 @@ using System.IO;
 using System.Text;
 using Packsly.Core.Modpack.Provider;
 using Packsly.Core.Common;
+using Packsly.Curse.Content.Provider;
 
 namespace Packsly.Cli {
 
@@ -19,6 +20,7 @@ namespace Packsly.Cli {
             // IModpackProvider creates Modpack instance from string source
             PackslyRegistry.Register(new JsonFileModpackProvider());
             PackslyRegistry.Register(new JsonModpackProvider());
+            PackslyRegistry.Register(new JsonUrlModpackProvider());
             PackslyRegistry.Register(new CurseLatestModpackProvider());
             PackslyRegistry.Register(new CurseModpackProvider());
 
@@ -28,12 +30,14 @@ namespace Packsly.Cli {
 
             // Register modules
             // IModule applies arbitrary changes to provided IMinecraftInstance
-            PackslyRegistry.Register(new MmcForgeTweak());
+            PackslyRegistry.Register(new MmcForgeAdapter());
 
             // Create MinecraftInstance from source
             // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
-            CreateTestJson();
-            PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
+            // CreateTestJson();
+            // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
+
+            PackslyFactory.MinecraftInstance.BuildFrom("https://pastebin.com/raw/GcgxsWd6");
 
             Console.ReadKey();
         }

@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Forge\ForgePatchFile.cs" />
-    <Compile Include="Forge\MmcForgeTweak.cs" />
+    <Compile Include="Forge\MmcForgeAdapter.cs" />
     <Compile Include="Launcher\MmcConfigFile.cs" />
     <Compile Include="Launcher\MmcMinecraftInstance.cs" />
     <Compile Include="Launcher\MmcLauncherSchema.cs" />

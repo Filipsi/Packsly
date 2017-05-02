@@ -1,18 +1,12 @@
 ﻿using Packsly.Core.Common;
-using Packsly.Core.Common.Model;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Packsly.Core.Modpack.Provider {
 
     public class JsonFileModpackProvider : IModpackProvider {
 
         public bool CanUseSource(string source) {
-            return File.Exists(source) && source.Contains(".json");
+            return File.Exists(source) && source.EndsWith(".json");
         }
 
         public ModpackInfo Create(string source) {
