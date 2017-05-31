@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Packsly.Curse.Content.Provider {
 
-    public class CurseLatestModpackProvider : IModpackProvider {
+    public class LatestCurseModpackProvider : IModpackProvider {
 
         private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/(\w+)$");
 

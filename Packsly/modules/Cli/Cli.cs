@@ -16,14 +16,13 @@ namespace Packsly.Cli {
     class Cli {
 
         static void Main(string[] args) {
-            
 
             // Register modpack providers
             // IModpackProvider creates Modpack instance from string source
-            PackslyRegistry.Register(new JsonFileModpackProvider());
             PackslyRegistry.Register(new JsonModpackProvider());
-            PackslyRegistry.Register(new JsonUrlModpackProvider());
-            PackslyRegistry.Register(new CurseLatestModpackProvider());
+            PackslyRegistry.Register(new JsonFileModpackProvider());
+            PackslyRegistry.Register(new PastebinModpackProvider());
+            PackslyRegistry.Register(new LatestCurseModpackProvider());
             PackslyRegistry.Register(new CurseModpackProvider());
 
             // Register launcher schemas
@@ -35,9 +34,9 @@ namespace Packsly.Cli {
             PackslyRegistry.Register(new MmcForgeAdapter());
 
             // Create MinecraftInstance from source
-            // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
             // CreateTestJson();
-            PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
+            // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
+            // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
 
             Console.ReadKey();
         }
@@ -51,11 +50,7 @@ namespace Packsly.Cli {
             mi.AddTweaks(new ForgeAdapterContext("1.11.2-13.20.0.2284"));
             mi.AddOverrides(string.Empty, @"config\jei\jei.cfg");
 
-            string raw = JsonConvert.SerializeObject(mi, Formatting.Indented);
-            using(FileStream writer = File.Open("modpack-testxy.json", FileMode.Create)) {
-                byte[] buffer = Encoding.UTF8.GetBytes(raw);
-                writer.Write(buffer, 0, buffer.Length);
-            }
+            mi.Save(Path.Combine(Directory.GetCurrentDirectory(), "modpack-testxy.json"));
         }
 
     }

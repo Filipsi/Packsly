@@ -26,7 +26,6 @@ namespace Packsly.Curse.Content.Provider {
 
         public ModpackInfo Create(string source) {
             HtmlDocument page = new HtmlDocument();
-
             using(WebClient client = new WebClient())
                 page.LoadHtml(client.DownloadString(source));
 

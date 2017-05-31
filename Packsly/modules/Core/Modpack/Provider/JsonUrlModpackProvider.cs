@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Packsly.Core.Modpack.Provider {
 
-    public class JsonUrlModpackProvider : IModpackProvider {
+    public class PastebinModpackProvider : IModpackProvider {
 
         private static Regex _pattenPastebin = new Regex(@"\w+:\/\/pastebin.com\/.+");
 

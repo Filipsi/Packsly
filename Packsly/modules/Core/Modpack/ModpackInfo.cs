@@ -4,6 +4,7 @@ using Packsly.Core.Launcher;
 using Packsly.Core.Tweaker;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Packsly.Core.Modpack {
 
@@ -97,6 +98,16 @@ namespace Packsly.Core.Modpack {
             }
 
             return this;
+        }
+
+        #endregion
+
+        #region IO
+
+        public void Save(string path) {
+            byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this, Formatting.Indented));
+            using(FileStream writer = File.Open(path, FileMode.Create))
+                writer.Write(buffer, 0, buffer.Length);
         }
 
         #endregion
