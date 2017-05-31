@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
 
-namespace Packsly.Core.Modpack {
+namespace Packsly.Core.Modpack.Model {
 
     [JsonObject(MemberSerialization.OptIn)]
     public class ModInfo {

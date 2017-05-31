@@ -52,11 +52,12 @@
     <Compile Include="Forge\ForgeAdapter.cs" />
     <Compile Include="Common\Configuration\Settings.cs" />
     <Compile Include="Forge\ForgeAdapterContext.cs" />
+    <Compile Include="Modpack\ModpackBuilder.cs" />
     <Compile Include="Modpack\Provider\IModpackProvider.cs" />
     <Compile Include="Modpack\Provider\JsonFileModpackProvider.cs" />
     <Compile Include="Modpack\Provider\JsonModpackProvider.cs" />
-    <Compile Include="Modpack\ModInfo.cs" />
-    <Compile Include="Modpack\ModpackInfo.cs" />
+    <Compile Include="Modpack\Model\ModInfo.cs" />
+    <Compile Include="Modpack\Model\ModpackInfo.cs" />
     <Compile Include="Modpack\ModpackFactory.cs" />
     <Compile Include="Launcher\ILauncherSchema.cs" />
     <Compile Include="Launcher\MinecraftInstanceFactory.cs" />

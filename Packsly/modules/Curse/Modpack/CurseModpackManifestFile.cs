@@ -5,6 +5,7 @@ using Packsly.Core.Common.FileSystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Packsly.Core.Modpack.Model;
 
 namespace Packsly.Curse.Content {
 

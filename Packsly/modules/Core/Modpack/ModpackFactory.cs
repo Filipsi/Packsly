@@ -1,10 +1,11 @@
 ﻿using Packsly.Core.Common.Registry;
+using Packsly.Core.Modpack.Model;
 using Packsly.Core.Modpack.Provider;
 using System;
 
 namespace Packsly.Core.Modpack {
 
-    public class ModpackFactory : SingleTypeRegistry<IModpackProvider>{
+    public class ModpackFactory : SingleTypeRegistry<IModpackProvider> {
 
         public ModpackInfo BuildFrom(string source) {
             IModpackProvider provider = modules.Find(m => m.CanUseSource(source));
@@ -16,5 +17,4 @@ namespace Packsly.Core.Modpack {
         }
 
     }
-
 }

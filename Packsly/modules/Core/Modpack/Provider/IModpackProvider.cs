@@ -1,4 +1,6 @@
-﻿namespace Packsly.Core.Modpack.Provider {
+﻿using Packsly.Core.Modpack.Model;
+
+namespace Packsly.Core.Modpack.Provider {
 
     public interface IModpackProvider {
 

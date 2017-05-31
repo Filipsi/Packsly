@@ -2,6 +2,7 @@
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Common.Registry;
 using Packsly.Core.Modpack;
+using Packsly.Core.Modpack.Model;
 using System;
 using System.Linq;
 

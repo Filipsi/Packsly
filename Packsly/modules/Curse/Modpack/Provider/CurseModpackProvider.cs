@@ -9,6 +9,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Zip;
 using Packsly.Core.Modpack.Provider;
+using Packsly.Core.Modpack.Model;
 
 namespace Packsly.Curse.Content.Provider {
 
@@ -39,25 +40,26 @@ namespace Packsly.Curse.Content.Provider {
 
             CurseModpackManifestFile manifest = new CurseModpackManifestFile(Path.Combine(Temp.FullName, "manifest.json"));
 
-            ModpackInfo modpack = new ModpackInfo(
-                modpackId,
-                manifest.Name,
-                project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),
-                manifest.MinecraftVersion,
-                manifest.Version,
-                manifest.BuildModInfo()
-            );
+            ModpackBuilder builder = ModpackBuilder
+                .Create(
+                    modpackId,
+                    manifest.Name,
+                    project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),
+                    manifest.MinecraftVersion)
+                .WithVersion(manifest.Version);
 
             if(manifest.ForgeVersion != null)
-                modpack.AddTweaks(new ForgeAdapterContext(manifest.ForgeVersion));
+                builder.WithAdapters(new ForgeAdapterContext(manifest.ForgeVersion));
 
             if(manifest.Overrides != null) {
                 string overrideSource = Path.Combine(Temp.FullName, manifest.Overrides);
                 string[] overrides = Directory.GetFiles(overrideSource, "*", SearchOption.AllDirectories);
-                if(overrides.Length > 0) modpack.AddOverrides(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray());
+
+                if(overrides.Length > 0)
+                    builder.WithOverridesFrom(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray());
             }
 
-            return modpack;
+            return builder.Build();
         }
 
         #endregion

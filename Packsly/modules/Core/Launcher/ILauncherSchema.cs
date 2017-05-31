@@ -1,4 +1,5 @@
 ﻿using Packsly.Core.Modpack;
+using Packsly.Core.Modpack.Model;
 using System.IO;
 
 namespace Packsly.Core.Launcher {

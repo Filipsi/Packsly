@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Packsly.Core.Common;
 using Packsly.Core.Modpack;
+using Packsly.Core.Modpack.Model;
 using Packsly.Core.Modpack.Provider;
 using System;
 using System.Net;

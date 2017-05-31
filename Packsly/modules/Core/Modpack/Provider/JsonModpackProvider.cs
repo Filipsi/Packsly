@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Packsly.Core.Modpack.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

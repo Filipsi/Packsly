@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Packsly.Core.Modpack;
 using System.IO;
 using Packsly.Core.Common.Configuration;
+using Packsly.Core.Modpack.Model;
+using Packsly.Core.Tweaker;
 
 namespace Packsly.MultiMc.Launcher {
 
@@ -36,12 +38,27 @@ namespace Packsly.MultiMc.Launcher {
 
             instance.Save();
 
+            // Paths
             string mcInstnacePath = Path.Combine(instance.Location, "minecraft");
             string mcModsPath = Path.Combine(mcInstnacePath, "mods");
-            modpack.DownloadMods(mcModsPath);
-            modpack.ExecuteTweaks(instance);
-            modpack.ApplyOverrides(mcInstnacePath);
 
+            // Download mods
+            foreach(ModInfo mod in modpack.Mods)
+                mod.Download(mcModsPath);
+
+            // Execute adapters
+            foreach(IExecutionContext args in modpack.Adapters)
+                AdapterRegistry.Execute(instance, args);
+
+            // Apply overrides
+            if(modpack.OverrideFiles != null)
+                foreach(string file in modpack.OverrideFiles) {
+                    string destination = Path.Combine(mcModsPath, file.Replace(Settings.Instance.Temp.FullName + @"\", string.Empty));
+                    Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                    File.Copy(Path.Combine(modpack.OverrideSource, file), destination);
+                }
+
+            // Remove temp directory
             DirectoryInfo Temp = Settings.Instance.Temp;
             if(Temp.Exists)
                 Temp.Delete(true);

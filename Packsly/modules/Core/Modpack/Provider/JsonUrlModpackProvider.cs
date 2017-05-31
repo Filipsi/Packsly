@@ -1,4 +1,5 @@
 ﻿using Packsly.Core.Common;
+using Packsly.Core.Modpack.Model;
 using System;
 using System.Net;
 using System.Text.RegularExpressions;
