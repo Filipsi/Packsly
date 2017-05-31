@@ -13,11 +13,14 @@ namespace Packsly.Core.Common.JsonConverters {
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-            return new DirectoryInfo(JToken.Load(reader).Value<string>());
+            string path = JToken.Load(reader).Value<string>();
+            return new DirectoryInfo(path.StartsWith(@".\") ? Path.Combine(Directory.GetCurrentDirectory(), path.Remove(0, 2)) : path);
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-            new JValue((value as DirectoryInfo).FullName).WriteTo(writer);
+            string workspace = Directory.GetCurrentDirectory();
+            string path = (value as DirectoryInfo).FullName;
+            new JValue(path.StartsWith(workspace) ? "." + path.Remove(0, workspace.Length) : path).WriteTo(writer);
         }
 
     }

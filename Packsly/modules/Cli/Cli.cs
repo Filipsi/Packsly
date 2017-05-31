@@ -16,6 +16,8 @@ namespace Packsly.Cli {
     class Cli {
 
         static void Main(string[] args) {
+            
+
             // Register modpack providers
             // IModpackProvider creates Modpack instance from string source
             PackslyRegistry.Register(new JsonFileModpackProvider());
@@ -29,15 +31,13 @@ namespace Packsly.Cli {
             PackslyRegistry.Register(new MmcLauncherSchema());
 
             // Register modules
-            // IModule applies arbitrary changes to provided IMinecraftInstance
+            // Adapter applies arbitrary changes to provided IMinecraftInstance
             PackslyRegistry.Register(new MmcForgeAdapter());
 
             // Create MinecraftInstance from source
             // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
             // CreateTestJson();
-            // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
-
-            PackslyFactory.MinecraftInstance.BuildFrom("https://pastebin.com/raw/GcgxsWd6");
+            PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
 
             Console.ReadKey();
         }

@@ -28,7 +28,10 @@ namespace Packsly.Core.Common.Configuration {
         #region Constructor
 
         private Settings(string filename = "config.json") : base(filename) {
-            Load();
+            if(_file.Exists)
+                Load();
+            else
+                Save();
         }
 
         #endregion
