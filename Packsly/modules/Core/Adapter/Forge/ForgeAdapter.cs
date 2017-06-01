@@ -1,10 +1,10 @@
-﻿using Packsly.Core.Tweaker;
+﻿using Packsly.Core.Adapter;
 using System.IO;
 using System.Net;
 using Packsly.Core.Launcher;
 using Packsly.Core.Common.Configuration;
 
-namespace Packsly.Core.Forge {
+namespace Packsly.Core.Adapter.Forge {
 
     public abstract class ForgeAdapter<T> : Adapter<T, ForgeAdapterContext> where T : IMinecraftInstance {
 

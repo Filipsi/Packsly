@@ -31,6 +31,8 @@ namespace Packsly.Curse.Content {
         [JsonProperty("files")]
         public string[] Files { private set; get; }
 
+        public ModInfo[] Mods { private set; get; }
+
         [JsonProperty("overrides")]
         public string Overrides { private set; get; }
 
@@ -64,6 +66,10 @@ namespace Packsly.Curse.Content {
                 case 1: ParseVersion1(root); break;
                 default: throw new Exception($"Unexpected manifest version {version}");
             }
+
+            Mods = new ModInfo[Files.Length];
+            for(ushort i = 0; i < Files.Length; i++)
+                Mods[i] = new ModInfo(string.Format("http://minecraft.curseforge.com/{0}/download", Files[i]));
         }
 
         public override void Save() {
@@ -95,21 +101,6 @@ namespace Packsly.Curse.Content {
             Files = files.ToArray();
 
             Overrides = root.Value<string>("overrides");
-        }
-
-        #endregion
-
-        #region Utils
-
-        public ModInfo[] BuildModInfo() {
-            ModInfo[] mods = new ModInfo[Files.Length];
-
-            for(ushort i = 0; i < mods.Length; i++)
-                mods[i] = new ModInfo(
-                    string.Format("http://minecraft.curseforge.com/{0}/download", Files[i])
-                );
-
-            return mods;
         }
 
         #endregion

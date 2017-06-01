@@ -1,7 +1,7 @@
 ﻿using Packsly.Core.Launcher;
 using System;
 
-namespace Packsly.Core.Tweaker {
+namespace Packsly.Core.Adapter {
 
     public abstract class Adapter {
 
@@ -9,11 +9,11 @@ namespace Packsly.Core.Tweaker {
 
         internal abstract Type ExecutionContextType { get; }
 
-        public abstract void Execute(IMinecraftInstance instance, IExecutionContext context);
+        public abstract void Execute(IMinecraftInstance instance, IAdapterContext context);
 
     }
 
-    public abstract class Adapter<I, C> : Adapter where I : IMinecraftInstance where C : IExecutionContext {
+    public abstract class Adapter<I, C> : Adapter where I : IMinecraftInstance where C : IAdapterContext {
 
         #region Logic
 
@@ -29,7 +29,7 @@ namespace Packsly.Core.Tweaker {
             }
         }
 
-        public override void Execute(IMinecraftInstance instance, IExecutionContext context) {
+        public override void Execute(IMinecraftInstance instance, IAdapterContext context) {
             Execute((I)instance, (C)context);
         }
 

@@ -1,7 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Modpack;
-using Packsly.Core.Forge;
+using Packsly.Core.Adapter.Forge;
 using System;
 using System.IO;
 using System.Linq;
@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Zip;
 using Packsly.Core.Modpack.Provider;
 using Packsly.Core.Modpack.Model;
+using Packsly.Core.Adapter.Override;
 
 namespace Packsly.Curse.Content.Provider {
 
@@ -26,39 +27,47 @@ namespace Packsly.Curse.Content.Provider {
         }
 
         public ModpackInfo Create(string source) {
+            // Get website
             HtmlDocument page = new HtmlDocument();
             using(WebClient client = new WebClient())
                 page.LoadHtml(client.DownloadString(source));
 
+            // Main node
             HtmlNode project = page.DocumentNode.SelectSingleNode("//div[contains(@class, 'project-user')]");
 
+            // Obtain info
             Match pattenMatch = _patten.Match(source);
             string modpackId = pattenMatch.Groups[2].ToString();
             string relativeDownloadUrl = page.DocumentNode.SelectSingleNode("//div[contains(@class, 'project-file-download-button-large')]/a").GetAttributeValue("href", string.Empty);
            
+            // Process modpack manifest
             DownloadModpack(pattenMatch.Groups[1] + relativeDownloadUrl, modpackId);
-
             CurseModpackManifestFile manifest = new CurseModpackManifestFile(Path.Combine(Temp.FullName, "manifest.json"));
 
+            // Build modpack from manifest
             ModpackBuilder builder = ModpackBuilder
                 .Create(
                     modpackId,
                     manifest.Name,
                     project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),
                     manifest.MinecraftVersion)
-                .WithVersion(manifest.Version);
+                .WithVersion(manifest.Version)
+                .WithMods(manifest.Mods);
 
+            // Add forge if needed
             if(manifest.ForgeVersion != null)
                 builder.WithAdapters(new ForgeAdapterContext(manifest.ForgeVersion));
 
+            // Override files if needed 
             if(manifest.Overrides != null) {
                 string overrideSource = Path.Combine(Temp.FullName, manifest.Overrides);
                 string[] overrides = Directory.GetFiles(overrideSource, "*", SearchOption.AllDirectories);
 
                 if(overrides.Length > 0)
-                    builder.WithOverridesFrom(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray());
+                    builder.WithAdapters(new OverrideAdapterContext(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray()));
             }
 
+            // Build the modpack
             return builder.Build();
         }
 

@@ -8,7 +8,7 @@ using Packsly.Core.Modpack;
 using System.IO;
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Modpack.Model;
-using Packsly.Core.Tweaker;
+using Packsly.Core.Adapter;
 
 namespace Packsly.MultiMc.Launcher {
 
@@ -47,16 +47,8 @@ namespace Packsly.MultiMc.Launcher {
                 mod.Download(mcModsPath);
 
             // Execute adapters
-            foreach(IExecutionContext args in modpack.Adapters)
+            foreach(IAdapterContext args in modpack.Adapters)
                 AdapterRegistry.Execute(instance, args);
-
-            // Apply overrides
-            if(modpack.OverrideFiles != null)
-                foreach(string file in modpack.OverrideFiles) {
-                    string destination = Path.Combine(mcModsPath, file.Replace(Settings.Instance.Temp.FullName + @"\", string.Empty));
-                    Directory.CreateDirectory(Path.GetDirectoryName(destination));
-                    File.Copy(Path.Combine(modpack.OverrideSource, file), destination);
-                }
 
             // Remove temp directory
             DirectoryInfo Temp = Settings.Instance.Temp;

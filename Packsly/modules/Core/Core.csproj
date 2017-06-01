@@ -44,14 +44,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapter\Override\OverrideAdapter.cs" />
+    <Compile Include="Adapter\Override\OverrideAdapterContext.cs" />
     <Compile Include="Common\FileSystem\FileInfoWrapper.cs" />
     <Compile Include="Common\PackslyFactory.cs" />
     <Compile Include="Common\PackslyManager.cs" />
     <Compile Include="Common\Registry\IRegistry.cs" />
     <Compile Include="Common\Registry\SingleTypeRegistry.cs" />
-    <Compile Include="Forge\ForgeAdapter.cs" />
+    <Compile Include="Adapter\Forge\ForgeAdapter.cs" />
     <Compile Include="Common\Configuration\Settings.cs" />
-    <Compile Include="Forge\ForgeAdapterContext.cs" />
+    <Compile Include="Adapter\Forge\ForgeAdapterContext.cs" />
     <Compile Include="Modpack\ModpackBuilder.cs" />
     <Compile Include="Modpack\Provider\IModpackProvider.cs" />
     <Compile Include="Modpack\Provider\JsonFileModpackProvider.cs" />
@@ -62,13 +64,13 @@
     <Compile Include="Launcher\ILauncherSchema.cs" />
     <Compile Include="Launcher\MinecraftInstanceFactory.cs" />
     <Compile Include="Modpack\Provider\JsonUrlModpackProvider.cs" />
-    <Compile Include="Tweaker\IExecutionContext.cs" />
-    <Compile Include="Tweaker\Adapter.cs" />
-    <Compile Include="Tweaker\AdapterRegistry.cs" />
+    <Compile Include="Adapter\IAdapterContext.cs" />
+    <Compile Include="Adapter\Adapter.cs" />
+    <Compile Include="Adapter\AdapterRegistry.cs" />
     <Compile Include="Common\JsonConverters\DirectoryInfoConverter.cs" />
     <Compile Include="Common\FileSystem\DataPairFile.cs" />
     <Compile Include="Launcher\IMinecraftInstance.cs" />
-    <Compile Include="Forge\ForgeLibrary.cs" />
+    <Compile Include="Adapter\Forge\ForgeLibrary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

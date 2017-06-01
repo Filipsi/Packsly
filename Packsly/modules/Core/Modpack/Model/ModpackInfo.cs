@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Packsly.Core.Common.Configuration;
 using Packsly.Core.Launcher;
-using Packsly.Core.Tweaker;
+using Packsly.Core.Adapter;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -30,14 +30,8 @@ namespace Packsly.Core.Modpack.Model {
         [JsonProperty("mods")]
         public ModInfo[] Mods { internal set; get; }
 
-        [JsonProperty("tweaks", ItemTypeNameHandling = TypeNameHandling.All, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public List<IExecutionContext> Adapters { internal set; get; } = new List<IExecutionContext>();
-
-        [JsonProperty("overrideSource", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string OverrideSource { internal set; get; } = string.Empty;
-
-        [JsonProperty("overrides", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string[] OverrideFiles { internal set; get; }
+        [JsonProperty("adapters", ItemTypeNameHandling = TypeNameHandling.All, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public List<IAdapterContext> Adapters { internal set; get; } = new List<IAdapterContext>();
 
         #endregion
 

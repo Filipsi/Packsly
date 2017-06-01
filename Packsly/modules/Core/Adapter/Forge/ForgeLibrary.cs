@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Packsly.Core.Forge {
+namespace Packsly.Core.Adapter.Forge {
 
     [JsonObject(MemberSerialization.OptIn)]
     public class ForgeLibrary {

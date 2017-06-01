@@ -1,12 +1,12 @@
 ﻿using Ionic.Zip;
 using Newtonsoft.Json.Linq;
 using Packsly.Core.Common.Configuration;
-using Packsly.Core.Forge;
+using Packsly.Core.Adapter.Forge;
 using Packsly.MultiMc.Launcher;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Packsly.MultiMc.Forge {
+namespace Packsly.MultiMc.Adapter.Forge {
 
     public class MmcForgeAdapter : ForgeAdapter<MmcMinecraftInstance> {
 

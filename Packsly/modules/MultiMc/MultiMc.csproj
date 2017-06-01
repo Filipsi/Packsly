@@ -48,8 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forge\ForgePatchFile.cs" />
-    <Compile Include="Forge\MmcForgeAdapter.cs" />
+    <Compile Include="Adapter\Forge\ForgePatchFile.cs" />
+    <Compile Include="Adapter\Forge\MmcForgeAdapter.cs" />
     <Compile Include="Launcher\MmcConfigFile.cs" />
     <Compile Include="Launcher\MmcMinecraftInstance.cs" />
     <Compile Include="Launcher\MmcLauncherSchema.cs" />

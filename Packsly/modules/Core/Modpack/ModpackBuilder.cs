@@ -1,5 +1,5 @@
 ﻿using Packsly.Core.Modpack.Model;
-using Packsly.Core.Tweaker;
+using Packsly.Core.Adapter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,16 +48,8 @@ namespace Packsly.Core.Modpack {
             return this;
         }
 
-        public ModpackBuilder WithAdapters(params IExecutionContext[] adapters) {
+        public ModpackBuilder WithAdapters(params IAdapterContext[] adapters) {
             _intance.Adapters.AddRange(adapters);
-            return this;
-        }
-
-        public ModpackBuilder WithOverridesFrom(string source, params string[] files) {
-            if(!string.IsNullOrEmpty(source))
-                _intance.OverrideSource = source;
-
-            _intance.OverrideFiles = files;
             return this;
         }
 

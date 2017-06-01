@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
-using Packsly.Core.Tweaker;
+using Packsly.Core.Adapter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Packsly.Core.Forge {
+namespace Packsly.Core.Adapter.Forge {
 
-    public class ForgeAdapterContext : IExecutionContext {
+    public class ForgeAdapterContext : IAdapterContext {
 
         [JsonProperty("version")]
         public string Version { private set; get; }

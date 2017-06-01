@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
+using Packsly.Core.Adapter.Forge;
 using Packsly.Core.Common.FileSystem;
-using Packsly.Core.Forge;
 using System.IO;
 
-namespace Packsly.MultiMc.Forge {
+namespace Packsly.MultiMc.Adapter.Forge {
 
     public class ForgePatchFile : JsonFile {
 
