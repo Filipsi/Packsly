@@ -34,9 +34,9 @@ namespace Packsly.Cli {
             PackslyRegistry.Register(new MmcForgeAdapter());
 
             // Create MinecraftInstance from source
-            //CreateTestJson();
+            // CreateTestJson();
             // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
-            PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
+            // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
 
             Console.ReadKey();
         }
@@ -44,15 +44,12 @@ namespace Packsly.Cli {
         static void CreateTestJson() {
             ModpackBuilder
                 .Create("TestXY", "iron", "1.11.2")
-                .WithMods(
+                .AddMods(
                     "https://minecraft.curseforge.com/projects/just-enough-items-jei/files/2408687/download",
                     "https://minecraft.curseforge.com/projects/iron-chests/files/2389224/download")
-                .WithAdapters(
-                    new ForgeAdapterContext("1.11.2-13.20.0.2284"),
-                    new OverrideAdapterContext(string.Empty, @"config\jei\jei.cfg")
-                )
+                .AddForge("1.11.2-13.20.0.2284")
                 .Build()
-                .Save(Path.Combine(Directory.GetCurrentDirectory(), "modpack-testxy.json"));
+                .Save("modpack-testxy.json");
         }
 
     }

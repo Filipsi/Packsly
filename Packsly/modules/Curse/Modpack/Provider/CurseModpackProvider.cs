@@ -51,12 +51,12 @@ namespace Packsly.Curse.Content.Provider {
                     manifest.Name,
                     project.SelectSingleNode("//a[contains(@class, 'e-avatar64')]").GetAttributeValue("href", string.Empty),
                     manifest.MinecraftVersion)
-                .WithVersion(manifest.Version)
-                .WithMods(manifest.Mods);
+                .SetVersion(manifest.Version)
+                .AddMods(manifest.Mods);
 
             // Add forge if needed
             if(manifest.ForgeVersion != null)
-                builder.WithAdapters(new ForgeAdapterContext(manifest.ForgeVersion));
+                builder.AddForge(manifest.ForgeVersion);
 
             // Override files if needed 
             if(manifest.Overrides != null) {
@@ -64,7 +64,7 @@ namespace Packsly.Curse.Content.Provider {
                 string[] overrides = Directory.GetFiles(overrideSource, "*", SearchOption.AllDirectories);
 
                 if(overrides.Length > 0)
-                    builder.WithAdapters(new OverrideAdapterContext(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray()));
+                    builder.AddOverrides(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray());
             }
 
             // Build the modpack
