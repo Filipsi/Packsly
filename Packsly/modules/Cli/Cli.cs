@@ -9,6 +9,8 @@ using Packsly.Core.Common;
 using Packsly.Curse.Content.Provider;
 using Packsly.MultiMc.Adapter.Forge;
 using Packsly.Core.Adapter.Override;
+using Packsly.Core.Adapter.Update;
+using Packsly.Core.Common.Configuration;
 
 namespace Packsly.Cli {
 
@@ -32,11 +34,14 @@ namespace Packsly.Cli {
             // Adapter applies arbitrary changes to provided IMinecraftInstance
             PackslyRegistry.Register(new OverrideAdapter());
             PackslyRegistry.Register(new MmcForgeAdapter());
+            PackslyRegistry.Register(new UpdateAdapter());
 
             // Create MinecraftInstance from source
             // CreateTestJson();
             // PackslyFactory.MinecraftInstance.BuildFrom("modpack-testxy.json");
             // PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/invasion");
+            PackslyFactory.MinecraftInstance.BuildFrom("https://minecraft.curseforge.com/projects/little-modded");
+            //var a = PackslyFactory.MinecraftInstance.BuildFrom(Path.Combine(Settings.Instance.Launcher.FullName, @"instances\invasion\instance.packsly.json"));
 
             Console.ReadKey();
         }

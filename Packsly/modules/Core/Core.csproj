@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Adapter\Override\OverrideAdapter.cs" />
     <Compile Include="Adapter\Override\OverrideAdapterContext.cs" />
+    <Compile Include="Adapter\Update\UpdateAdapter.cs" />
+    <Compile Include="Adapter\Update\UpdateAdapterContext.cs" />
     <Compile Include="Common\FileSystem\FileInfoWrapper.cs" />
     <Compile Include="Common\PackslyFactory.cs" />
     <Compile Include="Common\PackslyManager.cs" />

@@ -8,17 +8,23 @@ namespace Packsly.Core.Common.FileSystem {
 
         public string Location {
             get {
-                return _file.FullName;
+                return File.FullName;
             }
         }
 
         public string FileName {
             get {
-                return _file.Name; 
+                return File.Name; 
             }
         }
 
-        protected readonly FileInfo _file;
+        public FileInfo File {
+            get {
+                return _file;
+            }
+        }
+
+        protected FileInfo _file;
 
         #endregion
 
@@ -37,8 +43,8 @@ namespace Packsly.Core.Common.FileSystem {
         public abstract void Save();
 
         public void Delete() {
-            if(_file.Exists)
-                _file.Delete();
+            if(File.Exists)
+                File.Delete();
         }
 
         #endregion

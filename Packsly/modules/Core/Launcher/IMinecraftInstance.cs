@@ -4,11 +4,13 @@
 
         string Id               { get; }
 
-        string Name             { get; }
+        string Name             { set; get; }
 
         string Location         { get; }
 
         string MinecraftVersion { get; }
+
+        string Icon             { set; get; }
 
         void Save();
 

@@ -12,18 +12,18 @@ namespace Packsly.Core.Modpack {
 
     public class ModpackBuilder {
 
-        private ModpackInfo _intance = new ModpackInfo();
-        private List<ModInfo> _mods = new List<ModInfo>();
+        internal readonly ModpackInfo Instace = new ModpackInfo();
+        private readonly List<ModInfo> _mods = new List<ModInfo>();
 
         private ModpackBuilder() {
         }
 
         public static ModpackBuilder Create(string id, string name, string icon, string mcVersion) {
             ModpackBuilder builder = new ModpackBuilder();
-            builder._intance.Id = id;
-            builder._intance.Name = name;
-            builder._intance.Icon = icon;
-            builder._intance.MinecraftVersion = mcVersion;
+            builder.Instace.Id = id;
+            builder.Instace.Name = name;
+            builder.Instace.Icon = icon;
+            builder.Instace.MinecraftVersion = mcVersion;
             return builder;
         }
 
@@ -32,7 +32,7 @@ namespace Packsly.Core.Modpack {
         }
 
         public ModpackBuilder SetVersion(string version) {
-            _intance.Version = version;
+            Instace.Version = version;
             return this;
         }
 
@@ -51,28 +51,28 @@ namespace Packsly.Core.Modpack {
         }
 
         public ModpackBuilder AddAdapters(params IAdapterContext[] adapters) {
-            _intance.Adapters.AddRange(adapters);
+            Instace.Adapters.AddRange(adapters);
             return this;
         }
 
         public ModpackBuilder AddForge(string version) {
-            _intance.Adapters.Add(new ForgeAdapterContext(version));
+            Instace.Adapters.Add(new ForgeAdapterContext(version));
             return this;
         }
 
         public ModpackBuilder AddOverrides(params string[] overrides) {
-            _intance.Adapters.Add(new OverrideAdapterContext(overrides));
+            Instace.Adapters.Add(new OverrideAdapterContext(overrides));
             return this;
         }
 
         public ModpackBuilder AddOverrides(string source, params string[] overrides) {
-            _intance.Adapters.Add(new OverrideAdapterContext(source, overrides));
+            Instace.Adapters.Add(new OverrideAdapterContext(source, overrides));
             return this;
         }
 
         public ModpackInfo Build() {
-            _intance.Mods = _mods.ToArray();
-            return _intance;
+            Instace.Mods = _mods.ToArray();
+            return Instace;
         }
 
     }

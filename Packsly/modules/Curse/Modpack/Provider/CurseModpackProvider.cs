@@ -11,12 +11,13 @@ using ICSharpCode.SharpZipLib.Zip;
 using Packsly.Core.Modpack.Provider;
 using Packsly.Core.Modpack.Model;
 using Packsly.Core.Adapter.Override;
+using Packsly.Core.Adapter.Update;
 
 namespace Packsly.Curse.Content.Provider {
 
     public class CurseModpackProvider : IModpackProvider {
 
-        private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/(\w+)\/files\/\d+$");
+        private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/([^\/]+)\/files\/\d+$");
 
         private readonly DirectoryInfo Temp = Settings.Instance.Temp;
 
@@ -66,6 +67,9 @@ namespace Packsly.Curse.Content.Provider {
                 if(overrides.Length > 0)
                     builder.AddOverrides(overrideSource, overrides.Select(f => f.Replace(overrideSource + @"\", string.Empty)).ToArray());
             }
+
+            // Add update adapter
+            builder.AddAdapters(new UpdateAdapterContext(builder, source));
 
             // Build the modpack
             return builder.Build();

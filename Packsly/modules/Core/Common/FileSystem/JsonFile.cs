@@ -21,13 +21,13 @@ namespace Packsly.Core.Common.FileSystem {
         #region IO
 
         public override void Load() {
-            if(_file.Exists)
-                using(StreamReader reader = _file.OpenText())
+            if(File.Exists)
+                using(StreamReader reader = File.OpenText())
                     JsonConvert.PopulateObject(reader.ReadToEnd(), this);
         }
 
         public override void Save() {
-            using(StreamWriter writer = _file.CreateText())
+            using(StreamWriter writer = File.CreateText())
                 writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
         }
 

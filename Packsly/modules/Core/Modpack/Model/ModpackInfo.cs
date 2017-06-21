@@ -5,11 +5,12 @@ using Packsly.Core.Adapter;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Packsly.Core.Common.FileSystem;
 
 namespace Packsly.Core.Modpack.Model {
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class ModpackInfo {
+    public class ModpackInfo : JsonFile {
 
         #region Properties
 
@@ -37,23 +38,29 @@ namespace Packsly.Core.Modpack.Model {
 
         #region Constructors
 
-        internal ModpackInfo() {
+        internal ModpackInfo() : base(string.Empty) {
         }
 
-        [JsonConstructor]
-        private ModpackInfo(string name) {
-            Id = name.ToLower();
-            Name = name;
+        internal ModpackInfo(string path) : base(path) {
         }
 
         #endregion
 
         #region IO
 
-        public void Save(string path) {
-            byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this, Formatting.Indented));
-            using(FileStream writer = File.Open(path, FileMode.Create))
+        public override void Save() {
+            byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects }));
+            using(FileStream writer = File.Open(FileMode.Create))
                 writer.Write(buffer, 0, buffer.Length);
+        }
+
+        public override void Load() {
+            if(File.Exists) {
+                using(StreamReader reader = File.OpenText())
+                    JsonConvert.PopulateObject(reader.ReadToEnd(), this);
+                Id = Name.ToLower();
+            }
+
         }
 
         #endregion

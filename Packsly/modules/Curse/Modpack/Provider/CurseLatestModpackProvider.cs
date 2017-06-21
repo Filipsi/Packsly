@@ -11,7 +11,7 @@ namespace Packsly.Curse.Content.Provider {
 
     public class LatestCurseModpackProvider : IModpackProvider {
 
-        private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/(\w+)$");
+        private static Regex _patten = new Regex(@"(\w+:\/\/minecraft.curseforge.com)\/projects\/([^\/]+)$");
 
         #region IModpackProvider
 

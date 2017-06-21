@@ -2,7 +2,7 @@
 
 namespace Packsly.Core.Adapter {
 
-    [JsonObject(MemberSerialization = MemberSerialization.Fields)]
+    [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public interface IAdapterContext {
 
     }

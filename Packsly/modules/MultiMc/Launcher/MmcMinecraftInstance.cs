@@ -18,6 +18,9 @@ namespace Packsly.MultiMc.Launcher {
         }
 
         public string Name {
+            set {
+                ConfigFile.Set("name", value);
+            }
             get {
                 return ConfigFile.Get("name");
             }
@@ -36,7 +39,7 @@ namespace Packsly.MultiMc.Launcher {
         }
 
         public string Icon {
-            private set {
+            set {
                 SetIcon(value);
             }
             get {
