@@ -33,10 +33,13 @@ namespace Packsly.Core.Adapter.Forge {
         #region Cache
 
         protected string GetCachedForge(string version) {
+            if(!Cache.Exists)
+                Cache.Create();
+
             return Path.Combine(Cache.FullName, string.Format(ForgeUniversalFormat, version));
         }
 
-        protected bool isForgeCached(string version) {
+        protected bool IsForgeCached(string version) {
             return File.Exists(GetCachedForge(version));
         }
 

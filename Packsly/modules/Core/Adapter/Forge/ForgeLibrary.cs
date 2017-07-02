@@ -39,6 +39,7 @@ namespace Packsly.Core.Adapter.Forge {
             JToken client = root.GetValue("clientreq");
             JToken server = root.GetValue("serverreq");
 
+            // TODO: Fix this
             if(root.GetValue("checksums") != null)
                 lib.MmcHint = "forge-pack-xz";
 

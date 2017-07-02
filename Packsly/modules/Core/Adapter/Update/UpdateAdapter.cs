@@ -15,12 +15,13 @@ namespace Packsly.Core.Adapter.Update {
     public class UpdateAdapter : Adapter<IMinecraftInstance, UpdateAdapterContext> {
 
         protected override void Execute(IMinecraftInstance instance, UpdateAdapterContext context) {
-            ModpackInfo oldModpack = new ModpackInfo(Path.Combine(instance.Location, "instance.packsly.json"));
+            ModpackInfo oldModpack = new ModpackInfo();
+            string location = Path.Combine(instance.Location, "instance.packsly.json");
 
             // If there is no modpack file, create it and stop update procedure
             // This is probably when modpack is installed
-            if(!oldModpack.File.Exists) {
-                oldModpack.Save();
+            if(!File.Exists(location)) {
+                oldModpack.Save(location);
                 return;
             }
 

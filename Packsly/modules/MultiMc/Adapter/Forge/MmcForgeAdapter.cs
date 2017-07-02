@@ -14,7 +14,7 @@ namespace Packsly.MultiMc.Adapter.Forge {
             string version = args.Version;
 
             // Download Forge if needed
-            if(!isForgeCached(version))
+            if(!IsForgeCached(version))
                 DownloadForgeUniversal(args.Url, version);
 
             // Copy Forge to MultiMC libs if missing

@@ -25,7 +25,12 @@ namespace Packsly.MultiMc.Launcher {
         }
 
         public string[] GetInstances(DirectoryInfo location) {
-            return Directory.EnumerateDirectories(Path.Combine(location.FullName, "instances")).ToArray();
+            string instancesFolder = Path.Combine(location.FullName, "instances");
+
+            if(!Directory.Exists(instancesFolder))
+                Directory.CreateDirectory(instancesFolder);
+
+            return Directory.EnumerateDirectories(instancesFolder).ToArray();
         }
 
         public IMinecraftInstance Create(ModpackInfo modpack) {

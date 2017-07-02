@@ -24,6 +24,8 @@ namespace Packsly.Core.Modpack.Model {
         public ModInfo Download(string path) {
             string location = Url;
 
+            Console.WriteLine($"Downloading {Url}...");
+
             do {
                 HttpWebRequest client = WebRequest.Create(location) as HttpWebRequest;
                 client.AllowAutoRedirect = false;
@@ -50,6 +52,8 @@ namespace Packsly.Core.Modpack.Model {
                     }
                 } catch {
                     // TODO: Log this
+                    Console.WriteLine($"Error has occured while downloading {Url}...");
+                    return this;
                 }
             } while(location != null);
 

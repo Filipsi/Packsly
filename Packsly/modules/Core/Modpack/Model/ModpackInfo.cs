@@ -10,7 +10,7 @@ using Packsly.Core.Common.FileSystem;
 namespace Packsly.Core.Modpack.Model {
 
     [JsonObject(MemberSerialization.OptIn)]
-    public class ModpackInfo : JsonFile {
+    public class ModpackInfo {
 
         #region Properties
 
@@ -38,29 +38,26 @@ namespace Packsly.Core.Modpack.Model {
 
         #region Constructors
 
-        internal ModpackInfo() : base(string.Empty) {
-        }
+        internal ModpackInfo() {
 
-        internal ModpackInfo(string path) : base(path) {
         }
 
         #endregion
 
         #region IO
 
-        public override void Save() {
+        public void Save(string path) {
             byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects }));
-            using(FileStream writer = File.Open(FileMode.Create))
+            using(FileStream writer = File.Open(path, FileMode.Create))
                 writer.Write(buffer, 0, buffer.Length);
         }
 
-        public override void Load() {
-            if(File.Exists) {
-                using(StreamReader reader = File.OpenText())
+        public void Load(string path) {
+            if(File.Exists(path)) {
+                using(StreamReader reader = File.OpenText(path))
                     JsonConvert.PopulateObject(reader.ReadToEnd(), this);
                 Id = Name.ToLower();
             }
-
         }
 
         #endregion

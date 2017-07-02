@@ -69,7 +69,7 @@ namespace Packsly.Curse.Content.Provider {
             }
 
             // Add update adapter
-            builder.AddAdapters(new UpdateAdapterContext(builder, source));
+            builder.AddAdapters(new UpdateAdapterContext(source));
 
             // Build the modpack
             return builder.Build();

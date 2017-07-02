@@ -87,7 +87,11 @@ namespace Packsly.MultiMc.Launcher {
 
                 if(Uri.IsWellFormedUriString(value, UriKind.Absolute)) {
                     name = patten.Match(value).Groups[1].ToString();
-                    string iconPath = Path.Combine(Settings.Instance.Launcher.FullName, "icons", name + ".png");
+                    string iconsDirectory = Path.Combine(Settings.Instance.Launcher.FullName, "icons");
+                    string iconPath = Path.Combine(iconsDirectory, name + ".png");
+
+                    if(!Directory.Exists(iconsDirectory))
+                        Directory.CreateDirectory(iconsDirectory);
 
                     if(!File.Exists(iconPath))
                         using(WebClient client = new WebClient())
