@@ -46,18 +46,22 @@ namespace Packsly.Core.Modpack.Model {
 
         #region IO
 
-        public void Save(string path) {
+        public ModpackInfo Save(string path) {
             byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { PreserveReferencesHandling = PreserveReferencesHandling.Objects }));
             using(FileStream writer = File.Open(path, FileMode.Create))
                 writer.Write(buffer, 0, buffer.Length);
+
+            return this;
         }
 
-        public void Load(string path) {
+        public ModpackInfo Load(string path) {
             if(File.Exists(path)) {
                 using(StreamReader reader = File.OpenText(path))
                     JsonConvert.PopulateObject(reader.ReadToEnd(), this);
                 Id = Name.ToLower();
             }
+
+            return this;
         }
 
         #endregion

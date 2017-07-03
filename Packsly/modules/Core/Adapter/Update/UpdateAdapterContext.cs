@@ -14,8 +14,11 @@ namespace Packsly.Core.Adapter.Update {
         [JsonProperty(PropertyName = "source")]
         public readonly string UpdateSource;
 
-        public UpdateAdapterContext(string source) {
+        internal readonly ModpackInfo Modpack;
+
+        public UpdateAdapterContext(string source, ModpackBuilder builder) {
             UpdateSource = source;
+            Modpack = builder.Instace;
         }
 
     }

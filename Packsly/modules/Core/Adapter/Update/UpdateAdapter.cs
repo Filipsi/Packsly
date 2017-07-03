@@ -15,20 +15,23 @@ namespace Packsly.Core.Adapter.Update {
     public class UpdateAdapter : Adapter<IMinecraftInstance, UpdateAdapterContext> {
 
         protected override void Execute(IMinecraftInstance instance, UpdateAdapterContext context) {
-            ModpackInfo oldModpack = new ModpackInfo();
+
+            if(string.IsNullOrEmpty(context.UpdateSource))
+                return;
+
             string location = Path.Combine(instance.Location, "instance.packsly.json");
 
             // If there is no modpack file, create it and stop update procedure
             // This is probably when modpack is installed
             if(!File.Exists(location)) {
-                oldModpack.Save(location);
+                if(context.Modpack == null)
+                    throw new Exception($"Packsly file 'instance.packsly.json' is missing in {instance.Name} instace.");
+
+                context.Modpack.Save(location);
                 return;
             }
 
-            if(string.IsNullOrEmpty(context.UpdateSource))
-                return;
-
-            // Build new ModpackInfo from context and compare it to the saved file
+            ModpackInfo oldModpack = new ModpackInfo().Load(location);
             ModpackInfo sourceModpack = PackslyFactory.Modpack.BuildFrom(context.UpdateSource);
 
             // Update instance icon
