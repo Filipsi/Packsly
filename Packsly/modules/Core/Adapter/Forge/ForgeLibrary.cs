@@ -35,12 +35,10 @@ namespace Packsly.Core.Adapter.Forge {
 
         public static ForgeLibrary FromJson(JObject root) {
             ForgeLibrary lib = new ForgeLibrary();
+            JToken clientreq = root.GetValue("clientreq");
+            JToken serverreq = root.GetValue("serverreq");
 
-            JToken client = root.GetValue("clientreq");
-            JToken server = root.GetValue("serverreq");
-
-            // TODO: Fix this
-            if(root.GetValue("checksums") != null)
+            if(root.GetValue("checksums") != null && clientreq != null && clientreq.Value<bool>() && serverreq != null && serverreq.Value<bool>())
                 lib.MmcHint = "forge-pack-xz";
 
             string name = root.Value<string>("name");
