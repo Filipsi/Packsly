@@ -1,0 +1,22 @@
+{
+  "name": "tuttest",
+  "instanceType": "OneSix",
+  "minecraftVersion": "1.12.2",
+  "forgeVersion": "14.23.4.2705",
+  "mcLaunchMethod": "LauncherPart",
+  "preLaunchCommand": null,
+  "postExitCommand": null,
+  "wrapperCommand": null,
+  "autoCloseConsole": false,
+  "showConsole": false,
+  "showConsoleOnError": false,
+  "javaArguments": "-XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+UseNUMA -XX:+CMSParallelRemarkEnabled -XX:MaxTenuringThreshold=15 -XX:MaxGCPauseMillis=30 -XX:GCPauseIntervalMillis=150 -XX:+UseAdaptiveGCBoundary -XX:-UseGCOverheadLimit -XX:+UseBiasedLocking -XX:SurvivorRatio=8 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=15 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -XX:+UseFastAccessorMethods -XX:+UseCompressedOops -XX:+OptimizeStringConcat -XX:+AggressiveOpts -XX:ReservedCodeCacheSize=2048m -XX:+UseCodeCacheFlushing -XX:SoftRefLRUPolicyMSPerMB=2000 -XX:ParallelGCThreads=10",
+  "javaPath": null,
+  "maxMemoryAllocation": 3072,
+  "minMemoryAllocation": 0,
+  "launchMaximized": false,
+  "windowHeight": 0,
+  "windowWidth": 0,
+  "icon": "tnt",
+  "notes": ""
+}
