@@ -1,9 +1,0 @@
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\obj\Debug\Packsly3.Core.csproj.CoreCompileInputs.cache
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\bin\Debug\Packsly3.Core.dll
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\bin\Debug\Packsly3.Core.pdb
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\obj\Debug\Packsly3.Core.dll
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\obj\Debug\Packsly3.Core.pdb
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\bin\Debug\Newtonsoft.Json.dll
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\bin\Debug\Newtonsoft.Json.xml
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\obj\Debug\Packsly3.Core.csproj.CopyComplete
-C:\Users\Filipsi\source\repos\Packsly3\Packsly3.Core\obj\Debug\Packsly3.Core.csprojResolveAssemblyReference.cache
