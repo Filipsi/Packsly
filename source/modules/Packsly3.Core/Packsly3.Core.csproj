@@ -43,6 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystem\PackslyInstanceFile.cs" />
+    <Compile Include="Launcher\Adapter\AdapterHandler.cs" />
+    <Compile Include="Launcher\Adapter\IAdapter.cs" />
+    <Compile Include="Launcher\Adapter\Impl\RevisionUpdateSchema.cs" />
+    <Compile Include="Launcher\Instance\Lifecycle.cs" />
+    <Compile Include="Launcher\Instance\LifecycleDispatcher.cs" />
     <Compile Include="Launcher\Instance\EnvironmentVariables.cs" />
     <Compile Include="Launcher\Instance\Icon.cs" />
     <Compile Include="Modpack\ModSource.cs" />

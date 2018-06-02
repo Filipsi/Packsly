@@ -38,17 +38,16 @@ namespace Packsly3.Cli {
             LauncherEnvironment.Workspace = new DirectoryInfo("D:\\Games\\MultiMC");
 
             Console.WriteLine("Detecting environment...");
-            try {
+
                 Console.WriteLine($" > Current handler: {LauncherEnvironment.Current}");
                 Console.WriteLine(string.Empty);
-                IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(Path.Combine(Directory.GetCurrentDirectory(), "modpack.json"));
-            }
-            catch (Exception ex) {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write("Exception: ");
-                Console.ResetColor();
-                Console.WriteLine(ex.Message);
-            }
+
+                IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(
+                    new FileInfo(
+                        Path.Combine(Directory.GetCurrentDirectory(), "modpack.json")
+                    )
+                );
+            
 
             Console.ReadKey();
 

@@ -12,73 +12,88 @@ namespace Packsly3.Core.Launcher.Instance {
 
     public static class MinecraftInstanceFactory {
 
-        public static IMinecraftInstance CreateFromModpack(string path) {
-            FileInfo file = new FileInfo(path);
-
-            if (!file.Exists) {
-                throw new FileNotFoundException($"File '{file.FullName}' does not exist!");
+        public static IMinecraftInstance CreateFromModpack(FileInfo modpackFile) {
+            if (!modpackFile.Exists) {
+                throw new FileNotFoundException($"File '{modpackFile.FullName}' does not exist!");
             }
 
-            using (StreamReader reader = file.OpenText()) {
-                ModpackDefinition modpackDefinition = JsonConvert.DeserializeObject<ModpackDefinition>(reader.ReadToEnd());
-                IMinecraftInstance instance = LauncherEnvironment.CreateInstance(Path.GetFileNameWithoutExtension(file.Name));
+            using (StreamReader reader = modpackFile.OpenText()) {
+                return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFile.FullName), reader.ReadToEnd());
+            }
+        }
 
-                // Instance properties
-                instance.Name = modpackDefinition.Name;
-                instance.MinecraftVersion = modpackDefinition.MinecraftVersion;
-                instance.Icon.Source = modpackDefinition.Icon;
+        public static IMinecraftInstance CreateFromModpack(Uri modpackFileUrl) {
+            using (WebClient client = new WebClient()) {
+                return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFileUrl.AbsolutePath), client.DownloadString(modpackFileUrl));
+            }
+        }
 
-                // Enviroments
-                foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
-                    string name = environmentEntry.Key;
-                    if (name != LauncherEnvironment.Current.Name)
-                        continue;
+        public static IMinecraftInstance CreateFromModpack(string instanceId, string modpackJson) {
+            ModpackDefinition modpackDefinition = JsonConvert.DeserializeObject<ModpackDefinition>(modpackJson);
+            IMinecraftInstance instance = LauncherEnvironment.CreateInstance(instanceId);
 
-                    string config = environmentEntry.Value.ToString();
-                    instance.Configure(config);
-                }
+            // Instance properties
+            instance.Name = modpackDefinition.Name;
+            instance.MinecraftVersion = modpackDefinition.MinecraftVersion;
+            instance.Icon.Source = modpackDefinition.Icon;
 
-                instance.Save();
+            // Save used adapters with configuration
+            foreach (KeyValuePair<string, object> adapterDefinition in modpackDefinition.Adapters) {
+                string adapterName = adapterDefinition.Key;
+                object adapterSettings = adapterDefinition.Value;
 
-                // Install or update modloaders
-                foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
-                    string name = modloaderEntry.Key;
-                    string version = modloaderEntry.Value;
+                instance.PackslyConfig.SetAdapterConfig(adapterName, adapterSettings);
+                instance.PackslyConfig.Save();
+            }
 
-                    instance.ModLoaderManager.Install(name, version);
-                }
+            // Enviroments
+            foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
+                string name = environmentEntry.Key;
+                if (name != LauncherEnvironment.Current.Name)
+                    continue;
 
-                // Remove unused modloaders
-                IEnumerable<ModLoader> oldModLoaders =
-                    instance.ModLoaderManager.ModLoaders.Where(ml => !modpackDefinition.ModLoaders.ContainsKey(ml.Name));
-                foreach (ModLoader modLoader in oldModLoaders)
-                    modLoader.Uninstall();
+                string config = environmentEntry.Value.ToString();
+                instance.Configure(config);
+            }
 
-                EnvironmentVariables instanceVariables = new EnvironmentVariables(instance);
+            instance.Save();
 
-                // Download mods
-                using (WebClient client = new WebClient()) {
-                    foreach (ModSource modSource in modpackDefinition.Mods) {
-                        DirectoryInfo envModPath =  new DirectoryInfo(instanceVariables.Format(modSource.FilePath));
-                        Console.WriteLine($"Downloading mod '{modSource.FileName}' to '{envModPath.FullName}'...");
+            // Install or update modloaders
+            foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
+                string name = modloaderEntry.Key;
+                string version = modloaderEntry.Value;
 
-                        if (!envModPath.Exists) {
-                            envModPath.Create();
+                instance.ModLoaderManager.Install(name, version);
+            }
+
+            // Remove unused modloaders
+            IEnumerable<ModLoader> oldModLoaders =
+                instance.ModLoaderManager.ModLoaders.Where(ml => !modpackDefinition.ModLoaders.ContainsKey(ml.Name));
+            foreach (ModLoader modLoader in oldModLoaders)
+                modLoader.Uninstall();
+
+            // Download mods
+            using (WebClient client = new WebClient()) {
+                foreach (ModSource modSource in modpackDefinition.Mods) {
+                    DirectoryInfo envModPath =  new DirectoryInfo(instance.EnvironmentVariables.Format(modSource.FilePath));
+                    Console.WriteLine($"Downloading mod '{modSource.FileName}' to '{envModPath.FullName}'...");
+
+                    if (!envModPath.Exists) {
+                        envModPath.Create();
+                    }
+
+                    client.DownloadFile(modSource.Url, Path.Combine(envModPath.FullName, modSource.FileName));
+
+                    // Download mod resources
+                    foreach (RemoteResource resource in modSource.Resources) {
+                        DirectoryInfo envResPath = new DirectoryInfo(instance.EnvironmentVariables.Format(resource.FilePath));
+                        Console.WriteLine($" > Downloading resource '{resource.FileName}' to '{envResPath.FullName}'...");
+
+                        if (!envResPath.Exists) {
+                            envResPath.Create();
                         }
 
-                        client.DownloadFile(modSource.Url, Path.Combine(envModPath.FullName, modSource.FileName));
-
-                        // Download mod resources
-                        foreach (RemoteResource resource in modSource.Resources) {
-                            DirectoryInfo envResPath = new DirectoryInfo(instanceVariables.Format(resource.FilePath));
-                            Console.WriteLine($" > Downloading resource '{resource.FileName}' to '{envResPath.FullName}'...");
-
-                            if (!envResPath.Exists) {
-                                envResPath.Create();
-                            }
-
-                            client.DownloadFile(resource.Url, Path.Combine(envResPath.FullName, resource.FileName));
-                        }
+                        client.DownloadFile(resource.Url, Path.Combine(envResPath.FullName, resource.FileName));
                     }
                 }
 

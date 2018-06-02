@@ -18,8 +18,8 @@ namespace Packsly3.Core.Modpack {
         [JsonProperty("icon")]
         public string Icon { private set; get; }
 
-        [JsonProperty("revision")]
-        public int Revision { private set; get; }
+        [JsonProperty("adapters")]
+        public Dictionary<string, object> Adapters { private set; get; } = new Dictionary<string, object>();
 
         [JsonProperty("modloader")]
         public Dictionary<string, string> ModLoaders { private set; get; } = new Dictionary<string, string>();
