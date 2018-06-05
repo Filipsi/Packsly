@@ -3,6 +3,8 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Packsly3.Core.Launcher;
+using Packsly3.Core.Launcher.Adapter;
+using Packsly3.Core.Launcher.Adapter.Impl;
 using Packsly3.Core.Launcher.Instance;
 using Packsly3.Core.Modpack;
 using Packsly3.MultiMC.Launcher;
@@ -38,16 +40,14 @@ namespace Packsly3.Cli {
             LauncherEnvironment.Workspace = new DirectoryInfo("D:\\Games\\MultiMC");
 
             Console.WriteLine("Detecting environment...");
+            Console.WriteLine($" > Current handler: {LauncherEnvironment.Current}");
+            Console.WriteLine(string.Empty);
 
-                Console.WriteLine($" > Current handler: {LauncherEnvironment.Current}");
-                Console.WriteLine(string.Empty);
-
-                IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(
-                    new FileInfo(
-                        Path.Combine(Directory.GetCurrentDirectory(), "modpack.json")
-                    )
-                );
-            
+            IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(
+                new FileInfo(
+                    Path.Combine(Directory.GetCurrentDirectory(), "modpack.json")
+                )
+            );
 
             Console.ReadKey();
 

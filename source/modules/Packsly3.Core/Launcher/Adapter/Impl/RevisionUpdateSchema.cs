@@ -1,28 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Packsly3.Core.Common;
-using Packsly3.Core.FileSystem;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher.Adapter.Impl {
 
-    public class RevisionUpdateSchema : ConfigurableAdapter<RevisionUpdateSchemaConfig> {
+    [Register]
+    public class RevisionUpdateSchema : Adapter<RevisionUpdateSchemaConfig> {
 
-        public override Lifecycle[] Triggers { get; } = {
-            Lifecycle.PostInstallation,
-            Lifecycle.PreLaunch
-        };
+        public override string Id { get; }
+            = "revisionBasedUpdater";
 
-        public override void Execute(Lifecycle trigger, RevisionUpdateSchemaConfig adapterConfig, IMinecraftInstance instance) {
-            // TODO
+        public override bool IsCompatible(IMinecraftInstance instance)
+            => true;
+
+        public override bool IsCompatible(string lifecycleEvent)
+            => lifecycleEvent == Lifecycle.PreLaunch;
+
+        public override void Execute(RevisionUpdateSchemaConfig config, string lifecycleEvent, IMinecraftInstance instance) {
+            throw new NotImplementedException();
         }
 
     }
@@ -34,7 +30,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
         public Uri UpdateUrl { private set; get; }
 
         [JsonProperty("revision")]
-        public int Revision { private set; get; } = 42;
+        public int Revision { private set; get; }
 
     }
 

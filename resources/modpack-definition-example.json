@@ -3,7 +3,7 @@
 	"minecraft": "1.12.2",
 	"icon": "http://mc.filipsi.net/pantone.png",
 	"adapters": {
-		"packsly3.core.launcher.adapter.impl.revisionupdateschema": {
+		"revisionBasedUpdater": {
 			"url": "http://mc.filipsi.net/modpack.json",
 			"revision": 1
 		}

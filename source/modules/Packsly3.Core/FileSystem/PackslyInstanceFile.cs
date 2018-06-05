@@ -15,26 +15,28 @@ namespace Packsly3.Core.FileSystem {
         internal Dictionary<string, object> AdaptersConfig { private set; get; } = new Dictionary<string, object>();
 
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
+            Load();
+        }
+
+        public sealed override void Load() {
+            base.Load();
         }
 
         internal object GetAdapterConfig(IAdapter adapter) {
-            string key = adapter.GetType().FullName?.ToLower();
-
-            if (key == null || !AdaptersConfig.ContainsKey(key)) {
+            if (adapter.Id == null || !AdaptersConfig.ContainsKey(adapter.Id)) {
                 return null;
             }
 
-            return AdaptersConfig[key];
+            return AdaptersConfig[adapter.Id];
         }
 
 
         internal void SetAdapterConfig(IAdapter adapter, object config)
-            => SetAdapterConfig(adapter.GetType().FullName?.ToLower(), config);
+            => SetAdapterConfig(adapter.Id, config);
 
         internal void SetAdapterConfig(string name, object config) {
             AdaptersConfig[name ?? throw new InvalidOperationException()] = config;
         }
-
 
     }
 

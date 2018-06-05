@@ -58,6 +58,8 @@ namespace Packsly3.Core.Launcher.Instance {
 
             instance.Save();
 
+            Lifecycle.LifecycleDispatcher.Dispatch(instance, Lifecycle.PreInstallation);
+
             // Install or update modloaders
             foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
                 string name = modloaderEntry.Key;
@@ -75,7 +77,8 @@ namespace Packsly3.Core.Launcher.Instance {
             // Download mods
             using (WebClient client = new WebClient()) {
                 foreach (ModSource modSource in modpackDefinition.Mods) {
-                    DirectoryInfo envModPath =  new DirectoryInfo(instance.EnvironmentVariables.Format(modSource.FilePath));
+                    DirectoryInfo envModPath =
+                        new DirectoryInfo(instance.EnvironmentVariables.Format(modSource.FilePath));
                     Console.WriteLine($"Downloading mod '{modSource.FileName}' to '{envModPath.FullName}'...");
 
                     if (!envModPath.Exists) {
@@ -86,8 +89,10 @@ namespace Packsly3.Core.Launcher.Instance {
 
                     // Download mod resources
                     foreach (RemoteResource resource in modSource.Resources) {
-                        DirectoryInfo envResPath = new DirectoryInfo(instance.EnvironmentVariables.Format(resource.FilePath));
-                        Console.WriteLine($" > Downloading resource '{resource.FileName}' to '{envResPath.FullName}'...");
+                        DirectoryInfo envResPath =
+                            new DirectoryInfo(instance.EnvironmentVariables.Format(resource.FilePath));
+                        Console.WriteLine(
+                            $" > Downloading resource '{resource.FileName}' to '{envResPath.FullName}'...");
 
                         if (!envResPath.Exists) {
                             envResPath.Create();
@@ -96,9 +101,11 @@ namespace Packsly3.Core.Launcher.Instance {
                         client.DownloadFile(resource.Url, Path.Combine(envResPath.FullName, resource.FileName));
                     }
                 }
-
-                return instance;
             }
+
+            Lifecycle.LifecycleDispatcher.Dispatch(instance, Lifecycle.PostInstallation);
+
+            return instance;
         }
 
     }

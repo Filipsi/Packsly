@@ -1,27 +1,44 @@
 ﻿using System;
+using System.Reflection;
+using Packsly3.Core.Launcher.Adapter;
 using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher.Instance {
 
-    public static class LifecycleDispatcher {
+    public static class Lifecycle {
 
-        public static EventHandler<LifecycleEventArgs> LifecycleChanged;
+        public static readonly string PreInstallation = "preinstallation";
 
-        public static void Dispatch(IMinecraftInstance instance, Lifecycle type)
-            => LifecycleChanged?.Invoke(null, new LifecycleEventArgs(instance, type));
+        public static readonly string PostInstallation = "postinstallation";
 
-    }
+        public static readonly string PreLaunch = "prelaunch";
 
-    public class LifecycleEventArgs : EventArgs {
+        public static readonly string PostExit = "postexit";
 
-        public readonly IMinecraftInstance Instance;
-        public readonly Lifecycle Type;
+        public class Changed : EventArgs {
 
-        public LifecycleEventArgs(IMinecraftInstance instance, Lifecycle type) {
-            Instance = instance;
-            Type = type;
+            public readonly IMinecraftInstance Instance;
+            public readonly string EventName;
+
+            protected internal Changed(IMinecraftInstance instance, string eventName) {
+                Instance = instance;
+                EventName = eventName;
+            }
+
         }
 
+        public static class LifecycleDispatcher {
+
+            public static EventHandler<Changed> LifecycleEvent;
+
+            static LifecycleDispatcher() {
+                LifecycleEvent += AdapterHandler.OnLifecycleChanged;
+            }
+
+            public static void Dispatch(IMinecraftInstance instance, string eventName)
+                => LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
+        }
     }
 
 }
+

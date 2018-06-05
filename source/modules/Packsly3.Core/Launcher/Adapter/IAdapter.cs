@@ -1,31 +1,45 @@
-﻿using System;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher.Adapter {
 
     public interface IAdapter {
 
-        Lifecycle[] Triggers { get; }
+        string Id { get; }
 
-        void Execute(Lifecycle trigger, IMinecraftInstance instance);
+        bool IsCompatible(IMinecraftInstance instance);
+
+        bool IsCompatible(string lifecycleEvent);
+
+        void Execute(JObject config, string lifecycleEvent, IMinecraftInstance instance);
 
     }
 
-    public abstract class ConfigurableAdapter<T> : IAdapter {
+    public abstract class Adapter<T> : IAdapter {
 
         #region IAdapter
 
-        public abstract Lifecycle[] Triggers { get; }
+        public abstract string Id { get; }
 
-        public void Execute(Lifecycle trigger, IMinecraftInstance instance)
-            => Execute(trigger, default(T), instance);
+        public abstract bool IsCompatible(IMinecraftInstance instance);
+
+        public abstract bool IsCompatible(string lifecycleEvent);
+
+        public void Execute(JObject config, string lifecycleEvent, IMinecraftInstance instance)
+            => Execute(config.ToObject<T>(), lifecycleEvent, instance);
 
         #endregion
 
-        public abstract void Execute(Lifecycle trigger, T adapterConfig, IMinecraftInstance instance);
+        public abstract void Execute(T config, string lifecycleEvent, IMinecraftInstance instance);
+
+    }
+
+    public abstract class InstanceAdapter<TC, TI> : Adapter<TC> {
+
+        public override bool IsCompatible(IMinecraftInstance instance)
+            => instance.GetType() == typeof(TI);
 
     }
 
 }
+
