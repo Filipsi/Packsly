@@ -9,8 +9,11 @@ namespace Packsly3.Core.Launcher.Instance {
     public class EnvironmentVariables {
 
         public static readonly string ModsFolder = "modsFolder";
+
         public static readonly string ConfigFolder = "configFolder";
+
         public static readonly string InstnaceFolder = "instanceFolder";
+
         public static readonly string MinecraftFolder = "minecraftFolder";
 
         private static readonly Regex PattenNamedParameter = new Regex("{([^}]+)}", RegexOptions.Compiled);
@@ -35,6 +38,10 @@ namespace Packsly3.Core.Launcher.Instance {
             if (!properties.ContainsKey(MinecraftFolder)) {
                 properties.Add(MinecraftFolder, Path.Combine(instance.Location.FullName, "minecraft"));
             }
+        }
+
+        public string GetProperty(string name) {
+            return Properties.ContainsKey(name) ? Properties[name] : string.Empty;
         }
 
         public string Format(string input) {

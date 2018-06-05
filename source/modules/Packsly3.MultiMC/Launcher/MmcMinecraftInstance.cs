@@ -66,7 +66,7 @@ namespace Packsly3.MultiMC.Launcher {
             Pack = new MmcPackFile(Location.FullName);
             Pack.Load();
 
-            Icon = new Icon(Path.Combine(LauncherEnvironment.Workspace.FullName, "icons"), Config.IconName);
+            Icon = new Icon(Path.Combine(Core.Launcher.Launcher.Workspace.FullName, "icons"), Config.IconName);
             Icon.IconChanged += (sender, args)
                 => Config.IconName = (sender as Icon)?.Source;
 

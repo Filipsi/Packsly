@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Packsly3.Core.Common;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Launcher {
 
-    public static class LauncherEnvironment {
+    public static class Launcher {
 
         private static readonly ILauncherEnvironment[] Enviroments =
             RegisterAttribute.GetOccurrencesFor<ILauncherEnvironment>();

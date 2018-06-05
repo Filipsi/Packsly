@@ -15,6 +15,10 @@ namespace Packsly3.Core.Launcher.Instance {
 
         public static readonly string PostExit = "postexit";
 
+        public static readonly string UpdateStarted = "updatestarted";
+
+        public static readonly string UpdateFinished = "updatefinished";
+
         public class Changed : EventArgs {
 
             public readonly IMinecraftInstance Instance;
@@ -27,15 +31,15 @@ namespace Packsly3.Core.Launcher.Instance {
 
         }
 
-        public static class LifecycleDispatcher {
+        public static class Dispatcher {
 
             public static EventHandler<Changed> LifecycleEvent;
 
-            static LifecycleDispatcher() {
+            static Dispatcher() {
                 LifecycleEvent += AdapterHandler.OnLifecycleChanged;
             }
 
-            public static void Dispatch(IMinecraftInstance instance, string eventName)
+            public static void Publish(IMinecraftInstance instance, string eventName)
                 => LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
         }
     }

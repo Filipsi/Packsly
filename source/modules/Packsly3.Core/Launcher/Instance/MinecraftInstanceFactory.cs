@@ -30,49 +30,17 @@ namespace Packsly3.Core.Launcher.Instance {
 
         public static IMinecraftInstance CreateFromModpack(string instanceId, string modpackJson) {
             ModpackDefinition modpackDefinition = JsonConvert.DeserializeObject<ModpackDefinition>(modpackJson);
-            IMinecraftInstance instance = LauncherEnvironment.CreateInstance(instanceId);
+            IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);
 
-            // Instance properties
-            instance.Name = modpackDefinition.Name;
-            instance.MinecraftVersion = modpackDefinition.MinecraftVersion;
-            instance.Icon.Source = modpackDefinition.Icon;
+            Lifecycle.Dispatcher.Publish(instance, Lifecycle.PreInstallation);
 
-            // Save used adapters with configuration
-            foreach (KeyValuePair<string, object> adapterDefinition in modpackDefinition.Adapters) {
-                string adapterName = adapterDefinition.Key;
-                object adapterSettings = adapterDefinition.Value;
-
-                instance.PackslyConfig.SetAdapterConfig(adapterName, adapterSettings);
-                instance.PackslyConfig.Save();
-            }
-
-            // Enviroments
-            foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
-                string name = environmentEntry.Key;
-                if (name != LauncherEnvironment.Current.Name)
-                    continue;
-
-                string config = environmentEntry.Value.ToString();
-                instance.Configure(config);
-            }
-
-            instance.Save();
-
-            Lifecycle.LifecycleDispatcher.Dispatch(instance, Lifecycle.PreInstallation);
-
-            // Install or update modloaders
+            // Install modloaders
             foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
                 string name = modloaderEntry.Key;
                 string version = modloaderEntry.Value;
 
                 instance.ModLoaderManager.Install(name, version);
             }
-
-            // Remove unused modloaders
-            IEnumerable<ModLoader> oldModLoaders =
-                instance.ModLoaderManager.ModLoaders.Where(ml => !modpackDefinition.ModLoaders.ContainsKey(ml.Name));
-            foreach (ModLoader modLoader in oldModLoaders)
-                modLoader.Uninstall();
 
             // Download mods
             using (WebClient client = new WebClient()) {
@@ -103,8 +71,40 @@ namespace Packsly3.Core.Launcher.Instance {
                 }
             }
 
-            Lifecycle.LifecycleDispatcher.Dispatch(instance, Lifecycle.PostInstallation);
+            Lifecycle.Dispatcher.Publish(instance, Lifecycle.PostInstallation);
 
+            return instance;
+        }
+
+        private static IMinecraftInstance CreateMinecraftInstnace(string instanceId, ModpackDefinition modpackDefinition) {
+            IMinecraftInstance instance = Launcher.CreateInstance(instanceId);
+
+            // Set base minecraft instance properties
+            instance.Name = modpackDefinition.Name;
+            instance.MinecraftVersion = modpackDefinition.MinecraftVersion;
+            instance.Icon.Source = modpackDefinition.Icon;
+
+            // Save adapters defined in modpack along with configuration to packsly instnace config file
+            foreach (KeyValuePair<string, object> adapterDefinition in modpackDefinition.Adapters) {
+                string adapterName = adapterDefinition.Key;
+                object adapterSettings = adapterDefinition.Value;
+
+                instance.PackslyConfig.SetAdapterConfig(adapterName, adapterSettings);
+                instance.PackslyConfig.Save();
+            }
+
+            // Configure instance using compatible enviroment settings
+            foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
+                string name = environmentEntry.Key;
+                if (name != Launcher.Current.Name)
+                    continue;
+
+                string settings = environmentEntry.Value.ToString();
+                instance.Configure(settings);
+                break;
+            }
+
+            instance.Save();
             return instance;
         }
 

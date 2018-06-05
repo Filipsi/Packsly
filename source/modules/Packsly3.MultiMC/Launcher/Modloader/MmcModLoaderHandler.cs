@@ -34,7 +34,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
         public override bool IsCompatible(string modLoader)
             => ModLoadersMap.Keys.Contains(modLoader);
 
-        public override void DetectModLoaders(MmcMinecraftInstance instance, List<ModLoader> modLoaders) {
+        public override void DetectModLoaders(MmcMinecraftInstance instance, List<ModLoaderInfo> modLoaders) {
             if (!instance.Pack.Exists)
                 return;
 
@@ -48,7 +48,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
 
             modLoaders.AddRange(
                 compatibleComponents.Select(component =>
-                    new ModLoader(instance.ModLoaderManager, component.Name.ToLower(), component.Version))
+                    new ModLoaderInfo(instance.ModLoaderManager, component.Name.ToLower(), component.Version))
             );
         }
 

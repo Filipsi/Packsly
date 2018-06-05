@@ -13,7 +13,7 @@ namespace Packsly3.Core.Launcher.Modloader {
 
         bool IsCompatible(IMinecraftInstance instance);
 
-        void DetectModLoaders(IMinecraftInstance instance, List<ModLoader> modLoaders);
+        void DetectModLoaders(IMinecraftInstance instance, List<ModLoaderInfo> modLoaders);
 
         void Install(IMinecraftInstance instance, string modLoader, string version);
 
@@ -28,7 +28,7 @@ namespace Packsly3.Core.Launcher.Modloader {
         public bool IsCompatible(IMinecraftInstance instance)
             => instance.GetType() == typeof(T);
 
-        public void DetectModLoaders(IMinecraftInstance instance, List<ModLoader> modLoaders)
+        public void DetectModLoaders(IMinecraftInstance instance, List<ModLoaderInfo> modLoaders)
             => DetectModLoaders((T) instance, modLoaders);
 
         public void Install(IMinecraftInstance instance, string modLoader, string version)
@@ -41,7 +41,7 @@ namespace Packsly3.Core.Launcher.Modloader {
 
         public abstract bool IsCompatible(string modLoader);
 
-        public abstract void DetectModLoaders(T instance, List<ModLoader> modLoaders);
+        public abstract void DetectModLoaders(T instance, List<ModLoaderInfo> modLoaders);
 
         public abstract void Install(T instance, string modLoader, string version);
 
