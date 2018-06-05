@@ -89,7 +89,7 @@ namespace Packsly3.Core.Launcher.Instance {
                 string adapterName = adapterDefinition.Key;
                 object adapterSettings = adapterDefinition.Value;
 
-                instance.PackslyConfig.SetAdapterConfig(adapterName, adapterSettings);
+                instance.PackslyConfig.Adapters.SetConfigFor(adapterName, adapterSettings);
                 instance.PackslyConfig.Save();
             }
 

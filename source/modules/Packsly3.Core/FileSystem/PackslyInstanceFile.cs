@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,10 +10,10 @@ using Packsly3.Core.Launcher.Adapter;
 
 namespace Packsly3.Core.FileSystem {
 
-    public class PackslyInstanceFile : JsonFile {
+    public partial class PackslyInstanceFile : JsonFile {
 
         [JsonProperty("adapters")]
-        internal Dictionary<string, object> AdaptersConfig { private set; get; } = new Dictionary<string, object>();
+        internal AdaptersConfig Adapters { private set; get; } = new AdaptersConfig();
 
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
             Load();
@@ -22,20 +23,41 @@ namespace Packsly3.Core.FileSystem {
             base.Load();
         }
 
-        internal object GetAdapterConfig(IAdapter adapter) {
-            if (adapter.Id == null || !AdaptersConfig.ContainsKey(adapter.Id)) {
-                return null;
+    }
+
+    public partial class PackslyInstanceFile {
+
+        [JsonObject(MemberSerialization.OptIn)]
+        internal class AdaptersConfig : IEnumerable<string> {
+
+            [JsonProperty("entries")]
+            protected Dictionary<string, object> Entries { set; get; } = new Dictionary<string, object>();
+
+            internal object GetConfigFor(IAdapter adapter) {
+                if (adapter.Id == null || !Entries.ContainsKey(adapter.Id)) {
+                    return null;
+                }
+
+                return Entries[adapter.Id];
             }
 
-            return AdaptersConfig[adapter.Id];
-        }
+            internal void SetConfigFor(IAdapter adapter, object config)
+                => SetConfigFor(adapter.Id, config);
 
+            internal void SetConfigFor(string name, object config) {
+                Entries[name ?? throw new InvalidOperationException()] = config;
+            }
 
-        internal void SetAdapterConfig(IAdapter adapter, object config)
-            => SetAdapterConfig(adapter.Id, config);
+            #region IEnumerable
 
-        internal void SetAdapterConfig(string name, object config) {
-            AdaptersConfig[name ?? throw new InvalidOperationException()] = config;
+            public IEnumerator<string> GetEnumerator()
+                => Entries.Keys.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator()
+                => GetEnumerator();
+
+            #endregion
+
         }
 
     }

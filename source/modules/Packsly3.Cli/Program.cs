@@ -41,17 +41,17 @@ namespace Packsly3.Cli {
 
             Console.WriteLine("Detecting environment...");
             Console.WriteLine($" > Current handler: {Launcher.Current}");
-            Console.WriteLine(string.Empty);
+            Console.WriteLine();
 
-            /*
             IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(
                 new FileInfo(
                     Path.Combine(Directory.GetCurrentDirectory(), "modpack.json")
                 )
             );
-            */
 
+            /*
             Lifecycle.Dispatcher.Publish(Launcher.GetInstance("modpack") ,Lifecycle.PreLaunch);
+            */
 
             Console.ReadKey();
 
