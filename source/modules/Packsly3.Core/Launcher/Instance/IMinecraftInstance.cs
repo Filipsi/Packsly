@@ -1,12 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Packsly3.Core.FileSystem;
 using Packsly3.Core.Launcher.Modloader;
+using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher.Instance {
 
     public interface IMinecraftInstance {
 
         DirectoryInfo Location { get; }
+
+        EnvironmentVariables EnvironmentVariables { get; }
+
+        PackslyInstanceFile PackslyConfig { get; }
+
+        ModLoaderManager ModLoaderManager { get; }
 
         string Id { get; }
 
@@ -15,10 +23,6 @@ namespace Packsly3.Core.Launcher.Instance {
         string MinecraftVersion { set; get; }
 
         Icon Icon { get; }
-
-        ModLoaderManager ModLoaderManager { get; }
-
-        void GetEnvironmentVariables(Dictionary<string, string> map);
 
         void Configure(string json);
 

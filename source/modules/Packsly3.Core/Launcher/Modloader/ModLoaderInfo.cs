@@ -1,6 +1,6 @@
 ﻿namespace Packsly3.Core.Launcher.Modloader {
 
-    public class ModLoader {
+    public class ModLoaderInfo {
 
         public string Name { get; }
 
@@ -8,7 +8,7 @@
 
         public ModLoaderManager Manager { get; }
 
-        public ModLoader(ModLoaderManager manager, string name, string version) {
+        public ModLoaderInfo(ModLoaderManager manager, string name, string version) {
             Manager = manager;
             Name = name;
             Version = version;

@@ -2,6 +2,12 @@
 	"name": "Testovací modpack",
 	"minecraft": "1.12.2",
 	"icon": "http://mc.filipsi.net/pantone.png",
+	"adapters": {
+		"core.updater.revision": {
+			"url": "http://mc.filipsi.net/modpack.json",
+			"revision": 1
+		}
+	},
 	"modloader": {
 		"forge": "14.23.4.2705"
 	},

@@ -22,6 +22,10 @@ namespace Packsly3.Core.FileSystem {
         }
 
         public override void Save() {
+            if (!ThisFile.Exists && ThisFile.DirectoryName != null) {
+                Directory.CreateDirectory(ThisFile.DirectoryName);
+            }
+
             using (StreamWriter writer = ThisFile.CreateText())
                 writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
         }

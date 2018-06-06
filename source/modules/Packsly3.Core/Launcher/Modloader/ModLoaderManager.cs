@@ -16,15 +16,15 @@ namespace Packsly3.Core.Launcher.Modloader {
         public static readonly IModLoaderHandler[] InstalationSchemas =
             RegisterAttribute.GetOccurrencesFor<IModLoaderHandler>();
 
-        public readonly ReadOnlyCollection<ModLoader> ModLoaders;
+        public readonly ReadOnlyCollection<ModLoaderInfo> ModLoaders;
 
-        private readonly List<ModLoader> _modLoaders;
+        private readonly List<ModLoaderInfo> _modLoaders;
         private readonly IMinecraftInstance _mcInstance;
         private readonly IModLoaderHandler[] _compatibleSchemata;
 
         public ModLoaderManager(IMinecraftInstance mcInstnace) {
             _mcInstance = mcInstnace;
-            _modLoaders = new List<ModLoader>();
+            _modLoaders = new List<ModLoaderInfo>();
             ModLoaders = _modLoaders.AsReadOnly();
 
             _compatibleSchemata = InstalationSchemas.Where(s => s.IsCompatible(mcInstnace)).ToArray();
@@ -41,13 +41,13 @@ namespace Packsly3.Core.Launcher.Modloader {
             }
 
             schema.Install(_mcInstance, name, version);
-            _modLoaders.Add(new ModLoader(this, name, version));
+            _modLoaders.Add(new ModLoaderInfo(this, name, version));
         }
 
         public void Uninstall(string name) {
-            ModLoader modLoader = ModLoaders.FirstOrDefault(ml => ml.Name == name);
+            ModLoaderInfo modLoaderInfo = ModLoaders.FirstOrDefault(ml => ml.Name == name);
 
-            if (modLoader == null) {
+            if (modLoaderInfo == null) {
                 throw new KeyNotFoundException($"This instance does not have any modloder with name '{name}'.");
             }
 
@@ -57,7 +57,7 @@ namespace Packsly3.Core.Launcher.Modloader {
             }
 
             schema.Uninstall(_mcInstance, name);
-            _modLoaders.Remove(modLoader);
+            _modLoaders.Remove(modLoaderInfo);
         }
 
     }

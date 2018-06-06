@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Packsly3.Core.FileSystem;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Instance;
 using Packsly3.Core.Launcher.Modloader;
@@ -21,6 +22,10 @@ namespace Packsly3.MultiMC.Launcher {
     public class MmcMinecraftInstance : IMinecraftInstance {
 
         public DirectoryInfo Location { get; }
+
+        public EnvironmentVariables EnvironmentVariables { get; }
+
+        public PackslyInstanceFile PackslyConfig { get; }
 
         public string Id
             => Location.Name;
@@ -45,6 +50,14 @@ namespace Packsly3.MultiMC.Launcher {
         public MmcMinecraftInstance(DirectoryInfo location) {
             Location = location;
 
+            EnvironmentVariables = new EnvironmentVariables(this, new Dictionary<string, string> {
+                { EnvironmentVariables.MinecraftFolder, Path.Combine(Location.FullName, ".minecraft")           },
+                { EnvironmentVariables.ModsFolder,      Path.Combine(Location.FullName, ".minecraft", "mods")   },
+                { EnvironmentVariables.ConfigFolder,    Path.Combine(Location.FullName, ".minecraft", "config") }
+            });
+
+            PackslyConfig = new PackslyInstanceFile(Path.Combine(Location.FullName));
+
             Config = new MmcConfigFile(Location.FullName);
             if (!Config.Exists) {
                 Config.WithDefaults();
@@ -53,17 +66,11 @@ namespace Packsly3.MultiMC.Launcher {
             Pack = new MmcPackFile(Location.FullName);
             Pack.Load();
 
-            Icon = new Icon(Path.Combine(LauncherEnvironment.Workspace.FullName, "icons"), Config.IconName);
+            Icon = new Icon(Path.Combine(Core.Launcher.Launcher.Workspace.FullName, "icons"), Config.IconName);
             Icon.IconChanged += (sender, args)
                 => Config.IconName = (sender as Icon)?.Source;
 
             ModLoaderManager = new ModLoaderManager(this);
-        }
-
-        public void GetEnvironmentVariables(Dictionary<string, string> map) {
-            map[EnvironmentVariables.MinecraftFolder] = Path.Combine(Location.FullName, ".minecraft");
-            map[EnvironmentVariables.ModsFolder] = Path.Combine(Location.FullName, ".minecraft", "mods");
-            map[EnvironmentVariables.ConfigFolder] = Path.Combine(Location.FullName, ".minecraft", "config");
         }
 
         public void Configure(string json) {
