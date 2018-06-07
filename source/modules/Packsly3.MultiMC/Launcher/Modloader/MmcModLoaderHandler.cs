@@ -35,7 +35,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
             => ModLoadersMap.Keys.Contains(modLoader);
 
         public override void DetectModLoaders(MmcMinecraftInstance instance, List<ModLoaderInfo> modLoaders) {
-            if (!instance.Pack.Exists)
+            if (!instance.PackFile.Exists)
                 return;
 
             string[] ignored = {
@@ -44,7 +44,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
             };
 
             IEnumerable<MmcPackFile.Component> compatibleComponents =
-                instance.Pack.Components.Where(c => !ignored.Contains(c.Uid.ToLower()));
+                instance.PackFile.Components.Where(c => !ignored.Contains(c.Uid.ToLower()));
 
             modLoaders.AddRange(
                 compatibleComponents.Select(component =>
@@ -53,7 +53,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
         }
 
         public override void Install(MmcMinecraftInstance instance, string modLoader, string version) {
-            MmcPackFile pck = instance.Pack;
+            MmcPackFile pck = instance.PackFile;
 
             if (pck.Exists) {
                 pck.Load();
@@ -84,7 +84,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
                 pck.Save();
             }
 
-            MmcConfigFile cfg = instance.Config;
+            MmcConfigFile cfg = instance.MmcConfig;
             string mlConfigKey = ModLoadersMap[modLoader].Value;
 
             cfg.Load();
@@ -93,17 +93,17 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
         }
 
         public override void Uninstall(MmcMinecraftInstance instance, string modLoader) {
-            MmcPackFile pck = instance.Pack;
+            MmcPackFile pck = instance.PackFile;
 
             if (pck.Exists) {
                 pck.Load();
 
                 string mlUid = ModLoadersMap[modLoader].Key;
-                pck.Components.Remove(instance.Pack.Components.FirstOrDefault(c => c.Uid == mlUid));
+                pck.Components.Remove(instance.PackFile.Components.FirstOrDefault(c => c.Uid == mlUid));
                 pck.Save();
             }
 
-            MmcConfigFile cfg = instance.Config;
+            MmcConfigFile cfg = instance.MmcConfig;
             string mlConfigKey = ModLoadersMap[modLoader].Value;
 
             cfg.Load();

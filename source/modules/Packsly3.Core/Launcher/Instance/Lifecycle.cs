@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using Packsly3.Core.Launcher.Adapter;
-using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher.Instance {
 
