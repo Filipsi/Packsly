@@ -31,14 +31,13 @@ namespace Packsly3.Core.Launcher.Instance {
 
             if (FileMap.ContainsKey(group)) {
                 if (FileMap[group].Any(f => f.FullName.GetHashCode() == file.FullName.GetHashCode())) {
-                    throw new DuplicateNameException($"Group '{group}' allready contains file with path '{file.FullName}'");
+                   return;
                 }
             } else {
                 _instance.PackslyConfig.ManagedFiles.Add(group, new List<FileInfo>());
             }
 
             _instance.PackslyConfig.ManagedFiles[group].Add(file);
-
             IsDirty = true;
         }
 
@@ -87,6 +86,12 @@ namespace Packsly3.Core.Launcher.Instance {
         public void Remove(string path, GroupType group)
             => Remove(new FileInfo(path), group);
 
+        public void Remove(RemoteResource resource, GroupType group)
+            => Remove(new FileInfo(_instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName))), group);
+
+        public FileInfo[] GetGroup(GroupType group)
+            => !FileMap.ContainsKey(group) ? new FileInfo[0] : FileMap[group].ToArray();
+
         public FileInfo[] GetMissingFiles(GroupType group) {
             if (!FileMap.ContainsKey(group)) {
                 return new FileInfo[0];
@@ -95,6 +100,12 @@ namespace Packsly3.Core.Launcher.Instance {
             List<FileInfo> fileGroup = FileMap[group];
             return fileGroup.Where(f => !f.Exists).ToArray();
         }
+
+        public bool DoesGroupContain(GroupType group, RemoteResource resource)
+            => GetGroup(group).Any(m => m.FullName == _instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)));
+
+        public bool DoesGroupContain(GroupType group, FileInfo file)
+            => GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());
 
         public void Save() {
             if (!IsDirty)

@@ -51,11 +51,7 @@ namespace Packsly3.Cli {
             );
             */
 
-            IMinecraftInstance instnance = Launcher.GetInstance("modpack");
-
-            /*
             Lifecycle.Dispatcher.Publish(Launcher.GetInstance("modpack") ,Lifecycle.PreLaunch);
-            */
 
             Console.ReadKey();
 

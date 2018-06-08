@@ -27,7 +27,6 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
         public override bool IsCompatible(string lifecycleEvent)
             => lifecycleEvent == Lifecycle.PreLaunch;
 
-        // TODO: Updating launcher settings from enviroment?
         public override void Execute(RevisionUpdateSchemaConfig config, string lifecycleEvent, IMinecraftInstance instance) {
             if (!Uri.IsWellFormedUriString(config.UpdateUrl, UriKind.Absolute)) {
                 throw new FormatException($"Revision based updater '{GetType().FullName}' could not resolve update url '{config.UpdateUrl}' provided by configuration.");
@@ -60,7 +59,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
 
         #endregion
 
-        private void UpdateModloaders(IMinecraftInstance instance, ModpackDefinition modpack) {
+        private static void UpdateModloaders(IMinecraftInstance instance, ModpackDefinition modpack) {
             // Install or update modloaders
             foreach (KeyValuePair<string, string> modloaderEntry in modpack.ModLoaders) {
                 string name = modloaderEntry.Key;
@@ -81,51 +80,41 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
             }
         }
 
-        // TODO: This should probably be done with manager
-        private void UpdateMods(IMinecraftInstance instance, ModpackDefinition modpack) {
-            DirectoryInfo modsFolder = new DirectoryInfo(instance.EnvironmentVariables.GetProperty(EnvironmentVariables.ModsFolder));
-            FileInfo[] mods = modsFolder.GetFiles("*.jar");
-
-            // Delete mods that are not in the modpack
-            foreach (FileInfo modFile in mods) {
-                if (modpack.Mods.Any(mod => mod.FileName == modFile.Name))
+        private static void UpdateMods(IMinecraftInstance instance, ModpackDefinition modpack) {
+            foreach (FileInfo modFile in instance.Files.GetGroup(FileManager.GroupType.Mod)) {
+                if (modpack.Mods.Any(mm => mm.FileName == modFile.Name)) {
                     continue;
+                }
 
-                Console.WriteLine($" > Removing mod '{modFile.Name}'...");
+                Console.WriteLine($" > Removing mod {modFile.Name}...");
+                instance.Files.Remove(modFile, FileManager.GroupType.Mod);
                 modFile.Delete();
             }
 
-            // Update mods
-            using (WebClient client = new WebClient()) {
-                foreach (ModSource mod in modpack.Mods) {
-                    DirectoryInfo destinationFolder = new DirectoryInfo(instance.EnvironmentVariables.Format(mod.FilePath));
+            RemoteResource[] modResourceBlob = modpack.Mods.SelectMany(m => m.Resources).ToArray();
+            foreach (FileInfo modResourceFile in instance.Files.GetGroup(FileManager.GroupType.ModResource)) {
+                if (modResourceBlob.Any(mr => mr.FileName == modResourceFile.Name)) {
+                    continue;
+                }
 
-                    if (!destinationFolder.Exists) {
-                        destinationFolder.Create();
-                    }
+                Console.WriteLine($" > Removing mod resource {modResourceFile.Name}...");
+                instance.Files.Remove(modResourceFile, FileManager.GroupType.ModResource);
+                modResourceFile.Delete();
+            }
 
-                    FileInfo modDestination = new FileInfo(Path.Combine(destinationFolder.FullName, mod.FileName));
-                    if (!modDestination.Exists) {
-                        Console.WriteLine($" > Downloading mod '{mod.FileName}' to '{destinationFolder.FullName}'...");
-                        client.DownloadFile(mod.Url, modDestination.FullName);
-                    }
+            foreach (ModSource modpackMod in modpack.Mods) {
+                if (!instance.Files.DoesGroupContain(FileManager.GroupType.Mod, modpackMod)) {
+                    Console.WriteLine($" > Downloading mod {modpackMod.FileName}...");
+                    instance.Files.Download(modpackMod, FileManager.GroupType.Mod);
+                }
 
-                    // Update mod resources
-                    foreach (RemoteResource resource in mod.Resources) {
-                        DirectoryInfo envResPath = new DirectoryInfo(instance.EnvironmentVariables.Format(resource.FilePath));
-
-                        if (!envResPath.Exists) {
-                            envResPath.Create();
-                        }
-
-                        FileInfo resourceDestination = new FileInfo(Path.Combine(destinationFolder.FullName, mod.FileName));
-                        if (!resourceDestination.Exists) {
-                            Console.WriteLine($"  - Downloading resource '{resource.FileName}' to '{envResPath.FullName}'...");
-                            client.DownloadFile(resource.Url, Path.Combine(envResPath.FullName, resource.FileName));
-                        }
-                    }
+                foreach (RemoteResource modpackModResource in modpackMod.Resources) {
+                    Console.WriteLine($" > Downloading mod resource {modpackModResource.FileName}...");
+                    instance.Files.Download(modpackModResource, FileManager.GroupType.ModResource);
                 }
             }
+
+            instance.Files.Save();
         }
 
     }
