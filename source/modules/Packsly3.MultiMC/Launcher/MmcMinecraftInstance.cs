@@ -31,21 +31,24 @@ namespace Packsly3.MultiMC.Launcher {
             => Location.Name;
 
         public string Name {
-            get => Config.GetField<string>();
-            set => Config.SetField(value);
+            get => MmcConfig.GetField<string>();
+            set => MmcConfig.SetField(value);
         }
 
         public string MinecraftVersion {
-            get => Config.GetField<string>();
-            set => Config.SetField(value);
+            get => MmcConfig.GetField<string>();
+            set => MmcConfig.SetField(value);
         }
 
         public Icon Icon { get; }
 
         public ModLoaderManager ModLoaderManager { get; }
 
-        internal MmcConfigFile Config { get; }
-        internal MmcPackFile Pack { get; }
+        public FileManager Files { get; }
+
+        internal MmcConfigFile MmcConfig { get; }
+
+        internal MmcPackFile PackFile { get; }
 
         public MmcMinecraftInstance(DirectoryInfo location) {
             Location = location;
@@ -58,23 +61,25 @@ namespace Packsly3.MultiMC.Launcher {
 
             PackslyConfig = new PackslyInstanceFile(Path.Combine(Location.FullName));
 
-            Config = new MmcConfigFile(Location.FullName);
-            if (!Config.Exists) {
-                Config.WithDefaults();
+            MmcConfig = new MmcConfigFile(Location.FullName);
+            if (!MmcConfig.Exists) {
+                MmcConfig.WithDefaults();
             }
 
-            Pack = new MmcPackFile(Location.FullName);
-            Pack.Load();
+            PackFile = new MmcPackFile(Location.FullName);
+            PackFile.Load();
 
-            Icon = new Icon(Path.Combine(Core.Launcher.Launcher.Workspace.FullName, "icons"), Config.IconName);
+            Icon = new Icon(Path.Combine(Core.Launcher.Launcher.Workspace.FullName, "icons"), MmcConfig.IconName);
             Icon.IconChanged += (sender, args)
-                => Config.IconName = (sender as Icon)?.Source;
+                => MmcConfig.IconName = (sender as Icon)?.Source;
 
             ModLoaderManager = new ModLoaderManager(this);
+
+            Files = new FileManager(this);
         }
 
         public void Configure(string json) {
-            JsonConvert.PopulateObject(json, Config);
+            JsonConvert.PopulateObject(json, MmcConfig);
         }
 
         public void Save() {
@@ -82,7 +87,7 @@ namespace Packsly3.MultiMC.Launcher {
                 Location.Create();
             }
 
-            Config.Save();
+            MmcConfig.Save();
         }
 
         public void Delete() {

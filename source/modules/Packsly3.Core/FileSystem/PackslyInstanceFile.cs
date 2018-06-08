@@ -6,22 +6,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Packsly3.Core.Common.Json;
 using Packsly3.Core.Launcher.Adapter;
+using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.FileSystem {
 
     public partial class PackslyInstanceFile : JsonFile {
 
+        private readonly JsonSerializerSettings _serializerSettings;
+
         [JsonProperty("adapters")]
         internal AdaptersConfig Adapters { private set; get; } = new AdaptersConfig();
 
+        [JsonProperty("files")]
+        internal Dictionary<FileManager.GroupType, List<FileInfo>> ManagedFiles { private set; get; } = new Dictionary<FileManager.GroupType, List<FileInfo>>();
+
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
+            _serializerSettings = new JsonSerializerSettings {
+                ContractResolver = new LowercaseContractResolver(),
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                Converters = {
+                    new RelativePathConverter {
+                        Root = DirectoryPath
+                    }
+                }
+            };
+
             Load();
         }
 
-        public sealed override void Load() {
-            base.Load();
-        }
+        protected override JsonSerializerSettings GetSerializerSettings()
+            => _serializerSettings;
+
+        public sealed override void Load()
+            => base.Load();
 
     }
 

@@ -43,33 +43,17 @@ namespace Packsly3.Core.Launcher.Instance {
             }
 
             // Download mods
-            using (WebClient client = new WebClient()) {
-                foreach (ModSource modSource in modpackDefinition.Mods) {
-                    DirectoryInfo envModPath =
-                        new DirectoryInfo(instance.EnvironmentVariables.Format(modSource.FilePath));
-                    Console.WriteLine($"Downloading mod '{modSource.FileName}' to '{envModPath.FullName}'...");
+            foreach (ModSource mod in modpackDefinition.Mods) {
+                Console.WriteLine($"Downloading mod '{mod.FileName}' to '{mod.FilePath}'...");
+                instance.Files.Download(mod, FileManager.GroupType.Mod);
 
-                    if (!envModPath.Exists) {
-                        envModPath.Create();
-                    }
-
-                    client.DownloadFile(modSource.Url, Path.Combine(envModPath.FullName, modSource.FileName));
-
-                    // Download mod resources
-                    foreach (RemoteResource resource in modSource.Resources) {
-                        DirectoryInfo envResPath =
-                            new DirectoryInfo(instance.EnvironmentVariables.Format(resource.FilePath));
-                        Console.WriteLine(
-                            $" > Downloading resource '{resource.FileName}' to '{envResPath.FullName}'...");
-
-                        if (!envResPath.Exists) {
-                            envResPath.Create();
-                        }
-
-                        client.DownloadFile(resource.Url, Path.Combine(envResPath.FullName, resource.FileName));
-                    }
+                // Download mod resources
+                foreach (RemoteResource resource in mod.Resources) {
+                    Console.WriteLine($" > Downloading resource '{resource.FileName}' to '{resource.FilePath}'...");
+                    instance.Files.Download(resource, FileManager.GroupType.ModResource);
                 }
             }
+            instance.Files.Save();
 
             Lifecycle.Dispatcher.Publish(instance, Lifecycle.PostInstallation);
 
