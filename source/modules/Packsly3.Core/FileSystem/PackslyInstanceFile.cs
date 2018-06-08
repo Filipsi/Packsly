@@ -14,6 +14,8 @@ namespace Packsly3.Core.FileSystem {
 
     public partial class PackslyInstanceFile : JsonFile {
 
+        private readonly JsonSerializerSettings _serializerSettings;
+
         [JsonProperty("adapters")]
         internal AdaptersConfig Adapters { private set; get; } = new AdaptersConfig();
 
@@ -21,12 +23,24 @@ namespace Packsly3.Core.FileSystem {
         internal Dictionary<FileManager.GroupType, List<FileInfo>> ManagedFiles { private set; get; } = new Dictionary<FileManager.GroupType, List<FileInfo>>();
 
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
+            _serializerSettings = new JsonSerializerSettings {
+                ContractResolver = new LowercaseContractResolver(),
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+                Converters = {
+                    new RelativePathConverter {
+                        Root = DirectoryPath
+                    }
+                }
+            };
+
             Load();
         }
 
-        public sealed override void Load() {
-            base.Load();
-        }
+        protected override JsonSerializerSettings GetSerializerSettings()
+            => _serializerSettings;
+
+        public sealed override void Load()
+            => base.Load();
 
     }
 

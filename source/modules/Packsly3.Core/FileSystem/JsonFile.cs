@@ -8,17 +8,16 @@ namespace Packsly3.Core.FileSystem {
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class JsonFile : FileBase {
 
-        private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings {
+        private static readonly JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new LowercaseContractResolver(),
-            ObjectCreationHandling = ObjectCreationHandling.Replace,
-            Converters = {
-                new RelativePathConverter {
-                    Root = Launcher.Launcher.Workspace.FullName
-                }
-            }
+            ObjectCreationHandling = ObjectCreationHandling.Replace
         };
 
         protected JsonFile(string path) : base(path) {
+        }
+
+        protected virtual JsonSerializerSettings GetSerializerSettings() {
+            return DefaultSerializerSettings;
         }
 
         public override void Load() {
@@ -26,7 +25,7 @@ namespace Packsly3.Core.FileSystem {
                 return;
 
             using (StreamReader reader = ThisFile.OpenText())
-                JsonConvert.PopulateObject(reader.ReadToEnd(), this, SerializerSettings);
+                JsonConvert.PopulateObject(reader.ReadToEnd(), this, GetSerializerSettings());
         }
 
         public override void Save() {
@@ -35,7 +34,7 @@ namespace Packsly3.Core.FileSystem {
             }
 
             using (StreamWriter writer = ThisFile.CreateText())
-                writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented, SerializerSettings));
+                writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented, GetSerializerSettings()));
         }
 
     }
