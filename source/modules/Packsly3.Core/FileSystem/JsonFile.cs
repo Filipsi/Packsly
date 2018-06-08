@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using Packsly3.Core.Common;
+using Packsly3.Core.Common.Json;
 
 namespace Packsly3.Core.FileSystem {
 
@@ -7,7 +9,13 @@ namespace Packsly3.Core.FileSystem {
     public abstract class JsonFile : FileBase {
 
         private static readonly JsonSerializerSettings SerializerSettings = new JsonSerializerSettings {
-            ObjectCreationHandling = ObjectCreationHandling.Replace
+            ContractResolver = new LowercaseContractResolver(),
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
+            Converters = {
+                new RelativePathConverter {
+                    Root = Launcher.Launcher.Workspace.FullName
+                }
+            }
         };
 
         protected JsonFile(string path) : base(path) {
@@ -27,7 +35,7 @@ namespace Packsly3.Core.FileSystem {
             }
 
             using (StreamWriter writer = ThisFile.CreateText())
-                writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented));
+                writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented, SerializerSettings));
         }
 
     }

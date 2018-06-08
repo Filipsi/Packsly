@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Packsly3.Core.Common.Json;
 using Packsly3.Core.Launcher.Adapter;
 using Packsly3.Core.Launcher.Instance;
 

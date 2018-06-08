@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Json\LowercaseContractResolver.cs" />
+    <Compile Include="Common\Json\RelativePathConverter.cs" />
     <Compile Include="FileSystem\PackslyInstanceFile.cs" />
     <Compile Include="Launcher\Adapter\AdapterHandler.cs" />
     <Compile Include="Launcher\Adapter\IAdapter.cs" />

@@ -43,11 +43,15 @@ namespace Packsly3.Cli {
             Console.WriteLine($" > Current handler: {Launcher.Current}");
             Console.WriteLine();
 
+            /*
             IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(
                 new FileInfo(
                     Path.Combine(Directory.GetCurrentDirectory(), "modpack.json")
                 )
             );
+            */
+
+            IMinecraftInstance instnance = Launcher.GetInstance("modpack");
 
             /*
             Lifecycle.Dispatcher.Publish(Launcher.GetInstance("modpack") ,Lifecycle.PreLaunch);
