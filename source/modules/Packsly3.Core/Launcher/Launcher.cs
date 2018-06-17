@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
+using System.Reflection;
 using Packsly3.Core.Common;
 using Packsly3.Core.Launcher.Instance;
 
@@ -12,7 +13,7 @@ namespace Packsly3.Core.Launcher {
         private static readonly ILauncherEnvironment[] Enviroments =
             RegisterAttribute.GetOccurrencesFor<ILauncherEnvironment>();
 
-        private static readonly DirectoryInfo Root = new DirectoryInfo(Directory.GetCurrentDirectory());
+        private static readonly DirectoryInfo Root = new DirectoryInfo(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) ?? throw new InvalidOperationException());
 
         public static DirectoryInfo Workspace { get; set; } = Root;
 
@@ -28,7 +29,7 @@ namespace Packsly3.Core.Launcher {
 
             ILauncherEnvironment env = Enviroments.FirstOrDefault(e => e.IsCompatible(Workspace));
             if (env == null) {
-                throw new Exception($"No compatible enviromnet found in workspace '{Workspace.FullName}'!");
+                throw new Exception($"No compatible environment found in workspace '{Workspace.FullName}'!");
             }
 
             return env;

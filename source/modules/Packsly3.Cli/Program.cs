@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
+using System.Text;
 using Newtonsoft.Json;
+using Packsly3.Core.FileSystem;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Adapter;
 using Packsly3.Core.Launcher.Adapter.Impl;
@@ -37,24 +40,64 @@ namespace Packsly3.Cli {
         private static void Main(string[] args) {
             PrintLogo();
 
-            Launcher.Workspace = new DirectoryInfo("D:\\Games\\MultiMC");
+            try {
+                RunPacksly();
+            }
+            catch (Exception ex) {
+                Console.WriteLine(FlattenException(ex));
+            }
+
+            Console.ReadKey();
+        }
+
+        private static void RunPacksly() {
+            Console.WriteLine("Welcome to Packsly3!");
+            Console.WriteLine();
+
+            if (PackslyConfig.Instnace.Workspace != null && PackslyConfig.Instnace.Workspace.Exists) {
+                Launcher.Workspace = PackslyConfig.Instnace.Workspace;
+                Console.WriteLine($"Workspace was set from configuration file to: {Launcher.Workspace}");
+                Console.WriteLine();
+            }
 
             Console.WriteLine("Detecting environment...");
             Console.WriteLine($" > Current handler: {Launcher.Current}");
             Console.WriteLine();
 
-            /*
-            IMinecraftInstance instance = MinecraftInstanceFactory.CreateFromModpack(
-                new FileInfo(
-                    Path.Combine(Directory.GetCurrentDirectory(), "modpack.json")
-                )
-            );
-            */
+            string modpackSource = PackslyConfig.Instnace.DefaultModpackSource;
 
-            Lifecycle.Dispatcher.Publish(Launcher.GetInstance("modpack") ,Lifecycle.PreLaunch);
+            if (!string.IsNullOrEmpty(modpackSource)) {
+                Console.WriteLine($"Gathering modpack definition from source '{modpackSource}' specified in configuration file...");
 
-            Console.ReadKey();
+                if (File.Exists(modpackSource)) {
+                    Console.WriteLine("Beginning installation from local modpack definition file...");
 
+                    MinecraftInstanceFactory.CreateFromModpack(
+                        new FileInfo(modpackSource)
+                    );
+                } else if (Uri.IsWellFormedUriString(modpackSource, UriKind.Absolute)) {
+                    Console.WriteLine("Beginning installation from remote modpack definition source...");
+
+                    MinecraftInstanceFactory.CreateFromModpack(
+                        new Uri(modpackSource)
+                    );
+                } else {
+                    Console.WriteLine("Modpack source specified in configuration file is invalid.");
+                }
+            }
+        }
+
+        public static string FlattenException(Exception exception) {
+            StringBuilder builder = new StringBuilder();
+
+            while (exception != null) {
+                builder.AppendLine(exception.Message);
+                builder.AppendLine(exception.StackTrace);
+
+                exception = exception.InnerException;
+            }
+
+            return builder.ToString();
         }
 
     }
