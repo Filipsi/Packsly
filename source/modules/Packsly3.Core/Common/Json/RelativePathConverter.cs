@@ -28,11 +28,16 @@ namespace Packsly3.Core.Common.Json {
                 throw new NotSupportedException( $"{GetType().Name} does not support deserialization of '{objectType}' type.");
 
             string path = JToken.Load(reader).Value<string>();
+
+            if (string.IsNullOrEmpty(path)) {
+                return null;
+            }
+
             string resolvedPath = path.StartsWith(@".\")
                 ? Path.Combine(Root, path.Remove(0, 2))
                 : path;
 
-            return  Activator.CreateInstance(objectType, resolvedPath);
+            return Activator.CreateInstance(objectType, resolvedPath);
         }
 
     }
