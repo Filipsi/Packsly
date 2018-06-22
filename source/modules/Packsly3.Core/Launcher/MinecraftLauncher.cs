@@ -8,7 +8,7 @@ using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Launcher {
 
-    public static class Launcher {
+    public static class MinecraftLauncher {
 
         private static readonly ILauncherEnvironment[] Enviroments =
             RegisterAttribute.GetOccurrencesFor<ILauncherEnvironment>();
@@ -17,7 +17,7 @@ namespace Packsly3.Core.Launcher {
 
         public static DirectoryInfo Workspace { get; set; } = Root;
 
-        public static ILauncherEnvironment Current
+        public static ILauncherEnvironment CurrentEnvironment
             => _currentEnviroment ?? (_currentEnviroment = GetCurrentEnvironment());
 
         private static ILauncherEnvironment _currentEnviroment;
@@ -36,13 +36,13 @@ namespace Packsly3.Core.Launcher {
         }
 
         public static IMinecraftInstance[] GetInstances()
-            => Current.GetInstances(Workspace).ToArray();
+            => CurrentEnvironment.GetInstances(Workspace).ToArray();
 
         public static IMinecraftInstance GetInstance(string id)
-            => Current.GetInstance(Workspace, id);
+            => CurrentEnvironment.GetInstance(Workspace, id);
 
         public static IMinecraftInstance CreateInstance(string id)
-            => Current.CreateInstance(Workspace, id);
+            => CurrentEnvironment.CreateInstance(Workspace, id);
     }
 
 }

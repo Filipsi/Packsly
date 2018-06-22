@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Modpack {
 
+    [JsonObject(MemberSerialization.OptIn)]
     public class RemoteResource {
 
         [JsonProperty("url")]
@@ -21,6 +19,22 @@ namespace Packsly3.Core.Modpack {
 
         [JsonProperty("filename")]
         public string FileName { protected set; get; }
+
+        [JsonProperty("environment", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public EnvironmentSpecific EnvironmentOnly { private set; get; } = new EnvironmentSpecific();
+
+        public bool ShouldDownload {
+            get {
+                if (!EnvironmentOnly.IsEnvironmentSpecific)
+                    return true;
+
+                bool containsEntry = EnvironmentOnly.Entries.Any(entry => entry == MinecraftLauncher.CurrentEnvironment.Name);
+                if (EnvironmentOnly.IsWhitelist && !containsEntry)
+                    return false;
+
+                return !EnvironmentOnly.IsBlacklist || !containsEntry;
+            }
+        }
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {

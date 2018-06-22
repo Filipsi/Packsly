@@ -69,7 +69,7 @@ namespace Packsly3.MultiMC.Launcher {
             PackFile = new MmcPackFile(Location.FullName);
             PackFile.Load();
 
-            Icon = new Icon(Path.Combine(Core.Launcher.Launcher.Workspace.FullName, "icons"), MmcConfig.IconName);
+            Icon = new Icon(Path.Combine(Core.Launcher.MinecraftLauncher.Workspace.FullName, "icons"), MmcConfig.IconName);
             Icon.IconChanged += (sender, args)
                 => MmcConfig.IconName = (sender as Icon)?.Source;
 

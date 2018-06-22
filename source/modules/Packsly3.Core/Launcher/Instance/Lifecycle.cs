@@ -31,7 +31,7 @@ namespace Packsly3.Core.Launcher.Instance {
 
         public static class Dispatcher {
 
-            public static EventHandler<Changed> LifecycleEvent;
+            public static readonly EventHandler<Changed> LifecycleEvent;
 
             static Dispatcher() {
                 LifecycleEvent += AdapterHandler.OnLifecycleChanged;

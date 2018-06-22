@@ -47,7 +47,15 @@
 					"filename": "foresters-manual.zs"
 				}
 			]
-		}
+		},
+		{
+			"url": "https://minecraft.curseforge.com/projects/journeymap/files/2498312/download",
+			"filename": "journeymap-1.12.2-5.5.2.jar",
+			"environment": {
+				"on": [ "server" ],
+				"isBlacklist": true
+			}
+		},
 	]
 }
 
