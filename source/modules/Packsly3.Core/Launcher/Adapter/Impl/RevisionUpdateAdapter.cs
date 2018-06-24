@@ -82,7 +82,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
 
         private static void UpdateMods(IMinecraftInstance instance, ModpackDefinition modpack) {
             foreach (FileInfo modFile in instance.Files.GetGroup(FileManager.GroupType.Mod)) {
-                if (modpack.Mods.Any(mm => mm.FileName == modFile.Name)) {
+                if (modpack.Mods.Any(mm => mm.FileName == modFile.Name && mm.ShouldDownload)) {
                     continue;
                 }
 
@@ -93,7 +93,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
 
             RemoteResource[] modResourceBlob = modpack.Mods.SelectMany(m => m.Resources).ToArray();
             foreach (FileInfo modResourceFile in instance.Files.GetGroup(FileManager.GroupType.ModResource)) {
-                if (modResourceBlob.Any(mr => mr.FileName == modResourceFile.Name)) {
+                if (modResourceBlob.Any(mr => mr.FileName == modResourceFile.Name && mr.ShouldDownload)) {
                     continue;
                 }
 
@@ -102,13 +102,13 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 modResourceFile.Delete();
             }
 
-            foreach (ModSource modpackMod in modpack.Mods) {
+            foreach (ModSource modpackMod in modpack.Mods.Where(mod => mod.ShouldDownload)) {
                 if (!instance.Files.DoesGroupContain(FileManager.GroupType.Mod, modpackMod)) {
                     Console.WriteLine($" > Downloading mod {modpackMod.FileName}...");
                     instance.Files.Download(modpackMod, FileManager.GroupType.Mod);
                 }
 
-                foreach (RemoteResource modpackModResource in modpackMod.Resources) {
+                foreach (RemoteResource modpackModResource in modpackMod.Resources.Where(resource => resource.ShouldDownload)) {
                     Console.WriteLine($" > Downloading mod resource {modpackModResource.FileName}...");
                     instance.Files.Download(modpackModResource, FileManager.GroupType.ModResource);
                 }

@@ -55,13 +55,13 @@ namespace Packsly3.Cli {
             Console.WriteLine();
 
             if (PackslyConfig.Instnace.Workspace != null && PackslyConfig.Instnace.Workspace.Exists) {
-                Launcher.Workspace = PackslyConfig.Instnace.Workspace;
-                Console.WriteLine($"Workspace was set from configuration file to: {Launcher.Workspace}");
+                MinecraftLauncher.Workspace = PackslyConfig.Instnace.Workspace;
+                Console.WriteLine($"Workspace was set from configuration file to: {MinecraftLauncher.Workspace}");
                 Console.WriteLine();
             }
 
             Console.WriteLine("Detecting environment...");
-            Console.WriteLine($" > Current handler: {Launcher.Current}");
+            Console.WriteLine($" > CurrentEnvironment handler: {MinecraftLauncher.CurrentEnvironment}");
             Console.WriteLine();
 
             string modpackSource = PackslyConfig.Instnace.DefaultModpackSource;

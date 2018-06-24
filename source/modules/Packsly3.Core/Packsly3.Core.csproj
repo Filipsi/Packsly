@@ -54,12 +54,13 @@
     <Compile Include="Launcher\Instance\Lifecycle.cs" />
     <Compile Include="Launcher\Instance\EnvironmentVariables.cs" />
     <Compile Include="Launcher\Instance\Icon.cs" />
+    <Compile Include="Modpack\EnvironmentSpecific.cs" />
     <Compile Include="Modpack\ModSource.cs" />
     <Compile Include="Modpack\RemoteResource.cs" />
     <Compile Include="Modpack\ModpackDefinition.cs" />
     <Compile Include="Launcher\Instance\MinecraftInstanceFactory.cs" />
     <Compile Include="Common\PackslyAssemblyLoader.cs" />
-    <Compile Include="Launcher\Launcher.cs" />
+    <Compile Include="Launcher\MinecraftLauncher.cs" />
     <Compile Include="Launcher\ILauncherEnvironment.cs" />
     <Compile Include="Launcher\Instance\IMinecraftInstance.cs" />
     <Compile Include="Launcher\Modloader\IModLoaderHandler.cs" />

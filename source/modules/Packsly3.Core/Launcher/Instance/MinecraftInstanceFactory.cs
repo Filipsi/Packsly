@@ -44,13 +44,23 @@ namespace Packsly3.Core.Launcher.Instance {
 
             // Download mods
             foreach (ModSource mod in modpackDefinition.Mods) {
-                Console.WriteLine($"Downloading mod '{mod.FileName}' to '{mod.FilePath}'...");
-                instance.Files.Download(mod, FileManager.GroupType.Mod);
+                if (mod.ShouldDownload) {
+                    Console.WriteLine($"Downloading mod '{mod.FileName}' to '{mod.FilePath}'...");
+                    instance.Files.Download(mod, FileManager.GroupType.Mod);
+                }
+                else {
+                    Console.WriteLine($"Skipping downloading of mod '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} in '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                }
 
                 // Download mod resources
                 foreach (RemoteResource resource in mod.Resources) {
-                    Console.WriteLine($" > Downloading resource '{resource.FileName}' to '{resource.FilePath}'...");
-                    instance.Files.Download(resource, FileManager.GroupType.ModResource);
+                    if (resource.ShouldDownload) {
+                        Console.WriteLine($" > Downloading resource '{resource.FileName}' to '{resource.FilePath}'...");
+                        instance.Files.Download(resource, FileManager.GroupType.ModResource);
+                    }
+                    else {
+                        Console.WriteLine($" > Skipping downloading of resource '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} in '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                    }
                 }
             }
             instance.Files.Save();
@@ -61,7 +71,7 @@ namespace Packsly3.Core.Launcher.Instance {
         }
 
         private static IMinecraftInstance CreateMinecraftInstnace(string instanceId, ModpackDefinition modpackDefinition) {
-            IMinecraftInstance instance = Launcher.CreateInstance(instanceId);
+            IMinecraftInstance instance = MinecraftLauncher.CreateInstance(instanceId);
 
             // Set base minecraft instance properties
             instance.Name = modpackDefinition.Name;
@@ -80,7 +90,7 @@ namespace Packsly3.Core.Launcher.Instance {
             // Configure instance using compatible enviroment settings
             foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
                 string name = environmentEntry.Key;
-                if (name != Launcher.Current.Name)
+                if (name != MinecraftLauncher.CurrentEnvironment.Name)
                     continue;
 
                 string settings = environmentEntry.Value.ToString();
