@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Packsly3.Core.Common;
@@ -36,20 +35,28 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
             Console.WriteLine("Checking for modpack updates...");
 
             using (WebClient client = new WebClient()) {
-                ModpackDefinition modpack = JsonConvert.DeserializeObject<ModpackDefinition>(client.DownloadString(config.UpdateUrl));
+                ModpackDefinition remoteModpack = JsonConvert.DeserializeObject<ModpackDefinition>(client.DownloadString(config.UpdateUrl));
 
-                if (!modpack.Adapters.ContainsKey(Id)) {
+                // Check if remote modpack has configuration for this adapter type
+                // Without this we can't check for revision number changes and perform the update
+                if (!remoteModpack.Adapters.ContainsKey(Id)) {
                     throw new InvalidOperationException(
                         $"Revision based updater '{GetType().FullName}' failed to obtain revision number from update source because adapter configuration is missing.");
                 }
 
                 RevisionUpdateSchemaConfig remoteConfig =
-                    JObject.FromObject(modpack.Adapters[Id]).ToObject<RevisionUpdateSchemaConfig>();
+                    JObject.FromObject(remoteModpack.Adapters[Id]).ToObject<RevisionUpdateSchemaConfig>();
 
+                // If there is a upate available
                 if (config.Revision != remoteConfig.Revision) {
                     Console.WriteLine($" > Updating modpack from revision {config.Revision} to {remoteConfig.Revision}!");
-                    UpdateModloaders(instance, modpack);
-                    UpdateMods(instance, modpack);
+
+                    // Update modloaders and mods
+                    UpdateModloaders(instance, remoteModpack);
+                    UpdateMods(instance, remoteModpack);
+
+                    // Update adapter settings saved in instnace.packsly file, because revision number has changed
+                    this.Save(instance, remoteConfig);
                 }
             }
 
