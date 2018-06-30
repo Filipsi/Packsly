@@ -47,7 +47,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 RevisionUpdateSchemaConfig remoteConfig =
                     JObject.FromObject(remoteModpack.Adapters[Id]).ToObject<RevisionUpdateSchemaConfig>();
 
-                // If there is a upate available
+                // If there is an update available
                 if (config.Revision != remoteConfig.Revision) {
                     Console.WriteLine($" > Updating modpack from revision {config.Revision} to {remoteConfig.Revision}!");
 
