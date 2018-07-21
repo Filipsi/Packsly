@@ -110,7 +110,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
             }
 
             foreach (ModSource modpackMod in modpack.Mods.Where(mod => mod.ShouldDownload)) {
-                if (!instance.Files.DoesGroupContain(FileManager.GroupType.Mod, modpackMod)) {
+                if (!instance.Files.GroupContains(FileManager.GroupType.Mod, modpackMod)) {
                     Console.WriteLine($" > Downloading mod {modpackMod.FileName}...");
                     instance.Files.Download(modpackMod, FileManager.GroupType.Mod);
                 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -22,11 +21,25 @@ namespace Packsly3.Core.Launcher.Instance {
             instance.PackslyConfig.Load();
             FileMap = new ReadOnlyDictionary<GroupType, List<FileInfo>>(instance.PackslyConfig.ManagedFiles);
             _instance = instance;
+
+            // Remove missing or non-existent files
+            foreach (GroupType group in Enum.GetValues(typeof(GroupType))) {
+                FileInfo[] missingFiles = GetNotExistingFiles(group);
+
+                if (missingFiles.Length <= 0)
+                    continue;
+
+                foreach (FileInfo file in missingFiles) {
+                    Remove(file, group);
+                }
+            }
+
+            Save();
         }
 
         public void Add(FileInfo file, GroupType group) {
             if (!file.Exists) {
-                throw new FileNotFoundException($"File with path '{file.FullName}' cound not be added to file manager because it does not exist");
+                throw new FileNotFoundException($"There was error while trying to add file with path '{file.FullName}' to the file manager. Specified file does not exist.");
             }
 
             if (FileMap.ContainsKey(group)) {
@@ -89,31 +102,34 @@ namespace Packsly3.Core.Launcher.Instance {
         public void Remove(RemoteResource resource, GroupType group)
             => Remove(new FileInfo(_instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName))), group);
 
-        public FileInfo[] GetGroup(GroupType group)
-            => !FileMap.ContainsKey(group) ? new FileInfo[0] : FileMap[group].ToArray();
-
-        public FileInfo[] GetMissingFiles(GroupType group) {
-            if (!FileMap.ContainsKey(group)) {
-                return new FileInfo[0];
-            }
-
-            List<FileInfo> fileGroup = FileMap[group];
-            return fileGroup.Where(f => !f.Exists).ToArray();
-        }
-
-        public bool DoesGroupContain(GroupType group, RemoteResource resource)
-            => GetGroup(group).Any(m => m.FullName == _instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)));
-
-        public bool DoesGroupContain(GroupType group, FileInfo file)
-            => GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());
+        #region IO
 
         public void Save() {
-            if (!IsDirty)
-                return;
-
+            if (!IsDirty) return;
             _instance.PackslyConfig.Save();
             IsDirty = false;
         }
+
+        #endregion
+
+        #region Utilities
+
+        public bool GroupContains(GroupType group, RemoteResource resource)
+            => GetGroup(group).Any(m => m.FullName == _instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)));
+
+        public bool GroupContains(GroupType group, FileInfo file)
+            => GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());
+
+        public FileInfo[] GetGroup(GroupType group)
+            => !FileMap.ContainsKey(group) ? new FileInfo[0] : FileMap[group].ToArray();
+
+        private FileInfo[] GetNotExistingFiles(GroupType group) {
+            return !FileMap.ContainsKey(group)
+                ? new FileInfo[0]
+                : FileMap[group].Where(f => !f.Exists).ToArray();
+        }
+
+        #endregion
 
         #region IDisposable
 
