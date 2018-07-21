@@ -13,6 +13,7 @@ namespace Packsly3.Core.FileSystem.Impl {
         public DirectoryInfo Workspace { private set; get; } = Packsly.AplicationDirectory;
 
         [JsonProperty("modpack")]
+        [JsonConverter(typeof(RelativePathConverter))]
         public string DefaultModpackSource { private set; get; }
 
         #endregion

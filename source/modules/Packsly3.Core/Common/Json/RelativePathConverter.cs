@@ -10,7 +10,7 @@ namespace Packsly3.Core.Common.Json {
         public string Root { get; set; } = Packsly.AplicationDirectory.FullName;
 
         public override bool CanConvert(Type objectType)
-            => objectType.IsSubclassOf(typeof(FileSystemInfo)) || objectType == typeof(FileSystemInfo);
+            => objectType.IsSubclassOf(typeof(FileSystemInfo)) || objectType == typeof(FileSystemInfo) || objectType == typeof(string);
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
             string path = ((FileSystemInfo)value).FullName;
@@ -24,7 +24,7 @@ namespace Packsly3.Core.Common.Json {
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
-            if (objectType != typeof(FileInfo) && objectType != typeof(DirectoryInfo))
+            if (objectType != typeof(FileInfo) && objectType != typeof(DirectoryInfo) && objectType != typeof(string))
                 throw new NotSupportedException( $"{GetType().Name} does not support serialization of '{objectType}' type.");
 
             string path = JToken.Load(reader).Value<string>();
@@ -37,7 +37,9 @@ namespace Packsly3.Core.Common.Json {
                 ? Path.Combine(Root, path.Remove(0, 2))
                 : path;
 
-            return Activator.CreateInstance(objectType, resolvedPath);
+            return objectType == typeof(string)
+                ? resolvedPath
+                : Activator.CreateInstance(objectType, resolvedPath);
         }
 
     }
