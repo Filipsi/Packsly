@@ -1,9 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
+using Packsly3.Core.FileSystem;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Launcher.Adapter {
 
-    public interface IAdapter {
+    internal interface IAdapter {
 
         string Id { get; }
 
@@ -12,6 +13,8 @@ namespace Packsly3.Core.Launcher.Adapter {
         bool IsCompatible(string lifecycleEvent);
 
         void Execute(JObject config, string lifecycleEvent, IMinecraftInstance instance);
+
+        void Save(IMinecraftInstance instance, object config);
 
     }
 
@@ -31,6 +34,12 @@ namespace Packsly3.Core.Launcher.Adapter {
         #endregion
 
         public abstract void Execute(T config, string lifecycleEvent, IMinecraftInstance instance);
+
+        public void Save(IMinecraftInstance instance, object config) {
+            PackslyInstanceFile cfg = instance.PackslyConfig;
+            cfg.Adapters.SetConfigFor(this, config);
+            cfg.Save();
+        }
 
     }
 
