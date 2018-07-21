@@ -25,7 +25,7 @@ namespace Packsly3.Core.Common.Json {
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
             if (objectType != typeof(FileInfo) && objectType != typeof(DirectoryInfo))
-                throw new NotSupportedException( $"{GetType().Name} does not support deserialization of '{objectType}' type.");
+                throw new NotSupportedException( $"{GetType().Name} does not support serialization of '{objectType}' type.");
 
             string path = JToken.Load(reader).Value<string>();
 

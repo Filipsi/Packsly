@@ -5,10 +5,12 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Packsly3.Core.Common;
+using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
+using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.Core.Modpack;
+using Packsly3.Core.Modpack.Model;
 
 namespace Packsly3.Core.Launcher.Adapter.Impl {
 
@@ -31,7 +33,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 throw new FormatException($"Revision based updater '{GetType().FullName}' could not resolve update url '{config.UpdateUrl}' provided by configuration.");
             }
 
-            Lifecycle.Dispatcher.Publish(instance, Lifecycle.UpdateStarted);
+            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateStarted);
             Console.WriteLine("Checking for modpack updates...");
 
             using (WebClient client = new WebClient()) {
@@ -56,12 +58,12 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                     UpdateMods(instance, remoteModpack);
 
                     // Update adapter settings saved in instnace.packsly file, because revision number has changed
-                    this.Save(instance, remoteConfig);
+                    Save(instance, remoteConfig);
                 }
             }
 
             Console.WriteLine("Modpack is up to date.");
-            Lifecycle.Dispatcher.Publish(instance, Lifecycle.UpdateFinished);
+            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateFinished);
         }
 
         #endregion

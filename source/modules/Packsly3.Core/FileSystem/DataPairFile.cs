@@ -64,7 +64,7 @@ namespace Packsly3.Core.FileSystem {
                 while (!reader.EndOfStream) {
                     string line = reader.ReadLine();
                     if (line == null)
-                        throw new Exception("An error occured while reading the file.");
+                        throw new Exception("An error occurred while reading the file.");
 
                     if (!line.Contains('='))
                         throw new Exception("Error while reading data pair file. Equal sign is missing on line.");

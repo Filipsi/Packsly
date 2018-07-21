@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using Newtonsoft.Json;
-using Packsly3.Core.Launcher.Modloader;
+using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Modpack;
+using Packsly3.Core.Modpack.Model;
 
 namespace Packsly3.Core.Launcher.Instance {
 
-    public static class MinecraftInstanceFactory {
+    internal static class MinecraftInstanceFactory {
 
         public static IMinecraftInstance CreateFromModpack(FileInfo modpackFile) {
             if (!modpackFile.Exists) {
@@ -32,7 +31,7 @@ namespace Packsly3.Core.Launcher.Instance {
             ModpackDefinition modpackDefinition = JsonConvert.DeserializeObject<ModpackDefinition>(modpackJson);
             IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);
 
-            Lifecycle.Dispatcher.Publish(instance, Lifecycle.PreInstallation);
+            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PreInstallation);
 
             // Install modloaders
             foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
@@ -65,20 +64,20 @@ namespace Packsly3.Core.Launcher.Instance {
             }
             instance.Files.Save();
 
-            Lifecycle.Dispatcher.Publish(instance, Lifecycle.PostInstallation);
+            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PostInstallation);
 
             return instance;
         }
 
         private static IMinecraftInstance CreateMinecraftInstnace(string instanceId, ModpackDefinition modpackDefinition) {
-            IMinecraftInstance instance = MinecraftLauncher.CreateInstance(instanceId);
+            IMinecraftInstance instance = Packsly.Launcher.CreateInstance(instanceId);
 
             // Set base minecraft instance properties
             instance.Name = modpackDefinition.Name;
             instance.MinecraftVersion = modpackDefinition.MinecraftVersion;
             instance.Icon.Source = modpackDefinition.Icon;
 
-            // Save adapters defined in modpack along with configuration to packsly instnace config file
+            // Save adapters defined in modpack along with configuration to packsly instance config file
             foreach (KeyValuePair<string, object> adapterDefinition in modpackDefinition.Adapters) {
                 string adapterName = adapterDefinition.Key;
                 object adapterSettings = adapterDefinition.Value;
@@ -87,10 +86,10 @@ namespace Packsly3.Core.Launcher.Instance {
                 instance.PackslyConfig.Save();
             }
 
-            // Configure instance using compatible enviroment settings
+            // Configure instance using compatible environment settings
             foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
                 string name = environmentEntry.Key;
-                if (name != MinecraftLauncher.CurrentEnvironment.Name)
+                if (name != Packsly.Launcher.Name)
                     continue;
 
                 string settings = environmentEntry.Value.ToString();

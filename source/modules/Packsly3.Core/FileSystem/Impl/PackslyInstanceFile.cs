@@ -2,15 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Packsly3.Core.Common.Json;
 using Packsly3.Core.Launcher.Adapter;
-using Packsly3.Core.Launcher.Instance;
+using Packsly3.Core.Launcher.Instance.Logic;
 
-namespace Packsly3.Core.FileSystem {
+namespace Packsly3.Core.FileSystem.Impl {
 
     public partial class PackslyInstanceFile : JsonFile {
 

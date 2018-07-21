@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
-using Packsly3.Core.FileSystem;
+using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Launcher.Adapter {

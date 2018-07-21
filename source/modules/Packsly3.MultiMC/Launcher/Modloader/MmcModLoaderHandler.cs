@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Packsly3.Core;
-using Packsly3.Core.Common;
-using Packsly3.Core.Launcher;
+using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.MultiMC.FileSystem;
 

@@ -3,10 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Packsly3.Core.Launcher;
-using Packsly3.Core.Launcher.Instance;
+using Packsly3.Core.Launcher.Instance.Logic;
 
-namespace Packsly3.Core.Modpack {
+namespace Packsly3.Core.Modpack.Model {
 
     [JsonObject(MemberSerialization.OptIn)]
     public class RemoteResource {
@@ -28,7 +27,7 @@ namespace Packsly3.Core.Modpack {
                 if (!EnvironmentOnly.IsEnvironmentSpecific)
                     return true;
 
-                bool containsEntry = EnvironmentOnly.Entries.Any(entry => entry == MinecraftLauncher.CurrentEnvironment.Name);
+                bool containsEntry = EnvironmentOnly.Entries.Any(entry => entry == Packsly.Launcher.Name);
                 if (EnvironmentOnly.IsWhitelist && !containsEntry)
                     return false;
 

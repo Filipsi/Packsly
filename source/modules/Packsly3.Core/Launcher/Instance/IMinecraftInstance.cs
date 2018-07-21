@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using Packsly3.Core.FileSystem;
+﻿using System.IO;
+using Packsly3.Core.FileSystem.Impl;
+using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
-using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher.Instance {
 

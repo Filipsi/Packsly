@@ -2,11 +2,10 @@
 using System.IO;
 using System.Net;
 
-namespace Packsly3.Core.Launcher.Instance {
+namespace Packsly3.Core.Launcher.Instance.Logic {
 
     public class Icon {
 
-        // TODO: Change when hash changes insted of name? Module maybe?
         public string Source {
             get => _source;
             set {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Packsly3.Core.Launcher.Instance {
+namespace Packsly3.Core.Launcher.Instance.Logic {
 
     public class EnvironmentVariables {
 

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace Packsly3.Core.Modpack {
+namespace Packsly3.Core.Modpack.Model {
 
     [JsonObject(MemberSerialization.OptIn)]
     public class EnvironmentSpecific {

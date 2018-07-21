@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Packsly3.Core.Common;
+using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Launcher.Modloader {
@@ -48,7 +44,7 @@ namespace Packsly3.Core.Launcher.Modloader {
             ModLoaderInfo modLoaderInfo = ModLoaders.FirstOrDefault(ml => ml.Name == name);
 
             if (modLoaderInfo == null) {
-                throw new KeyNotFoundException($"This instance does not have any modloder with name '{name}'.");
+                throw new KeyNotFoundException($"This instance does not have any modloader with name '{name}'.");
             }
 
             IModLoaderHandler schema = _compatibleSchemata.FirstOrDefault(s => s.IsCompatible(name));

@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Packsly3.Core.FileSystem;
-using Packsly3.Core.Launcher;
+using Packsly3.Core;
+using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher.Instance;
+using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.MultiMC.FileSystem;
-using Packsly3.MultiMC.Launcher.Modloader;
 
 namespace Packsly3.MultiMC.Launcher {
 
@@ -69,7 +60,7 @@ namespace Packsly3.MultiMC.Launcher {
             PackFile = new MmcPackFile(Location.FullName);
             PackFile.Load();
 
-            Icon = new Icon(Path.Combine(Core.Launcher.MinecraftLauncher.Workspace.FullName, "icons"), MmcConfig.IconName);
+            Icon = new Icon(Path.Combine(Packsly.Launcher.Workspace.FullName, "icons"), MmcConfig.IconName);
             Icon.IconChanged += (sender, args)
                 => MmcConfig.IconName = (sender as Icon)?.Source;
 

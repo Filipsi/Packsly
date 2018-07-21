@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json.Linq;
-using Packsly3.Core.Common;
-using Packsly3.Core.Launcher.Instance;
+using Packsly3.Core.Common.Register;
+using Packsly3.Core.Launcher.Instance.Logic;
 
 namespace Packsly3.Core.Launcher.Adapter {
 

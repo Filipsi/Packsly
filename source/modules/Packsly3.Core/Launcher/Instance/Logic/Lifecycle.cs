@@ -1,9 +1,11 @@
 ﻿using System;
 using Packsly3.Core.Launcher.Adapter;
 
-namespace Packsly3.Core.Launcher.Instance {
+namespace Packsly3.Core.Launcher.Instance.Logic {
 
-    public static class Lifecycle {
+    public class Lifecycle {
+
+        #region Constants
 
         public static readonly string PreInstallation = "preinstallation";
 
@@ -17,6 +19,15 @@ namespace Packsly3.Core.Launcher.Instance {
 
         public static readonly string UpdateFinished = "updatefinished";
 
+        #endregion
+
+        public readonly Dispatcher EventBus = new Dispatcher();
+
+        internal Lifecycle() {
+        }
+
+        #region Events
+
         public class Changed : EventArgs {
 
             public readonly IMinecraftInstance Instance;
@@ -29,17 +40,20 @@ namespace Packsly3.Core.Launcher.Instance {
 
         }
 
-        public static class Dispatcher {
+        public class Dispatcher {
 
-            public static readonly EventHandler<Changed> LifecycleEvent;
+            public readonly EventHandler<Changed> LifecycleEvent;
 
-            static Dispatcher() {
+            internal Dispatcher() {
                 LifecycleEvent += AdapterHandler.OnLifecycleChanged;
             }
 
-            public static void Publish(IMinecraftInstance instance, string eventName)
+            public void Publish(IMinecraftInstance instance, string eventName)
                 => LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
         }
+
+        #endregion
+
     }
 
 }

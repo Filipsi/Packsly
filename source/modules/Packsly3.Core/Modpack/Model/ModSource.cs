@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Packsly3.Core.Launcher;
-using Packsly3.Core.Launcher.Instance;
+using Packsly3.Core.Launcher.Instance.Logic;
 
-namespace Packsly3.Core.Modpack {
+namespace Packsly3.Core.Modpack.Model {
 
     public class ModSource : RemoteResource {
 

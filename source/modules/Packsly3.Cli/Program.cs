@@ -4,7 +4,9 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using Newtonsoft.Json;
+using Packsly3.Core;
 using Packsly3.Core.FileSystem;
+using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Adapter;
 using Packsly3.Core.Launcher.Adapter.Impl;
@@ -54,17 +56,17 @@ namespace Packsly3.Cli {
             Console.WriteLine("Welcome to Packsly3!");
             Console.WriteLine();
 
-            if (PackslyConfig.Instnace.Workspace != null && PackslyConfig.Instnace.Workspace.Exists) {
-                MinecraftLauncher.Workspace = PackslyConfig.Instnace.Workspace;
-                Console.WriteLine($"Workspace was set from configuration file to: {MinecraftLauncher.Workspace}");
+            if (Packsly.Configuration.Workspace != null && Packsly.Configuration.Workspace.Exists) {
+                Packsly.Launcher.Workspace = Packsly.Configuration.Workspace;
+                Console.WriteLine($"Workspace was set from configuration file to: {Packsly.Launcher.Workspace}");
                 Console.WriteLine();
             }
 
             Console.WriteLine("Detecting environment...");
-            Console.WriteLine($" > CurrentEnvironment handler: {MinecraftLauncher.CurrentEnvironment}");
+            Console.WriteLine($" > Current environment name: {Packsly.Launcher.Name}");
             Console.WriteLine();
 
-            string modpackSource = PackslyConfig.Instnace.DefaultModpackSource;
+            string modpackSource = Packsly.Configuration.DefaultModpackSource;
 
             if (!string.IsNullOrEmpty(modpackSource)) {
                 Console.WriteLine($"Gathering modpack definition from source '{modpackSource}' specified in configuration file...");
@@ -72,13 +74,13 @@ namespace Packsly3.Cli {
                 if (File.Exists(modpackSource)) {
                     Console.WriteLine("Beginning installation from local modpack definition file...");
 
-                    MinecraftInstanceFactory.CreateFromModpack(
+                    Packsly.Launcher.CreateInstanceFromModpack(
                         new FileInfo(modpackSource)
                     );
                 } else if (Uri.IsWellFormedUriString(modpackSource, UriKind.Absolute)) {
                     Console.WriteLine("Beginning installation from remote modpack definition source...");
 
-                    MinecraftInstanceFactory.CreateFromModpack(
+                    Packsly.Launcher.CreateInstanceFromModpack(
                         new Uri(modpackSource)
                     );
                 } else {

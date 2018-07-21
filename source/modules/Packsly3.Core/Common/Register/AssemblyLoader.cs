@@ -4,30 +4,29 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Packsly3.Core.Common {
+namespace Packsly3.Core.Common.Register {
 
-    internal static class PackslyAssemblyLoader {
-
-        public static Assembly[] LoadedAssemblies;
+    internal static class AssemblyLoader {
 
         private static readonly DirectoryInfo Root = new DirectoryInfo(Directory.GetCurrentDirectory());
 
-        static PackslyAssemblyLoader() {
-            // Search for Packsly dlls in workspace
+        public static readonly Assembly[] LoadedAssemblies;
+
+        static AssemblyLoader() {
+            // Search for Packsly libraries in the workspace
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             FileInfo[] toLoad = Root
                 .GetFiles("Packsly3.*.dll")
                 .Where(f => assemblies.All(a => a.Location != f.FullName))
                 .ToArray();
 
-            // Load Packsly dlls
+            // Load Packsly libraries
             List<Assembly> loaded = toLoad
                 .Select(dll => Assembly.LoadFrom(dll.FullName))
                 .ToList();
 
             // Add this assembly to the list
             loaded.Add(Assembly.GetExecutingAssembly());
-
             LoadedAssemblies = loaded.ToArray();
         }
 

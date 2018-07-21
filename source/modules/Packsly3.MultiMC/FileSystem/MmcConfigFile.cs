@@ -1,12 +1,9 @@
 ﻿using Packsly3.Core.FileSystem;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Packsly3.MultiMC.FileSystem {

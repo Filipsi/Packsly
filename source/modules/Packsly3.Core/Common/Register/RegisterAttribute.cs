@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Packsly3.Core.Launcher;
 
-namespace Packsly3.Core.Common {
+namespace Packsly3.Core.Common.Register {
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class RegisterAttribute : Attribute {
@@ -12,7 +11,7 @@ namespace Packsly3.Core.Common {
         public static T[] GetOccurrencesFor<T>() {
             List<T> occurrences = new List<T>();
 
-            foreach (Assembly assembly in PackslyAssemblyLoader.LoadedAssemblies) {
+            foreach (Assembly assembly in AssemblyLoader.LoadedAssemblies) {
                 foreach (Type type in assembly.GetTypes()) {
                     object[] attributes = type.GetCustomAttributes(typeof(RegisterAttribute), false);
 

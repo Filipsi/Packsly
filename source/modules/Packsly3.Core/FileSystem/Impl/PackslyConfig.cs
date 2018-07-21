@@ -1,21 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Newtonsoft.Json;
 using Packsly3.Core.Common.Json;
-using Packsly3.Core.Modpack;
 
-namespace Packsly3.Core.FileSystem {
+namespace Packsly3.Core.FileSystem.Impl {
 
     public class PackslyConfig : JsonFile {
-
-        public static readonly PackslyConfig Instnace = new PackslyConfig(
-            Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)
-        );
 
         [JsonProperty("workspace")]
         [JsonConverter(typeof(RelativePathConverter))]
@@ -24,7 +13,10 @@ namespace Packsly3.Core.FileSystem {
         [JsonProperty("modpack")]
         public string DefaultModpackSource { private set; get; }
 
-        private PackslyConfig(string path) : base(Path.Combine(path, "packsly.json")) {
+        internal PackslyConfig(FileSystemInfo path) : this(path.FullName) {
+        }
+
+        internal PackslyConfig(string path) : base(Path.Combine(path, "packsly.json")) {
             if (!Exists) {
                 Save();
             }

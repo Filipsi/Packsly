@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Packsly3.Core;
-using Packsly3.Core.Common;
+using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.MultiMC.FileSystem;
 
 namespace Packsly3.MultiMC.Launcher {
 
@@ -65,7 +59,7 @@ namespace Packsly3.MultiMC.Launcher {
                     .FirstOrDefault(dir => dir.Name == id) != null;
 
                 if (hasInstanceWithId)
-                    throw new DuplicateNameException($"Instance with id '{id}' allready exists!");
+                    throw new DuplicateNameException($"Instance with id '{id}' already exists!");
             } else {
                 instancesFolder = workspace.CreateSubdirectory(id);
             }

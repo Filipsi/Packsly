@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
-using Packsly3.Core.Modpack;
+using Packsly3.Core.Modpack.Model;
 
-namespace Packsly3.Core.Launcher.Instance {
+namespace Packsly3.Core.Launcher.Instance.Logic {
 
     public class FileManager : IDisposable {
 
