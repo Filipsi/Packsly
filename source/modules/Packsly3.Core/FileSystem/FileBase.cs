@@ -4,25 +4,40 @@ namespace Packsly3.Core.FileSystem {
 
     public abstract class FileBase {
 
-        public string FileName      => ThisFile.Name;
-        public string FilePath      => ThisFile.FullName;
-        public string DirectoryPath => Path.GetDirectoryName(FilePath);
-        public bool   Exists        => ThisFile.Exists;
+        #region MyRegion
 
-        protected readonly FileInfo ThisFile;
+        public string FileName
+            => File.Name;
+
+        public string FilePath
+            => File.FullName;
+
+        public string DirectoryPath
+            => Path.GetDirectoryName(FilePath);
+
+        public bool Exists
+            => File.Exists;
+
+        #endregion
+
+        protected readonly FileInfo File;
 
         protected FileBase(string path) {
-            ThisFile = new FileInfo(path);
+            File = new FileInfo(path);
         }
+
+        #region IO
 
         public abstract void Load();
 
         public abstract void Save();
 
         public void Delete() {
-            if (ThisFile.Exists)
-                ThisFile.Delete();
+            if (File.Exists)
+                File.Delete();
         }
+
+        #endregion
 
     }
 

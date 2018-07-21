@@ -53,6 +53,8 @@ namespace Packsly3.Core.FileSystem {
             MarkDirty();
         }
 
+        #region IO
+
         public override void Load() {
             if (!Exists) {
                 return;
@@ -60,7 +62,7 @@ namespace Packsly3.Core.FileSystem {
 
             _data.Clear();
 
-            using (StreamReader reader = ThisFile.OpenText())
+            using (StreamReader reader = File.OpenText())
                 while (!reader.EndOfStream) {
                     string line = reader.ReadLine();
                     if (line == null)
@@ -85,11 +87,13 @@ namespace Packsly3.Core.FileSystem {
             foreach (KeyValuePair<string, string> entry in _data)
                 builder.AppendLine($"{entry.Key}={entry.Value}");
 
-            using (FileStream writer = ThisFile.Open(FileMode.Create)) {
+            using (FileStream writer = File.Open(FileMode.Create)) {
                 byte[] raw = Encoding.UTF8.GetBytes(builder.ToString());
                 writer.Write(raw, 0, raw.Length);
             }
         }
+
+        #endregion
 
     }
 

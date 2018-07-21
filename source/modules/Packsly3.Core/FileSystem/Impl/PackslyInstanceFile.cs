@@ -11,13 +11,17 @@ namespace Packsly3.Core.FileSystem.Impl {
 
     public partial class PackslyInstanceFile : JsonFile {
 
-        private readonly JsonSerializerSettings _serializerSettings;
+        #region Properties
 
         [JsonProperty("adapters")]
         internal AdaptersConfig Adapters { private set; get; } = new AdaptersConfig();
 
         [JsonProperty("files")]
         internal Dictionary<FileManager.GroupType, List<FileInfo>> ManagedFiles { private set; get; } = new Dictionary<FileManager.GroupType, List<FileInfo>>();
+
+        #endregion
+
+        private readonly JsonSerializerSettings _serializerSettings;
 
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
             _serializerSettings = new JsonSerializerSettings {
@@ -36,8 +40,12 @@ namespace Packsly3.Core.FileSystem.Impl {
         protected override JsonSerializerSettings GetSerializerSettings()
             => _serializerSettings;
 
+        #region IO
+
         public sealed override void Load()
             => base.Load();
+
+        #endregion
 
     }
 

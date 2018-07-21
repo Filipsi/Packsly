@@ -8,14 +8,12 @@ namespace Packsly3.Core.Common.Register {
 
     internal static class AssemblyLoader {
 
-        private static readonly DirectoryInfo Root = new DirectoryInfo(Directory.GetCurrentDirectory());
-
         public static readonly Assembly[] LoadedAssemblies;
 
         static AssemblyLoader() {
             // Search for Packsly libraries in the workspace
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            FileInfo[] toLoad = Root
+            FileInfo[] toLoad = Packsly.AplicationDirectory
                 .GetFiles("Packsly3.*.dll")
                 .Where(f => assemblies.All(a => a.Location != f.FullName))
                 .ToArray();

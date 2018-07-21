@@ -6,12 +6,16 @@ namespace Packsly3.Core.FileSystem.Impl {
 
     public class PackslyConfig : JsonFile {
 
+        #region Properties
+
         [JsonProperty("workspace")]
         [JsonConverter(typeof(RelativePathConverter))]
         public DirectoryInfo Workspace { private set; get; }
 
         [JsonProperty("modpack")]
         public string DefaultModpackSource { private set; get; }
+
+        #endregion
 
         internal PackslyConfig(FileSystemInfo path) : this(path.FullName) {
         }
@@ -24,11 +28,15 @@ namespace Packsly3.Core.FileSystem.Impl {
             Load();
         }
 
+        #region IO
+
         public sealed override void Save()
             => base.Save();
 
         public sealed override void Load()
             => base.Load();
+
+        #endregion
 
     }
 

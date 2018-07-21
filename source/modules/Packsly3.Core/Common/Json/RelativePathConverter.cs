@@ -7,7 +7,7 @@ namespace Packsly3.Core.Common.Json {
 
     internal class RelativePathConverter : JsonConverter {
 
-        public string Root { get; set; } = Directory.GetCurrentDirectory();
+        public string Root { get; set; } = Packsly.AplicationDirectory.FullName;
 
         public override bool CanConvert(Type objectType)
             => objectType.IsSubclassOf(typeof(FileSystemInfo)) || objectType == typeof(FileSystemInfo);
