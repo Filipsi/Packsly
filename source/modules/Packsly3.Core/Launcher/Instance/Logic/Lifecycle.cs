@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Packsly3.Core.Launcher.Adapter;
 
 namespace Packsly3.Core.Launcher.Instance.Logic {
@@ -50,6 +51,12 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
             public void Publish(IMinecraftInstance instance, string eventName)
                 => LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
+
+            public void Publish(IMinecraftInstance instance, IEnumerable<string> eventNames) {
+                foreach (string eventName in eventNames) {
+                    Publish(instance, eventName);
+                }
+            }
         }
 
         #endregion

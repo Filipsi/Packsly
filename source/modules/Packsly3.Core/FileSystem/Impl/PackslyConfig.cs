@@ -10,7 +10,7 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         [JsonProperty("workspace")]
         [JsonConverter(typeof(RelativePathConverter))]
-        public DirectoryInfo Workspace { private set; get; }
+        public DirectoryInfo Workspace { private set; get; } = Packsly.AplicationDirectory;
 
         [JsonProperty("modpack")]
         public string DefaultModpackSource { private set; get; }

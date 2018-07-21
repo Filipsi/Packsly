@@ -11,7 +11,7 @@ namespace Packsly3.Core.Launcher {
 
         private static readonly ILauncherEnvironment[] Enviroments = RegisterAttribute.GetOccurrencesFor<ILauncherEnvironment>();
 
-        public DirectoryInfo Workspace { get; set; } = Packsly.AplicationDirectory;
+        public DirectoryInfo Workspace { get; set; } = Packsly.Configuration.Workspace;
 
         public string Name
             => CurrentEnvironment.Name;
@@ -22,6 +22,11 @@ namespace Packsly3.Core.Launcher {
         private ILauncherEnvironment _currentEnviroment;
 
         internal MinecraftLauncher() {
+        }
+
+        public void ForceEnviromentUsage(string name) {
+            ILauncherEnvironment environment = Enviroments.FirstOrDefault((env) => env.Name == name);
+            _currentEnviroment = environment ?? throw new Exception($"Environment with name '{name}' does not exist.");
         }
 
         #region Wrapper methods
