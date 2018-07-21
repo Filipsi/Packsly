@@ -21,11 +21,12 @@ namespace Packsly3.Core.FileSystem.Impl {
         }
 
         internal PackslyConfig(string path) : base(Path.Combine(path, "packsly.json")) {
-            if (!Exists) {
+            if (Exists) {
+                Load();
+            }
+            else {
                 Save();
             }
-
-            Load();
         }
 
         #region IO
