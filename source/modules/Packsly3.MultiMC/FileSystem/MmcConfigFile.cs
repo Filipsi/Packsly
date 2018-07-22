@@ -48,8 +48,7 @@ namespace Packsly3.MultiMC.FileSystem {
             get         => Get<bool>("OverrideCommands");
         }
 
-        [JsonProperty(PropertyName = "preLaunchCommand")]
-        public string PreLaunchCommand {
+        internal string PreLaunchCommand {
             set {
                 OverrideCommands = !string.IsNullOrEmpty(WrapperCommand) || !string.IsNullOrEmpty(PostExitCommand) || !string.IsNullOrEmpty(value);
                 Set("PreLaunchCommand", value);
@@ -57,8 +56,7 @@ namespace Packsly3.MultiMC.FileSystem {
             get => Get<string>("PreLaunchCommand");
         }
 
-        [JsonProperty(PropertyName = "postExitCommand")]
-        public string PostExitCommand {
+        internal string PostExitCommand {
             set {
                 OverrideCommands = !string.IsNullOrEmpty(WrapperCommand) || !string.IsNullOrEmpty(PreLaunchCommand) || !string.IsNullOrEmpty(value);
                 Set("PostExitCommand", value);
