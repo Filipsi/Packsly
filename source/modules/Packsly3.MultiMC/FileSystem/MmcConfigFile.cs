@@ -11,149 +11,199 @@ namespace Packsly3.MultiMC.FileSystem {
     [JsonObject(MemberSerialization.OptIn)]
     internal sealed class MmcConfigFile : DataPairFile {
 
-        public string Name {
-            set => Set("name", value);
-            get => Get<string>("name");
-        }
+        #region Wrappers
 
-        [JsonProperty(PropertyName = "instanceType")]
-        public string InstanceType {
-            set => Set("InstanceType", value);
-            get => Get<string>("InstanceType");
+        public string Name {
+            get => Get<string>("name");
+            set => Set("name", value);
         }
 
         public string MinecraftVersion {
-            set => Set("IntendedVersion", value);
             get => Get<string>("IntendedVersion");
+            set => Set("IntendedVersion", value);
         }
 
         public string ForgeVersion {
-            set => Set("ForgeVersion", value);
             get => Get<string>("ForgeVersion");
+            set => Set("ForgeVersion", value);
         }
 
         public string LiteloaderVersion {
-            set => Set("LiteloaderVersion", value);
             get => Get<string>("LiteloaderVersion");
-        }
-
-        [JsonProperty(PropertyName = "mcLaunchMethod")]
-        public string McLaunchMethod {
-            set => Set("MCLaunchMethod", value);
-            get => Get<string>("MCLaunchMethod");
-        }
-
-        public bool OverrideCommands {
-            private set => Set("OverrideCommands", value);
-            get         => Get<bool>("OverrideCommands");
+            set => Set("LiteloaderVersion", value);
         }
 
         internal string PreLaunchCommand {
+            get => Get<string>("PreLaunchCommand");
             set {
                 OverrideCommands = !string.IsNullOrEmpty(WrapperCommand) || !string.IsNullOrEmpty(PostExitCommand) || !string.IsNullOrEmpty(value);
                 Set("PreLaunchCommand", value);
             }
-            get => Get<string>("PreLaunchCommand");
         }
 
         internal string PostExitCommand {
+            get => Get<string>("PostExitCommand");
             set {
                 OverrideCommands = !string.IsNullOrEmpty(WrapperCommand) || !string.IsNullOrEmpty(PreLaunchCommand) || !string.IsNullOrEmpty(value);
                 Set("PostExitCommand", value);
             }
-            get => Get<string>("PostExitCommand");
+        }
+
+        public bool OverrideConsole {
+            get => Get<bool>("OverrideConsole");
+            private set => Set("OverrideConsole", value);
+        }
+
+        public string IconName {
+            get => Get<string>("iconKey");
+            set => Set("iconKey", value);
+        }
+
+        #endregion
+
+        #region Exposed wrappers
+
+        [JsonProperty(PropertyName = "instanceType")]
+        public string InstanceType {
+            get => Get<string>("InstanceType");
+            set => Set("InstanceType", value);
+        }
+
+        [JsonProperty(PropertyName = "mcLaunchMethod")]
+        public string McLaunchMethod {
+            get => Get<string>("MCLaunchMethod");
+            set => Set("MCLaunchMethod", value);
         }
 
         [JsonProperty(PropertyName = "wrapperCommand")]
         public string WrapperCommand {
+            get => Get<string>("WrapperCommand");
             set {
                 OverrideCommands = !string.IsNullOrEmpty(PostExitCommand) || !string.IsNullOrEmpty(PreLaunchCommand) || !string.IsNullOrEmpty(value);
                 Set("WrapperCommand", value);
             }
-            get => Get<string>("WrapperCommand");
         }
 
-        public bool OverrideConsole {
-            private set => Set("OverrideConsole", value);
-            get         => Get<bool>("OverrideConsole");
-        }
 
         [JsonProperty(PropertyName = "autoCloseConsole")]
         public bool AutoCloseConsole {
+            get => Get<bool>("AutoCloseConsole");
             set {
                 OverrideConsole = ShowConsoleOnError || !ShowConsole || value;
                 Set("AutoCloseConsole", value);
             }
-            get => Get<bool>("AutoCloseConsole");
         }
 
         [JsonProperty(PropertyName = "showConsole")]
         public bool ShowConsole {
+            get => Get<bool>("ShowConsole");
             set {
                 OverrideConsole = ShowConsoleOnError || AutoCloseConsole || !value;
                 Set("ShowConsole", value);
             }
-            get => Get<bool>("ShowConsole");
         }
 
         [JsonProperty(PropertyName = "showConsoleOnError")]
         public bool ShowConsoleOnError {
+            get => Get<bool>("ShowConsoleOnError");
             set {
                 OverrideConsole = AutoCloseConsole || !ShowConsole || value;
                 Set("ShowConsoleOnError", value);
             }
-            get => Get<bool>("ShowConsoleOnError");
-        }
-
-        public bool AreJavaArgumentsOverridden {
-            private set => Set("OverrideJavaArgs", value);
-            get         => Get<bool>("OverrideJavaArgs");
         }
 
         [JsonProperty(PropertyName = "javaArguments")]
         public string JavaArguments {
+            get => Get<string>("JvmArgs");
             set {
                 AreJavaArgumentsOverridden = !string.IsNullOrEmpty(value);
                 Set("JvmArgs", value);
             }
-            get => Get<string>("JvmArgs");
-        }
-
-        public bool IsJavaLocationOverridden {
-            private set => Set("OverrideJavaLocation", value);
-            get         => Get<bool>("OverrideJavaLocation");
         }
 
         [JsonProperty(PropertyName = "javaPath")]
         public string JavaPath {
+            get => Get<string>("JavaPath");
             set {
                 IsJavaLocationOverridden = value == null;
                 Set("JavaPath", value);
             }
-            get => Get<string>("JavaPath");
-        }
-
-        public bool IsMemoryAllocationOverridden {
-            private set => Set("OverrideMemory", value);
-            get         => Get<bool>("OverrideMemory");
         }
 
         [JsonProperty(PropertyName = "maxMemoryAllocation")]
         public int MaxMemoryAllocation {
+            get => Get<int>("MaxMemAlloc");
             set {
                 IsMemoryAllocationOverridden = MaxMemoryAllocation > 0 || value > 0;
                 Set("MaxMemAlloc", IsMemoryAllocationOverridden ? value : 0);
             }
-            get => Get<int>("MaxMemAlloc");
         }
 
         [JsonProperty(PropertyName = "minMemoryAllocation")]
         public int MinMemoryAllocation {
+            get => Get<int>("MinMemAlloc");
             set {
                 IsMemoryAllocationOverridden = MaxMemoryAllocation > 0 || value > 0;
                 Set("MinMemAlloc", IsMemoryAllocationOverridden ? value : 0);
             }
-            get => Get<int>("MinMemAlloc");
+        }
+
+        [JsonProperty(PropertyName = "launchMaximized")]
+        public bool LaunchMaximized {
+            get => Get<bool>("LaunchMaximized");
+            set {
+                AreWindowSettingsOverridden = value || WindowWidth > 0 || WindowHeight > 0;
+                Set("LaunchMaximized", value);
+            }
+        }
+
+        [JsonProperty(PropertyName = "windowHeight")]
+        public int WindowHeight {
+            get => Get<int>("MinecraftWinHeight");
+            set {
+                AreWindowSettingsOverridden = LaunchMaximized || WindowWidth > 0 || value > 0;
+                Set("MinecraftWinHeight", IsMemoryAllocationOverridden ? value : 0);
+            }
+        }
+
+        [JsonProperty(PropertyName = "windowWidth")]
+        public int WindowWidth {
+            get => Get<int>("MinecraftWinWidth");
+            set {
+                AreWindowSettingsOverridden = LaunchMaximized || WindowHeight > 0 || value > 0;
+                Set("MinecraftWinWidth", IsMemoryAllocationOverridden ? value : 0);
+            }
+        }
+
+        [JsonProperty(PropertyName = "notes")]
+        public string Notes {
+            get => Get<string>("notes");
+            set => Set("notes", value);
+        }
+
+        #endregion
+
+        #region Helping wrappers
+
+
+        public bool OverrideCommands {
+            get => Get<bool>("OverrideCommands");
+            private set => Set("OverrideCommands", value);
+        }
+
+        public bool AreJavaArgumentsOverridden {
+            get => Get<bool>("OverrideJavaArgs");
+            private set => Set("OverrideJavaArgs", value);
+        }
+
+        public bool IsJavaLocationOverridden {
+            get => Get<bool>("OverrideJavaLocation");
+            private set => Set("OverrideJavaLocation", value);
+        }
+
+        public bool IsMemoryAllocationOverridden {
+            get => Get<bool>("OverrideMemory");
+            private set => Set("OverrideMemory", value);
         }
 
         public bool AreWindowSettingsOverridden {
@@ -161,45 +211,13 @@ namespace Packsly3.MultiMC.FileSystem {
             get => Get<bool>("OverrideWindow");
         }
 
-        [JsonProperty(PropertyName = "launchMaximized")]
-        public bool LaunchMaximized {
-            set {
-                AreWindowSettingsOverridden = value || WindowWidth > 0 || WindowHeight > 0;
-                Set("LaunchMaximized", value);
-            }
-            get => Get<bool>("LaunchMaximized");
-        }
+        #endregion
 
-        [JsonProperty(PropertyName = "windowHeight")]
-        public int WindowHeight {
-            set {
-                AreWindowSettingsOverridden = LaunchMaximized || WindowWidth > 0 || value > 0;
-                Set("MinecraftWinHeight", IsMemoryAllocationOverridden ? value : 0);
-            }
-            get => Get<int>("MinecraftWinHeight");
-        }
-
-        [JsonProperty(PropertyName = "windowWidth")]
-        public int WindowWidth {
-            set {
-                AreWindowSettingsOverridden = LaunchMaximized || WindowHeight > 0 || value > 0;
-                Set("MinecraftWinWidth", IsMemoryAllocationOverridden ? value : 0);
-            }
-            get => Get<int>("MinecraftWinWidth");
-        }
-
-        public string IconName {
-            set => Set("iconKey", value);
-            get => Get<string>("iconKey");
-        }
-
-        [JsonProperty(PropertyName = "notes")]
-        public string Notes {
-            set => Set("notes", value);
-            get => Get<string>("notes");
-        }
+        #region Properties
 
         public bool IsLoaded { private set; get; }
+
+        #endregion
 
         public MmcConfigFile(string path) : base(Path.Combine(path, "instance.cfg")) {
         }
@@ -218,10 +236,7 @@ namespace Packsly3.MultiMC.FileSystem {
             return this;
         }
 
-        public override void Save() {
-            base.Save();
-            IsLoaded = true;
-        }
+        #region Getters & Setters
 
         public void SetField(object value, [CallerMemberName] string propertyName = "") {
             PropertyInfo prop = GetType()
@@ -256,6 +271,17 @@ namespace Packsly3.MultiMC.FileSystem {
 
             return (T)prop.GetValue(this);
         }
+
+        #endregion
+
+        #region IO
+
+        public override void Save() {
+            base.Save();
+            IsLoaded = true;
+        }
+
+        #endregion
 
     }
 

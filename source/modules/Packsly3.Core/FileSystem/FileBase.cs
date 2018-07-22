@@ -4,7 +4,7 @@ namespace Packsly3.Core.FileSystem {
 
     public abstract class FileBase {
 
-        #region MyRegion
+        #region Properties
 
         public string FileName
             => File.Name;

@@ -9,13 +9,19 @@ namespace Packsly3.Core.FileSystem {
 
     public abstract class DataPairFile : FileBase {
 
+        #region Properties
+
         public bool IsDirty { private set; get; }
+
+        #endregion
 
         private readonly Dictionary<string, string> _data;
 
         protected DataPairFile(string path) : base(path) {
             _data = new Dictionary<string, string>();
         }
+
+        #region Helpers
 
         protected void MarkDirty() {
             IsDirty = true;
@@ -24,6 +30,10 @@ namespace Packsly3.Core.FileSystem {
         public bool HasKey(string key) {
             return _data.ContainsKey(key);
         }
+
+        #endregion
+
+        #region Getters & Setters
 
         protected T Get<T>(string key) {
             return HasKey(key) ?
@@ -52,6 +62,8 @@ namespace Packsly3.Core.FileSystem {
 
             MarkDirty();
         }
+
+        #endregion
 
         #region IO
 
