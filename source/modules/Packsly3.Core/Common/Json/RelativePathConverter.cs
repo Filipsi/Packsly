@@ -13,7 +13,9 @@ namespace Packsly3.Core.Common.Json {
             => objectType.IsSubclassOf(typeof(FileSystemInfo)) || objectType == typeof(FileSystemInfo) || objectType == typeof(string);
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-            string path = ((FileSystemInfo)value).FullName;
+            string path = value is string valueString
+                ? valueString
+                : ((FileSystemInfo)value).FullName;
 
             JValue jValue = new JValue(
                 path.StartsWith(Root)
