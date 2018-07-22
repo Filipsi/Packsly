@@ -17,9 +17,7 @@ namespace Packsly3.Cli.Common {
         };
 
         public static void Print() {
-            for (int i = 0; i < PackslyLogo.Length; i++) {
-                string line = PackslyLogo[i];
-                Console.SetCursorPosition(Console.WindowWidth / 2 - line.Length / 2, i + 1);
+            foreach (string line in PackslyLogo) {
                 Console.WriteLine(line);
             }
         }

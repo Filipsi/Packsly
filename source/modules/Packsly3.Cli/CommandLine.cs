@@ -17,13 +17,16 @@ namespace Packsly3.Cli {
             try {
                 Console.WriteLine("Welcome to Packsly3!");
                 ParseAndExecute(args);
+
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("All done!");
+                Console.ResetColor();
             }
             catch (Exception exception) {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(exception.Message);
                 Console.ResetColor();
-                Console.ReadKey();
             }
 
             if (System.Diagnostics.Debugger.IsAttached) {
@@ -32,7 +35,6 @@ namespace Packsly3.Cli {
         }
 
         private static void ParseAndExecute(string[] args) {
-            Console.ReadKey();
             if (args.Any()) {
                 FileInfo launcher = new FileInfo(args[0]);
                 if (launcher.Exists && launcher.Directory != null && launcher.Directory.Exists) {
