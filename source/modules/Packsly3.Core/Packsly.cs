@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher;
@@ -10,7 +11,7 @@ namespace Packsly3.Core {
 
         public static readonly DirectoryInfo AplicationDirectory = new DirectoryInfo(
             // ReSharper disable once AssignNullToNotNullAttribute
-            Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)
+            Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)
         );
 
         public static readonly PackslyConfig Configuration = new PackslyConfig(AplicationDirectory);
