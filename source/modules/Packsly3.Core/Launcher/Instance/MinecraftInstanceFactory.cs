@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Text;
 using Newtonsoft.Json;
 using NLog;
 using Packsly3.Core.Launcher.Instance.Logic;
@@ -27,6 +28,7 @@ namespace Packsly3.Core.Launcher.Instance {
 
         public static IMinecraftInstance CreateFromModpack(Uri modpackFileUrl) {
             using (WebClient client = new WebClient()) {
+                client.Encoding = Encoding.UTF8;
                 Logger.Debug($"Downloading modpack definition from {modpackFileUrl}");
                 return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFileUrl.AbsolutePath), client.DownloadString(modpackFileUrl));
             }
