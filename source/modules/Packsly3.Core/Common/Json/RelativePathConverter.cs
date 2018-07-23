@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Packsly3.Core.Common.Json {
 
-    internal class RelativePathConverter : JsonConverter {
+    public class RelativePathConverter : JsonConverter {
 
         public string Root { get; set; } = Packsly.AplicationDirectory.FullName;
 
@@ -17,12 +18,17 @@ namespace Packsly3.Core.Common.Json {
                 ? valueString
                 : ((FileSystemInfo)value).FullName;
 
-            JValue jValue = new JValue(
-                path.StartsWith(Root)
-                    ? "." + path.Remove(0, Root.Length)
-                    : path);
+            JValue token = new JValue(path);
+            if (path.StartsWith(Root)) {
+                token.Value = $".{path.Remove(0, Root.Length)}";
 
-            jValue.WriteTo(writer);
+            } else if (Root.StartsWith(path)) {
+                string rootFragment = Root.Substring(path.Length, Root.Length - path.Length);
+                int deep = rootFragment.Count(ch => ch == '\\');
+                token.Value = $".{string.Concat(Enumerable.Repeat("\\..", deep))}";
+            }
+
+            token.WriteTo(writer);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {

@@ -2,7 +2,7 @@
 
 namespace Packsly3.Core.Common.Json {
 
-    internal class LowercaseContractResolver : DefaultContractResolver {
+    public class LowercaseContractResolver : DefaultContractResolver {
 
         protected override string ResolvePropertyName(string propertyName) {
             return propertyName.ToLower();
