@@ -54,7 +54,7 @@ namespace Packsly3.Core.Launcher.Instance {
                     instance.Files.Download(mod, FileManager.GroupType.Mod);
                 }
                 else {
-                    Logger.Info($"Skipping downloading of mod '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} in '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                    Logger.Info($"Skipping downloading of mod '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
                 }
 
                 // Download mod resources
@@ -64,7 +64,7 @@ namespace Packsly3.Core.Launcher.Instance {
                         instance.Files.Download(resource, FileManager.GroupType.ModResource);
                     }
                     else {
-                        Logger.Info($"Skipping downloading of resource '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} in '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                        Logger.Info($"Skipping downloading of resource '{resource.FileName}' since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
                     }
                 }
             }

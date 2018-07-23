@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using NLog;
+﻿using NLog;
 using Packsly3.Cli.Verbs;
 using Packsly3.Core;
 using Packsly3.Core.Launcher.Instance;

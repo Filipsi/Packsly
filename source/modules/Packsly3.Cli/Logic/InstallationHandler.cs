@@ -14,8 +14,7 @@ namespace Packsly3.Cli.Logic {
         public static void Handle(InstallOptions options) {
             ApplySettings(options);
 
-            Logger.Info($"Gathering modpack definition from specified source '{options.Source}'...");
-
+            Logger.Info($"Using modpack definition from '{options.Source}'...");
             if (options.IsSourceLocalFile) {
                 Logger.Info("Beginning installation from local modpack definition file...");
                 Packsly.Launcher.CreateInstanceFromModpack(
@@ -40,7 +39,7 @@ namespace Packsly3.Cli.Logic {
                     Logger.Info($"Workspace was set to: {Packsly.Launcher.Workspace}");
                 }
                 else {
-                    throw new DirectoryNotFoundException("Specified workspace folder does not exists.");
+                    throw new DirectoryNotFoundException("Specified workspace folder does not exist.");
                 }
             }
 
