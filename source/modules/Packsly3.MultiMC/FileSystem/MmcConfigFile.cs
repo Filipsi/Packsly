@@ -98,7 +98,7 @@ namespace Packsly3.MultiMC.FileSystem {
         public bool ShowConsole {
             get => Get<bool>("ShowConsole");
             set {
-                OverrideConsole = ShowConsoleOnError || AutoCloseConsole || !value;
+                OverrideConsole = ShowConsoleOnError || AutoCloseConsole || value;
                 Set("ShowConsole", value);
             }
         }
@@ -225,8 +225,8 @@ namespace Packsly3.MultiMC.FileSystem {
         public MmcConfigFile WithDefaults() {
             InstanceType = "OneSix";
             McLaunchMethod = "LauncherPart";
+            ShowConsole = true;
             OverrideCommands = false;
-            OverrideConsole = false;
             AreJavaArgumentsOverridden = false;
             IsJavaLocationOverridden = false;
             IsMemoryAllocationOverridden = false;
