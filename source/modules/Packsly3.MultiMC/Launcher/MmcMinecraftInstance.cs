@@ -55,14 +55,17 @@ namespace Packsly3.MultiMC.Launcher {
             MmcConfig = new MmcConfigFile(Location.FullName);
             if (!MmcConfig.Exists) {
                 MmcConfig.WithDefaults();
+
+                const string runner = "$INST_DIR/../../packsly/Packsly3.Cli.exe lifecycle $INST_ID";
+                MmcConfig.PreLaunchCommand = $"{runner} {Lifecycle.PreLaunch}";
+                MmcConfig.PostExitCommand = $"{runner} {Lifecycle.PostExit}";
             }
 
             PackFile = new MmcPackFile(Location.FullName);
             PackFile.Load();
 
             Icon = new Icon(Path.Combine(Packsly.Launcher.Workspace.FullName, "icons"), MmcConfig.IconName);
-            Icon.IconChanged += (sender, args)
-                => MmcConfig.IconName = (sender as Icon)?.Source;
+            Icon.IconChanged += (sender, args) => MmcConfig.IconName = (sender as Icon)?.Source;
 
             ModLoaderManager = new ModLoaderManager(this);
 
