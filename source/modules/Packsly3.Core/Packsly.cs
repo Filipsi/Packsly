@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Instance.Logic;

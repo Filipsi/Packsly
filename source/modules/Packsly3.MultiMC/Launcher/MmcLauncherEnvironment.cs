@@ -53,15 +53,15 @@ namespace Packsly3.MultiMC.Launcher {
         public IMinecraftInstance CreateInstance(DirectoryInfo workspace, string id) {
             DirectoryInfo instancesFolder = workspace.GetDirectories("instances").FirstOrDefault();
 
-            if (instancesFolder != null) {
+            if (instancesFolder == null) {
+                instancesFolder = workspace.CreateSubdirectory("instances");
+            } else {
                 bool hasInstanceWithId = instancesFolder
                     .GetDirectories()
                     .FirstOrDefault(dir => dir.Name == id) != null;
 
                 if (hasInstanceWithId)
                     throw new DuplicateNameException($"Instance with id '{id}' already exists!");
-            } else {
-                instancesFolder = workspace.CreateSubdirectory(id);
             }
 
             DirectoryInfo instanceFolder = new DirectoryInfo(Path.Combine(instancesFolder.FullName, id));
