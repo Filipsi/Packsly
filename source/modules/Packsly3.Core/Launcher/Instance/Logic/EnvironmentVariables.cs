@@ -3,10 +3,13 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NLog;
 
 namespace Packsly3.Core.Launcher.Instance.Logic {
 
     public class EnvironmentVariables {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static readonly string ModsFolder = "modsFolder";
 
@@ -38,6 +41,8 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             if (!properties.ContainsKey(MinecraftFolder)) {
                 properties.Add(MinecraftFolder, Path.Combine(instance.Location.FullName, "minecraft"));
             }
+
+            Logger.Debug($"Environment variables of minecraft instance {instance} were set to: {Properties}");
         }
 
         public string GetProperty(string name) {
@@ -56,7 +61,9 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 .Where(namedParameter => Properties.ContainsKey(namedParameter))
                 .ToDictionary(namedParameter => namedParameter, namedParameter => Properties[namedParameter]);
 
-            return localMap.Aggregate(input, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value.ToString()));
+            string result = localMap.Aggregate(input, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value.ToString()));
+            Logger.Debug($"String '{input}' was transcribed as '{result}'");
+            return result;
         }
 
     }

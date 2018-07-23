@@ -4,11 +4,14 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using NLog;
 using Packsly3.Core.Modpack.Model;
 
 namespace Packsly3.Core.Launcher.Instance.Logic {
 
     public class FileManager : IDisposable {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public readonly ReadOnlyDictionary<GroupType, List<FileInfo>> FileMap;
 
@@ -30,6 +33,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                     continue;
 
                 foreach (FileInfo file in missingFiles) {
+                    Logger.Debug("Removing non-existing tracked file.");
                     Remove(file, group);
                 }
             }
@@ -51,6 +55,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             }
 
             _instance.PackslyConfig.ManagedFiles[group].Add(file);
+            Logger.Debug($"Tracked file {file.FullName} was added to minecraft instance {_instance.Id}");
             IsDirty = true;
         }
 
@@ -64,6 +69,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 destinationFile.Directory.Create();
             }
 
+            Logger.Debug($"Downloading file from {url}...");
             _client.DownloadFile(url, destination);
             Add(destinationFile, group);
         }
@@ -88,8 +94,10 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             }
 
             fileGroup.Remove(toRemove);
+            Logger.Debug($"Tracked file {file.FullName} was removed from minecraft instance {_instance.Id}");
 
             if (fileGroup.Count == 0) {
+                Logger.Debug($"Removing tracking group {group} from minecraft instance {_instance.Id}, because it is empty.");
                 _instance.PackslyConfig.ManagedFiles.Remove(group);
             }
 

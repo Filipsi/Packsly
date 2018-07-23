@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CommandLine;
+using NLog;
 using Packsly3.Cli.Common;
 using Packsly3.Cli.Logic;
 using Packsly3.Cli.Verbs;
@@ -11,49 +13,55 @@ namespace Packsly3.Cli {
 
     internal class CommandLine {
 
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private static void Main(string[] args) {
             Logo.Print();
 
             try {
-                Console.WriteLine("Welcome to Packsly3!");
-                ParseAndExecute(args);
-
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("All done!");
-                Console.ResetColor();
+                Logger.Info("Welcome to Packsly3!");
+                Run(args);
+                Logger.Info("Execution finished, goodbye!");
             }
             catch (Exception exception) {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(exception.Message);
-                Console.ResetColor();
+                Logger.Fatal(exception);
             }
 
+            // While in debug mode, prevent closing after everything is finished
             if (System.Diagnostics.Debugger.IsAttached) {
                 Console.ReadKey();
             }
         }
 
-        private static void ParseAndExecute(string[] args) {
+        private static void Run(IReadOnlyList<string> args) {
             if (args.Any()) {
+                // Allows for drag & drop of the launcher onto Packsly executable to initiate installation
                 FileInfo launcher = new FileInfo(args[0]);
                 if (launcher.Exists && launcher.Directory != null && launcher.Directory.Exists) {
+                    Logger.Debug("Running in drag & drop mode");
                     Packsly.Launcher.Workspace = launcher.Directory;
                     DefaultHandler.Handle();
                 }
+                // Handle usage as a CLI tool
                 else {
+                    Logger.Debug("Running in command line mode");
                     Parser.Default.ParseArguments<InstallOptions, LifecycleOptions>(args)
                         .WithParsed<InstallOptions>(InstallationHandler.Handle)
                         .WithParsed<LifecycleOptions>(LifecycleHandler.Handle);
                 }
             }
+            // Handle running as a application
             else {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Well, since no CLI arguments were specified, let's try to run installation with default settings...");
-                Console.ResetColor();
-                Console.WriteLine();
-
-                DefaultHandler.Handle();
+                Logger.Debug("Running in application mode");
+                Logger.Info("Since no command line arguments were specified, do you want to run default installation? (y/n)");
+                string responce = Console.ReadLine();
+                if (!string.IsNullOrEmpty(responce) && responce.Equals("y")) {
+                    Logger.Info("Running default installation.");
+                    DefaultHandler.Handle();
+                }
+                else {
+                    Logger.Info("Default installation was aborted.");
+                }
             }
         }
 

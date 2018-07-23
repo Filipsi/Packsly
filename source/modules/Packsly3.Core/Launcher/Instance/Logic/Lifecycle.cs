@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NLog;
 using Packsly3.Core.Launcher.Adapter;
 
 namespace Packsly3.Core.Launcher.Instance.Logic {
@@ -43,14 +44,18 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
         public class Dispatcher {
 
+            private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
             public readonly EventHandler<Changed> LifecycleEvent;
 
             internal Dispatcher() {
                 LifecycleEvent += AdapterHandler.OnLifecycleChanged;
             }
 
-            public void Publish(IMinecraftInstance instance, string eventName)
-                => LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
+            public void Publish(IMinecraftInstance instance, string eventName) {
+                Logger.Debug($"Publishing lifecycle event '{eventName}' for minecraft instance '{instance.Id}'...");
+                LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
+            }
 
             public void Publish(IMinecraftInstance instance, IEnumerable<string> eventNames) {
                 foreach (string eventName in eventNames) {

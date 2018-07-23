@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NLog;
 
 namespace Packsly3.Core.Common.Register {
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public class RegisterAttribute : Attribute {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static T[] GetOccurrencesFor<T>() {
             List<T> occurrences = new List<T>();
@@ -21,6 +24,7 @@ namespace Packsly3.Core.Common.Register {
                 }
             }
 
+            Logger.Debug($"Available implementations of {typeof(T).Name}: {string.Join(", ", occurrences.Select((occurrence) => occurrence.GetType().Name))}");
             return occurrences.ToArray();
         }
 

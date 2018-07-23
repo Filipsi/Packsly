@@ -1,11 +1,14 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using NLog;
 using Packsly3.Core.Common.Json;
 
 namespace Packsly3.Core.FileSystem {
 
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class JsonFile : FileBase {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new LowercaseContractResolver(),
@@ -25,8 +28,12 @@ namespace Packsly3.Core.FileSystem {
             if (!File.Exists)
                 return;
 
-            using (StreamReader reader = File.OpenText())
-                JsonConvert.PopulateObject(reader.ReadToEnd(), this, GetSerializerSettings());
+
+            using (StreamReader reader = File.OpenText()) {
+                string content = reader.ReadToEnd();
+                Logger.Debug($"Loaded JSON file '{File.Name}' with content {content}");
+                JsonConvert.PopulateObject(content, this, GetSerializerSettings());
+            }
         }
 
         public override void Save() {
@@ -34,8 +41,11 @@ namespace Packsly3.Core.FileSystem {
                 Directory.CreateDirectory(File.DirectoryName);
             }
 
-            using (StreamWriter writer = File.CreateText())
-                writer.Write(JsonConvert.SerializeObject(this, Formatting.Indented, GetSerializerSettings()));
+            using (StreamWriter writer = File.CreateText()) {
+                string content = JsonConvert.SerializeObject(this, Formatting.Indented, GetSerializerSettings());
+                Logger.Debug($"Saved JSON file '{File.Name}' with content {content}");
+                writer.Write(content);
+            }
         }
 
         #endregion

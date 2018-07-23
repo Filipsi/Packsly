@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using NLog;
 
 namespace Packsly3.Core.Common.Register {
 
     internal static class AssemblyLoader {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public static readonly Assembly[] LoadedAssemblies;
 
@@ -26,6 +29,7 @@ namespace Packsly3.Core.Common.Register {
             // Add this assembly to the list
             loaded.Add(Assembly.GetExecutingAssembly());
             LoadedAssemblies = loaded.ToArray();
+            Logger.Debug($"Loaded assemblies: {string.Join(", ", LoadedAssemblies.Select(assembly => assembly.GetName().Name))}");
         }
 
     }

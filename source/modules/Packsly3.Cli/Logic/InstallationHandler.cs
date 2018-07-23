@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.IO;
+using NLog;
 using Packsly3.Cli.Verbs;
 using Packsly3.Core;
 
@@ -8,19 +9,21 @@ namespace Packsly3.Cli.Logic {
 
     internal static class InstallationHandler {
 
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static void Handle(InstallOptions options) {
             ApplySettings(options);
 
-            Console.WriteLine($"Gathering modpack definition from specified source '{options.Source}'...");
+            Logger.Info($"Gathering modpack definition from specified source '{options.Source}'...");
 
             if (options.IsSourceLocalFile) {
-                Console.WriteLine("Beginning installation from local modpack definition file...");
+                Logger.Info("Beginning installation from local modpack definition file...");
                 Packsly.Launcher.CreateInstanceFromModpack(
                     new FileInfo(options.Source)
                 );
 
             } else if (options.IsSourceUrl) {
-                Console.WriteLine("Beginning installation from remote modpack definition source...");
+                Logger.Info("Beginning installation from remote modpack definition source...");
                 Packsly.Launcher.CreateInstanceFromModpack(
                     new Uri(options.Source)
                 );
@@ -34,8 +37,7 @@ namespace Packsly3.Cli.Logic {
             if (options.IsWorkspaceSpecified) {
                 if (options.IsWorkspaceValid) {
                     Packsly.Launcher.Workspace = new DirectoryInfo(options.Workspace);
-                    Console.WriteLine($"Workspace was set to: {Packsly.Launcher.Workspace}");
-                    Console.WriteLine();
+                    Logger.Info($"Workspace was set to: {Packsly.Launcher.Workspace}");
                 }
                 else {
                     throw new DirectoryNotFoundException("Specified workspace folder does not exists.");
@@ -44,13 +46,12 @@ namespace Packsly3.Cli.Logic {
 
             if (options.IsEnvironmentSpecified) {
                 Packsly.Launcher.ForceEnviromentUsage(options.Environment);
-                Console.WriteLine("Overriding environment auto detection...");
+                Logger.Info("Overriding environment auto detection...");
+                Logger.Info($"Current environment name: {Packsly.Launcher.Name}");
             }
             else {
-                Console.WriteLine("Detecting environment...");
+                Logger.Info($"Current environment name: {Packsly.Launcher.Name}");
             }
-            Console.WriteLine($" > Current environment name: {Packsly.Launcher.Name}");
-            Console.WriteLine();
         }
 
     }

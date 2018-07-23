@@ -4,10 +4,13 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NLog;
 
 namespace Packsly3.Core.FileSystem {
 
     public abstract class DataPairFile : FileBase {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         #region Properties
 
@@ -86,6 +89,8 @@ namespace Packsly3.Core.FileSystem {
                     string[] parts = line.Split(new[] { '=' }, 2);
                     _data.Add(parts[0], parts[1]);
                 }
+
+            Logger.Debug($"Loaded data pair file '{File.Name}' with content {_data}");
         }
 
         public override void Save() {
@@ -103,6 +108,8 @@ namespace Packsly3.Core.FileSystem {
                 byte[] raw = Encoding.UTF8.GetBytes(builder.ToString());
                 writer.Write(raw, 0, raw.Length);
             }
+
+            Logger.Debug($"Saved data pair file '{File.Name}' with content {builder}");
         }
 
         #endregion
