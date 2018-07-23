@@ -7,11 +7,11 @@ using Packsly3.Core;
 
 namespace Packsly3.Cli.Logic {
 
-    internal static class InstallationHandler {
+    internal static class Installer {
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static void Handle(InstallOptions options) {
+        public static void Run(InstallOptions options) {
             ApplySettings(options);
 
             Logger.Info($"Using modpack definition from '{options.Source}'...");

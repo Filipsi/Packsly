@@ -40,27 +40,24 @@ namespace Packsly3.Cli {
                 if (launcher.Exists && launcher.Directory != null && launcher.Directory.Exists) {
                     Logger.Debug("Running in drag & drop mode");
                     Packsly.Launcher.Workspace = launcher.Directory;
-                    DefaultHandler.Handle();
+                    DefaultInstaller.Run();
                 }
-                // Handle usage as a CLI tool
+                // Run usage as a CLI tool
                 else {
                     Logger.Debug("Running in command line mode");
                     Parser.Default.ParseArguments<InstallOptions, LifecycleOptions>(args)
-                        .WithParsed<InstallOptions>(InstallationHandler.Handle)
-                        .WithParsed<LifecycleOptions>(LifecycleHandler.Handle);
+                        .WithParsed<InstallOptions>(Installer.Run)
+                        .WithParsed<LifecycleOptions>(Lifecycle.Publish);
                 }
             }
-            // Handle running as a application
+            // Run running as a application
             else {
                 Logger.Debug("Running in application mode");
-                Logger.Info("Since no command line arguments were specified, do you want to run default installation? (y/n)");
-                string responce = Console.ReadLine();
-                if (!string.IsNullOrEmpty(responce) && responce.Equals("y")) {
-                    Logger.Info("Running default installation.");
-                    DefaultHandler.Handle();
-                }
-                else {
-                    Logger.Info("Default installation was aborted.");
+                Logger.Info("This application is designed to be used as a command line tool.");
+                Logger.Info("Please run it using terminal.");
+                Logger.Info("Or, to run default installation procedure, drag & drop the launcher executable onto this file.");
+                if (!System.Diagnostics.Debugger.IsAttached) {
+                    Console.ReadKey();
                 }
             }
         }

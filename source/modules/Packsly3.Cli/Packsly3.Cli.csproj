@@ -64,9 +64,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\Logo.cs" />
-    <Compile Include="Logic\InstallationHandler.cs" />
-    <Compile Include="Logic\LifecycleHandler.cs" />
-    <Compile Include="Logic\DefaultHandler.cs" />
+    <Compile Include="Logic\Installer.cs" />
+    <Compile Include="Logic\Lifecycle.cs" />
+    <Compile Include="Logic\DefaultInstaller.cs" />
     <Compile Include="CommandLine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Verbs\InstallOptions.cs" />
