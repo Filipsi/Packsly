@@ -15,11 +15,13 @@ namespace Packsly3.Core.FileSystem {
             ObjectCreationHandling = ObjectCreationHandling.Replace
         };
 
+        public JsonSerializerSettings SerializerSettings { get; set; }
+
         protected JsonFile(string path) : base(path) {
         }
 
         protected virtual JsonSerializerSettings GetSerializerSettings() {
-            return DefaultSerializerSettings;
+            return SerializerSettings ?? DefaultSerializerSettings;
         }
 
         #region IO

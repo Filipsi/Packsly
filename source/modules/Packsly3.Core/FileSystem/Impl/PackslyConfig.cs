@@ -6,22 +6,30 @@ namespace Packsly3.Core.FileSystem.Impl {
 
     public class PackslyConfig : JsonFile {
 
+        public static readonly JsonSerializerSettings ConfigSerializerSettings = new JsonSerializerSettings {
+            ContractResolver = new LowercaseContractResolver(),
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
+            Converters = {
+                new RelativePathConverter()
+            }
+        };
+
         #region Properties
 
         [JsonProperty("workspace")]
-        [JsonConverter(typeof(RelativePathConverter))]
-        public DirectoryInfo Workspace { private set; get; } = Packsly.AplicationDirectory;
+        public DirectoryInfo Workspace { set; get; } = Packsly.AplicationDirectory;
 
         [JsonProperty("modpack")]
-        [JsonConverter(typeof(RelativePathConverter))]
-        public string DefaultModpackSource { private set; get; }
+        public string DefaultModpackSource { set; get; }
 
         #endregion
 
-        internal PackslyConfig(FileSystemInfo path) : this(path.FullName) {
+        public PackslyConfig(FileSystemInfo path) : this(path.FullName) {
         }
 
-        internal PackslyConfig(string path) : base(Path.Combine(path, "packsly.json")) {
+        public PackslyConfig(string path) : base(Path.Combine(path, "packsly.json")) {
+            SerializerSettings = ConfigSerializerSettings;
+
             if (Exists) {
                 Load();
             }

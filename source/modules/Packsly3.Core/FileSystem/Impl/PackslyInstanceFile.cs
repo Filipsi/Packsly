@@ -18,10 +18,8 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         #endregion
 
-        private readonly JsonSerializerSettings _serializerSettings;
-
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
-            _serializerSettings = new JsonSerializerSettings {
+            SerializerSettings = new JsonSerializerSettings {
                 ContractResolver = new LowercaseContractResolver(),
                 ObjectCreationHandling = ObjectCreationHandling.Replace,
                 Converters = {
@@ -33,13 +31,6 @@ namespace Packsly3.Core.FileSystem.Impl {
 
             Load();
         }
-
-        #region Settings
-
-        protected override JsonSerializerSettings GetSerializerSettings()
-            => _serializerSettings;
-
-        #endregion
 
         #region IO
 
