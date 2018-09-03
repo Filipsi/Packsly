@@ -9,19 +9,17 @@ using Packsly3.Core.Modpack.Model;
 
 namespace Packsly3.Core.Launcher.Instance.Logic {
 
-    public class FileManager : IDisposable {
+    public class FileManager {
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public readonly ReadOnlyDictionary<GroupType, List<FileInfo>> FileMap;
 
-        private readonly WebClient _client = new WebClient();
         private readonly IMinecraftInstance _instance;
 
         public bool IsDirty { private set; get; }
 
         public FileManager(IMinecraftInstance instance) {
-            instance.PackslyConfig.Load();
             FileMap = new ReadOnlyDictionary<GroupType, List<FileInfo>>(instance.PackslyConfig.ManagedFiles);
             _instance = instance;
 
@@ -70,7 +68,10 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             }
 
             Logger.Debug($"Downloading file from {url}...");
-            _client.DownloadFile(url, destination);
+            using (WebClient client = new WebClient()) {
+                client.DownloadFile(url, destination);
+            }
+
             Add(destinationFile, group);
         }
 
@@ -135,27 +136,6 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             return !FileMap.ContainsKey(group)
                 ? new FileInfo[0]
                 : FileMap[group].Where(f => !f.Exists).ToArray();
-        }
-
-        #endregion
-
-        #region IDisposable
-
-        private bool _disposed;
-
-        protected virtual void Dispose(bool disposing) {
-            if (!_disposed) {
-                if (disposing) {
-                    _client.Dispose();
-                }
-            }
-
-            _disposed = true;
-        }
-
-        public void Dispose() {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         #endregion

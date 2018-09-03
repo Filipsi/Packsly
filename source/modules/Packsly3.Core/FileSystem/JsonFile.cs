@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 using Packsly3.Core.Common.Json;
 
@@ -30,10 +31,9 @@ namespace Packsly3.Core.FileSystem {
             if (!File.Exists)
                 return;
 
-
             using (StreamReader reader = File.OpenText()) {
                 string content = reader.ReadToEnd();
-                Logger.Debug($"Loaded JSON file '{File.Name}' with content {content}");
+                Logger.Debug($"Loaded JSON file '{File.Name}' with content {JToken.Parse(content).ToString()}");
                 JsonConvert.PopulateObject(content, this, GetSerializerSettings());
             }
         }

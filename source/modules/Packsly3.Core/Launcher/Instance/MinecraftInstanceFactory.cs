@@ -70,10 +70,9 @@ namespace Packsly3.Core.Launcher.Instance {
                     }
                 }
             }
+
             instance.Files.Save();
-
             Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PostInstallation);
-
             return instance;
         }
 

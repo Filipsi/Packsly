@@ -185,7 +185,6 @@ namespace Packsly3.MultiMC.FileSystem {
 
         #region Helping wrappers
 
-
         public bool OverrideCommands {
             get => Get<bool>("OverrideCommands");
             private set => Set("OverrideCommands", value);
@@ -244,7 +243,7 @@ namespace Packsly3.MultiMC.FileSystem {
                 .FirstOrDefault(p => p.Name == propertyName);
 
             if (prop == null) {
-                throw new MissingFieldException($"There is no filed with name {propertyName}!");
+                throw new MissingFieldException($"There is no field with name {propertyName}!");
             }
 
             if (Exists && !IsLoaded) {
@@ -261,7 +260,7 @@ namespace Packsly3.MultiMC.FileSystem {
                 .FirstOrDefault(p => p.Name == propertyName);
 
             if (prop == null) {
-                throw new MissingFieldException($"There is no filed with name {propertyName}!");
+                throw new MissingFieldException($"There is no field with name {propertyName}!");
             }
 
             if (Exists && !IsLoaded) {
