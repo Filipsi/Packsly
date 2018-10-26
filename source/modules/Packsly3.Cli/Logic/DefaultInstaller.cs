@@ -17,7 +17,8 @@ namespace Packsly3.Cli.Logic {
             Logger.Info($"Using modpack source from configuration: {Packsly.Configuration.DefaultModpackSource}");
 
             Installer.Run(new InstallOptions {
-                Source = Packsly.Configuration.DefaultModpackSource
+                Source = Packsly.Configuration.DefaultModpackSource,
+                Workspace = Packsly.Launcher.Workspace.FullName
             });
         }
 

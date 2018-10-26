@@ -15,6 +15,7 @@ namespace Packsly3.Cli {
     internal class CommandLine {
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static bool PauseWhenFinished = false;
 
         private static void Main(string[] args) {
             Logo.Print();
@@ -22,16 +23,19 @@ namespace Packsly3.Cli {
             try {
                 Logger.Info("Welcome to Packsly3!");
                 Run(args);
-                Logger.Info("Goodbye!");
+                Logger.Info("Thank you for using Packsly3!");
             }
             catch (Exception exception) {
                 Logger.Fatal(exception);
+                if (PauseWhenFinished) {
+                    Console.ReadKey();
+                }
             }
 
             Packsly.Lifecycle.EventBus.Publish(null, Core.Launcher.Instance.Logic.Lifecycle.PackslyExit);
 
             // While in debug mode, prevent closing after everything is finished
-            if (System.Diagnostics.Debugger.IsAttached) {
+            if (PauseWhenFinished) {
                 Console.ReadKey();
             }
         }
@@ -40,10 +44,18 @@ namespace Packsly3.Cli {
             if (args.Any()) {
                 // Allows for drag & drop of the launcher onto Packsly executable to initiate installation
                 FileInfo launcher = new FileInfo(args[0]);
-                if (launcher.Exists && launcher.Directory != null && launcher.Directory.Exists) {
+                if (launcher.Exists) {
                     Logger.Debug("Running in drag & drop mode");
-                    Packsly.Launcher.Workspace = launcher.Directory;
-                    DefaultInstaller.Run();
+                    PauseWhenFinished = true;
+
+                    DirectoryInfo workspace = launcher.Extension.ToLower() == ".lnk"
+                        ? ShortcutHelper.GetShortcutTarget(launcher).Directory
+                        : launcher.Directory;
+
+                    Installer.Run(new InstallOptions {
+                        Source = Packsly.Configuration.DefaultModpackSource,
+                        Workspace = workspace.FullName
+                    });
                 }
                 // Run usage as a CLI tool
                 else {
@@ -59,7 +71,8 @@ namespace Packsly3.Cli {
                 Logger.Info("This application is designed to be used as a command line tool.");
                 Logger.Info("Please run it using terminal.");
                 Logger.Info("Or you can run default installation procedure by dragging the launcher executable to this file.");
-                if (!System.Diagnostics.Debugger.IsAttached) {
+
+                if (!Debugger.IsAttached) {
                     Console.ReadKey();
                 }
             }
