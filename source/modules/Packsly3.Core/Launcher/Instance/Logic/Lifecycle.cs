@@ -21,6 +21,8 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
         public static readonly string UpdateFinished = "updatefinished";
 
+        public static readonly string PackslyExit = "packslyexit";
+
         #endregion
 
         public readonly Dispatcher EventBus = new Dispatcher();
@@ -46,15 +48,15 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
             private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-            public readonly EventHandler<Changed> LifecycleEvent;
+            public event EventHandler<Changed> LifecycleEvent;
 
             internal Dispatcher() {
                 LifecycleEvent += AdapterHandler.OnLifecycleChanged;
             }
 
             public void Publish(IMinecraftInstance instance, string eventName) {
-                Logger.Debug($"Publishing lifecycle event '{eventName}' for minecraft instance '{instance.Id}'...");
-                LifecycleEvent?.Invoke(null, new Changed(instance, eventName));
+                Logger.Debug($"Publishing lifecycle event '{eventName}' {(instance == null ? "..." : " for minecraft instance '{instance.Id}'...")}");
+                LifecycleEvent?.Invoke(this, new Changed(instance, eventName));
             }
 
             public void Publish(IMinecraftInstance instance, IEnumerable<string> eventNames) {

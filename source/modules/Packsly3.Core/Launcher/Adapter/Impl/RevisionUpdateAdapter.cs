@@ -36,7 +36,6 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 throw new FormatException($"Revision based updater '{GetType().FullName}' could not resolve update url '{config.UpdateUrl}' provided by configuration.");
             }
 
-            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateStarted);
             Logger.Info("Checking for modpack updates...");
 
             using (WebClient client = new WebClient()) {
@@ -54,6 +53,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
 
                 // If there is an update available
                 if (config.Revision != remoteConfig.Revision) {
+                    Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateStarted);
                     Logger.Info($"Updating modpack from revision {config.Revision} to {remoteConfig.Revision}!");
 
                     // Update modloaders and mods
@@ -62,11 +62,11 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
 
                     // Update adapter settings saved in instnace.packsly file, because revision number has changed
                     Save(instance, remoteConfig);
+                    Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateFinished);
                 }
             }
 
             Logger.Info("Modpack is up to date.");
-            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateFinished);
         }
 
         #endregion

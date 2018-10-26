@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using NLog;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.MultiMC.FileSystem;
@@ -8,6 +10,8 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
 
     [Register]
     public class MmcModLoaderHandler : InstanceModLoaderHandler<MmcMinecraftInstance> {
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly Dictionary<string, KeyValuePair<string, string>> ModLoadersMap = new Dictionary<string, KeyValuePair<string, string>> {
             {
@@ -81,7 +85,14 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
             string mlConfigKey = ModLoadersMap[modLoader].Value;
 
             cfg.Load();
-            cfg.GetType().GetProperty(mlConfigKey)?.SetValue(cfg, version);
+            PropertyInfo mlProp = cfg.GetType().GetProperty(mlConfigKey);
+            if (mlProp == null) {
+                Logger.Warn($"Failed to find a modloader property with name {mlConfigKey} inside MultiMC config file.");
+                Logger.Error($"Modloader couldn't be updated to version {version} in MultiMC config.");
+            }
+            else {
+                mlProp.SetValue(cfg, version);
+            }
             cfg.Save();
         }
 

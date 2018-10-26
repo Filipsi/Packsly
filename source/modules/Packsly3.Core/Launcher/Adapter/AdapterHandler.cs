@@ -11,6 +11,10 @@ namespace Packsly3.Core.Launcher.Adapter {
         internal static readonly IAdapter[] Adapters = RegisterAttribute.GetOccurrencesFor<IAdapter>();
 
         internal static void OnLifecycleChanged(object sender, Lifecycle.Changed args) {
+            if (args.Instance == null) {
+                return;
+            }
+
             IEnumerable<IAdapter> usedAdapters = Adapters
                 .Where(adapter => args.Instance.PackslyConfig.Adapters.Contains(adapter.Id))
                 .Where(adapter => adapter.IsCompatible(args.Instance))

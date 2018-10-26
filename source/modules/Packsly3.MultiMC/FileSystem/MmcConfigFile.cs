@@ -84,7 +84,6 @@ namespace Packsly3.MultiMC.FileSystem {
             }
         }
 
-
         [JsonProperty(PropertyName = "autoCloseConsole")]
         public bool AutoCloseConsole {
             get => Get<bool>("AutoCloseConsole");
@@ -216,6 +215,8 @@ namespace Packsly3.MultiMC.FileSystem {
 
         public bool IsLoaded { private set; get; }
 
+        public bool WasChanged { private set; get; }
+
         #endregion
 
         public MmcConfigFile(string path) : base(Path.Combine(path, "instance.cfg")) {
@@ -278,6 +279,7 @@ namespace Packsly3.MultiMC.FileSystem {
         public override void Save() {
             base.Save();
             IsLoaded = true;
+            WasChanged = true;
         }
 
         #endregion

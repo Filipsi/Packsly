@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CommandLine;
@@ -21,11 +22,13 @@ namespace Packsly3.Cli {
             try {
                 Logger.Info("Welcome to Packsly3!");
                 Run(args);
-                Logger.Info("Execution finished, goodbye!");
+                Logger.Info("Goodbye!");
             }
             catch (Exception exception) {
                 Logger.Fatal(exception);
             }
+
+            Packsly.Lifecycle.EventBus.Publish(null, Core.Launcher.Instance.Logic.Lifecycle.PackslyExit);
 
             // While in debug mode, prevent closing after everything is finished
             if (System.Diagnostics.Debugger.IsAttached) {
@@ -55,7 +58,7 @@ namespace Packsly3.Cli {
                 Logger.Debug("Running in application mode");
                 Logger.Info("This application is designed to be used as a command line tool.");
                 Logger.Info("Please run it using terminal.");
-                Logger.Info("Or, to run default installation procedure, drag & drop the launcher executable onto this file.");
+                Logger.Info("Or you can run default installation procedure by dragging the launcher executable to this file.");
                 if (!System.Diagnostics.Debugger.IsAttached) {
                     Console.ReadKey();
                 }
