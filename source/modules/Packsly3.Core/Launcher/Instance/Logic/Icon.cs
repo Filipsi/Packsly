@@ -6,17 +6,21 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
     public class Icon {
 
+        #region Properties
+
         public string Source {
-            get => _source;
+            get => source;
             set {
                 bool isUri = Uri.IsWellFormedUriString(value, UriKind.Absolute);
-                _source = isUri
+                source = isUri
                     ? Path.GetFileNameWithoutExtension(value)
                     : value;
 
-                Location = new FileInfo(Path.Combine(_iconFolder.FullName, $"{Source}.png"));
+                IconFile = new FileInfo(
+                    Path.Combine(iconFolder.FullName, $"{nameOverride ?? source}.png")
+                );
 
-                if (!Location.Exists && isUri) {
+                if (!IconFile.Exists && isUri) {
                     Download(value);
                 }
 
@@ -24,26 +28,45 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             }
         }
 
-        public FileInfo Location { private set; get; }
+        public FileInfo IconFile {
+            get;
+            private set;
+        }
+
+        #endregion
+
+        #region Events
 
         public event EventHandler IconChanged;
 
-        private readonly DirectoryInfo _iconFolder;
-        private string _source;
+        #endregion
 
-        public Icon(string iconFolder, string iconSource) {
-            _iconFolder = new DirectoryInfo(iconFolder);
+        #region Fields
+
+        private readonly DirectoryInfo iconFolder;
+        private readonly string nameOverride;
+        private string source;
+
+        #endregion
+
+        public Icon(string iconFolder, string iconSource, string nameOverride = null) {
+            this.iconFolder = new DirectoryInfo(iconFolder);
+            this.nameOverride = nameOverride;
             Source = iconSource;
         }
 
+        #region Logic
+
         private void Download(string url) {
-            if (!_iconFolder.Exists) {
-                _iconFolder.Create();
+            if (!iconFolder.Exists) {
+                iconFolder.Create();
             }
 
             using (WebClient clinet = new WebClient())
-                clinet.DownloadFile(url, Location.FullName);
+                clinet.DownloadFile(url, IconFile.FullName);
         }
+
+        #endregion
 
     }
 

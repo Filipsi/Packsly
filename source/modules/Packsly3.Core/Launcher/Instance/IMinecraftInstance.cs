@@ -9,6 +9,10 @@ namespace Packsly3.Core.Launcher.Instance {
 
         DirectoryInfo Location { get; }
 
+        EnvironmentVariables EnvironmentVariables { get; }
+
+        PackslyInstanceFile PackslyConfig { get; }
+
         string Id { get; }
 
         string Name { set; get; }
@@ -16,10 +20,6 @@ namespace Packsly3.Core.Launcher.Instance {
         string MinecraftVersion { set; get; }
 
         Icon Icon { get; }
-
-        EnvironmentVariables EnvironmentVariables { get; }
-
-        PackslyInstanceFile PackslyConfig { get; }
 
         ModLoaderManager ModLoaderManager { get; }
 
