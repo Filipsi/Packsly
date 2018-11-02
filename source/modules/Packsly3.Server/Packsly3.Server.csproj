@@ -49,7 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\modules\Packsly3.Core\Packsly3.Core.csproj">
+    <ProjectReference Include="..\Packsly3.Core\Packsly3.Core.csproj">
       <Project>{647C2998-0687-41C4-8FD4-E2F96812D81C}</Project>
       <Name>Packsly3.Core</Name>
     </ProjectReference>
