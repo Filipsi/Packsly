@@ -81,7 +81,11 @@ namespace Packsly3.Server.Launcher {
             PackslyConfig = new PackslyInstanceFile(Location.FullName);
             ModLoaderManager = new ModLoaderManager(this);
             Files = new FileManager(this);
+
             ServerProperties = new ServerPropertiesFile(Location.FullName);
+            if (!ServerProperties.Exists) {
+                ServerProperties.WithDefaults();
+            }
         }
 
         public void Configure(string json) {
