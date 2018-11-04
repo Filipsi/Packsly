@@ -49,4 +49,4 @@ Bleeding edge builds are available for [download](https://ci.appveyor.com/projec
 
 ## License
 
-MIT
+GNU General Public License v3.0
