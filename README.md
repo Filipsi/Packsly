@@ -19,13 +19,15 @@
 </p>
 
 <p align="center">
-  <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a> •
-  <a href="#download">Download</a> •
-  <a href="#license">License</a>
+	<a href="#key-features">Key Features</a> •
+	<a href="#how-to-use">How To Use</a> •
+	<a href="#download">Download</a> •
+	<a href="#license">License</a>
 </p>
 
-![screenshot](https://raw.githubusercontent.com/Filipsi/Packsly/master/resources/screenshot.png)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/Filipsi/Packsly/master/resources/screenshot.png">
+</p>
 
 ## Key Features
 
