@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Packsly3.Server.Launcher {
@@ -16,14 +17,18 @@ namespace Packsly3.Server.Launcher {
 
         public string Name { get; } = "server";
 
-        public bool IsCompatible(DirectoryInfo workspace) {
-            return false;
-        }
+        public static readonly Regex ServerJarNamePattern = new Regex(
+            pattern: @"minecraft_server\.(\d+\.\d+\.\d+)\.jar",
+            options: RegexOptions.Compiled
+        );
+
+        public bool IsCompatible(DirectoryInfo workspace)
+            => workspace
+                .EnumerateFiles()
+                .Where(file => ServerJarNamePattern.IsMatch(file.Name))
+                .Any();
 
         public IMinecraftInstance CreateInstance(DirectoryInfo workspace, string id) {
-            // TODO: Finish this
-            //       Download forge, run installer, etc..
-
             return new ServerMinecraftInstance(workspace);
         }
 

@@ -31,20 +31,8 @@ namespace Packsly3.Server.Launcher {
         }
 
         public string MinecraftVersion {
-            get {
-                FileInfo serverJar = Location
-                    .EnumerateFiles()
-                    .Where(file => serverJarNamePattern.IsMatch(file.Name))
-                    .FirstOrDefault();
-
-                if (serverJar == null) {
-                    throw new FileNotFoundException($"Couldn't find a minecraft server jar file!");
-                }
-
-                Match match = serverJarNamePattern.Match(serverJar.Name);
-                return match.Groups[1].Value;
-            }
-            set => throw new NotSupportedException("Server minecraft version can't be changed at runtime, only at instance creation.");
+            get => PackslyConfig.Get<string>(this, "minecraft");
+            set => PackslyConfig.Set(this, "minecraft", value);
         }
 
         public Icon Icon { get; }
@@ -57,19 +45,14 @@ namespace Packsly3.Server.Launcher {
 
         #endregion
 
-        #region Fields
-
-        private readonly Regex serverJarNamePattern = new Regex(@"minecraft_server\.(\d+\.\d+\.\d+)\.jar", RegexOptions.Compiled);
-
-        #endregion
-
         public ServerMinecraftInstance(DirectoryInfo location) {
             Location = location;
 
             EnvironmentVariables = new EnvironmentVariables(this, new Dictionary<string, string> {
-                { EnvironmentVariables.RootFolder,   Location.FullName                         },
-                { EnvironmentVariables.ModsFolder,   Path.Combine(Location.FullName, "mods")   },
-                { EnvironmentVariables.ConfigFolder, Path.Combine(Location.FullName, "config") }
+                { EnvironmentVariables.RootFolder,     Location.FullName                         },
+                { EnvironmentVariables.InstnaceFolder, Location.FullName                         },
+                { EnvironmentVariables.ModsFolder,     Path.Combine(Location.FullName, "mods")   },
+                { EnvironmentVariables.ConfigFolder,   Path.Combine(Location.FullName, "config") }
             });
 
             Icon = new Icon(
@@ -86,6 +69,8 @@ namespace Packsly3.Server.Launcher {
             if (!ServerProperties.Exists) {
                 ServerProperties.WithDefaults();
             }
+
+            // TODO: Server launch script
         }
 
         public void Configure(string json) {

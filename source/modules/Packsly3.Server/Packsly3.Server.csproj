@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystem\ServerPropertiesFile.cs" />
+    <Compile Include="Launcher\Modloader\ServerModLoaderHandler.cs" />
     <Compile Include="Launcher\ServerLauncherEnvironment.cs" />
     <Compile Include="Launcher\ServerMinecraftInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

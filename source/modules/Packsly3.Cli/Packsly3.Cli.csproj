@@ -86,6 +86,10 @@
       <Project>{BE9D38EC-4774-4E90-A383-36EA6C84DF2D}</Project>
       <Name>Packsly3.MultiMC</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Packsly3.Server\Packsly3.Server.csproj">
+      <Project>{c392bc62-fe5e-4cd6-8579-9d170661cbcc}</Project>
+      <Name>Packsly3.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

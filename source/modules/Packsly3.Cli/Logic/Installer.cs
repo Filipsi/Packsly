@@ -48,18 +48,22 @@ namespace Packsly3.Cli.Logic {
                 if (options.IsWorkspaceValid) {
                     Packsly.Launcher.Workspace = new DirectoryInfo(options.Workspace);
                     Logger.Info($"Workspace was set to: {Packsly.Launcher.Workspace}");
-                }
-                else {
+
+                } else {
                     throw new DirectoryNotFoundException("Specified workspace folder does not exist.");
                 }
+            } else {
+                Packsly.Launcher.Workspace = Packsly.Configuration.Workspace;
+                options.Workspace = Packsly.Launcher.Workspace.FullName;
+                Logger.Info($"Using workspace from configuration file: {Packsly.Launcher.Workspace}");
             }
 
             if (options.IsEnvironmentSpecified) {
                 Packsly.Launcher.ForceEnviromentUsage(options.Environment);
                 Logger.Info("Overriding environment auto detection...");
                 Logger.Info($"Current environment name: {Packsly.Launcher.Name}");
-            }
-            else {
+
+            } else {
                 Logger.Info($"Current environment name: {Packsly.Launcher.Name}");
             }
         }

@@ -33,8 +33,9 @@ namespace Packsly3.Core.FileSystem {
         public abstract void Save();
 
         public void Delete() {
-            if (File.Exists)
+            if (File.Exists) {
                 File.Delete();
+            }
         }
 
         #endregion

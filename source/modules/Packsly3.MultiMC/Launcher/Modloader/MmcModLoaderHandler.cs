@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using NLog;
+using Packsly3.Core;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.MultiMC.FileSystem;
@@ -15,13 +16,13 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
 
         private static readonly Dictionary<string, KeyValuePair<string, string>> ModLoadersMap = new Dictionary<string, KeyValuePair<string, string>> {
             {
-                "forge", new KeyValuePair<string, string>(
+                Packsly.Constants.ForgeModlaoder, new KeyValuePair<string, string>(
                     "net.minecraftforge",
                     "ForgeVersion"
                 )
             },
             {
-                "liteloader", new KeyValuePair<string, string>(
+                Packsly.Constants.LiteloaderModlaoder, new KeyValuePair<string, string>(
                     "com.mumfrey.liteloader",
                     "LiteloaderVersion"
                 )
@@ -32,8 +33,9 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
             => ModLoadersMap.Keys.Contains(modLoader);
 
         public override void DetectModLoaders(MmcMinecraftInstance instance, List<ModLoaderInfo> modLoaders) {
-            if (!instance.PackFile.Exists)
+            if (!instance.PackFile.Exists) {
                 return;
+            }
 
             string[] ignored = {
                 "org.lwjgl",
