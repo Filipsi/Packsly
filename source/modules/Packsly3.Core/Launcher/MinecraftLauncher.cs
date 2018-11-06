@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
 using NLog;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
@@ -14,10 +13,10 @@ namespace Packsly3.Core.Launcher {
         private static readonly ILauncherEnvironment[] Enviroments = RegisterAttribute.GetOccurrencesFor<ILauncherEnvironment>();
 
         public DirectoryInfo Workspace {
-            get => _workspace;
+            get => workspace;
             set {
-                _workspace = value;
-                Logger.Debug($"Launcher workspace was set to {_workspace.FullName}");
+                workspace = value;
+                Logger.Debug($"Launcher workspace was set to {workspace.FullName}");
             }
         }
 
@@ -37,7 +36,7 @@ namespace Packsly3.Core.Launcher {
         }
 
         private ILauncherEnvironment currentEnviroment;
-        private DirectoryInfo _workspace = Packsly.Configuration.Workspace;
+        private DirectoryInfo workspace = Packsly.Configuration.Workspace;
 
         internal MinecraftLauncher() {
         }
