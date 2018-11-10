@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
 using NLog;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
@@ -14,10 +13,10 @@ namespace Packsly3.Core.Launcher {
         private static readonly ILauncherEnvironment[] Enviroments = RegisterAttribute.GetOccurrencesFor<ILauncherEnvironment>();
 
         public DirectoryInfo Workspace {
-            get => _workspace;
+            get => workspace;
             set {
-                _workspace = value;
-                Logger.Debug($"Launcher workspace was set to {_workspace.FullName}");
+                workspace = value;
+                Logger.Debug($"Launcher workspace was set to {workspace.FullName}");
             }
         }
 
@@ -26,32 +25,33 @@ namespace Packsly3.Core.Launcher {
 
         private ILauncherEnvironment CurrentEnvironment {
             get {
-                if (_currentEnviroment != null)
-                    return _currentEnviroment;
+                if (currentEnviroment != null) {
+                    return currentEnviroment;
+                }
 
-                _currentEnviroment = GetCurrentEnvironment();
-                Logger.Debug($"Launcher environment was set to {_currentEnviroment} by auto-detect.");
-                return _currentEnviroment;
+                currentEnviroment = GetCurrentEnvironment();
+                Logger.Debug($"Launcher environment was set to {currentEnviroment} by auto-detect.");
+                return currentEnviroment;
             }
         }
 
-        private ILauncherEnvironment _currentEnviroment;
-        private DirectoryInfo _workspace = Packsly.Configuration.Workspace;
+        private ILauncherEnvironment currentEnviroment;
+        private DirectoryInfo workspace = Packsly.Configuration.Workspace;
 
         internal MinecraftLauncher() {
         }
 
         public void ForceEnviromentUsage(string name) {
             ILauncherEnvironment environment = Enviroments.FirstOrDefault((env) => env.Name == name);
-            _currentEnviroment = environment ?? throw new Exception($"Environment with name '{name}' does not exist.");
-            Logger.Debug($"Environment was forcefully changed to {_currentEnviroment}");
+            currentEnviroment = environment ?? throw new Exception($"Environment with name '{name}' does not exist.");
+            Logger.Debug($"Environment was forcefully changed to {currentEnviroment}");
         }
 
         #region Wrapper methods
 
         private ILauncherEnvironment GetCurrentEnvironment() {
             if (Enviroments.Length == 0) {
-                throw new InstanceNotFoundException("There are no environments registered.");
+                throw new Exception("There are no environments registered.");
             }
 
             ILauncherEnvironment env = Enviroments.FirstOrDefault(e => e.IsCompatible(Workspace));
@@ -69,7 +69,7 @@ namespace Packsly3.Core.Launcher {
             => CurrentEnvironment.GetInstance(Workspace, id);
 
         public IMinecraftInstance CreateInstance(string id) {
-            Logger.Debug($"Launcher using {_currentEnviroment} environment is creating new minecraft instance with id {id}");
+            Logger.Debug($"Launcher using {currentEnviroment} environment is creating new minecraft instance with id {id}");
             return CurrentEnvironment.CreateInstance(Workspace, id);
         }
 

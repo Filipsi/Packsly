@@ -13,7 +13,8 @@ namespace Packsly3.MultiMC.Launcher {
         public string Name { get; } = "multimc";
 
         public bool IsCompatible(DirectoryInfo workspace)
-            => workspace.GetFiles("MultiMC.exe").Length > 0;
+            => File.Exists(Path.Combine(workspace.FullName, "MultiMC.exe")) ||
+               File.Exists(Path.Combine(workspace.FullName, "bin", "MultiMC"));
 
         public IMinecraftInstance[] GetInstances(DirectoryInfo workspace) {
             DirectoryInfo instancesFolder = workspace.GetDirectories("instances").FirstOrDefault();
