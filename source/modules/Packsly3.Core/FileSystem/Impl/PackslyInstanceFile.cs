@@ -12,7 +12,7 @@ namespace Packsly3.Core.FileSystem.Impl {
         #region Properties
 
         [JsonProperty("data")]
-        internal Dictionary<IMinecraftInstance, Dictionary<string, object>> CustomData { private set; get; }
+        internal Dictionary<string, Dictionary<string, object>> CustomData { private set; get; }
 
         [JsonProperty("adapters")]
         internal AdaptersConfig Adapters { private set; get; }
@@ -23,7 +23,7 @@ namespace Packsly3.Core.FileSystem.Impl {
         #endregion
 
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
-            CustomData =  new Dictionary<IMinecraftInstance, Dictionary<string, object>>();
+            CustomData =  new Dictionary<string, Dictionary<string, object>>();
             Adapters = new AdaptersConfig();
             ManagedFiles = new Dictionary<FileManager.GroupType, List<FileInfo>>();
 
@@ -42,12 +42,12 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         #region Custom data
 
-        public T Get<T>(IMinecraftInstance owner, string key) {
-            if (!CustomData.ContainsKey(owner)) {
+        public T Get<T>(string group, string key) {
+            if (!CustomData.ContainsKey(group)) {
                 return default(T);
             }
 
-            Dictionary<string, object> storage = CustomData[owner];
+            Dictionary<string, object> storage = CustomData[group];
             if (!storage.ContainsKey(key)) {
                 return default(T);
             }
@@ -55,12 +55,12 @@ namespace Packsly3.Core.FileSystem.Impl {
             return (T)storage[key];
         }
 
-        public void Set<T>(IMinecraftInstance owner, string key, T value) {
-            if (!CustomData.ContainsKey(owner)) {
-                CustomData.Add(owner, new Dictionary<string, object>());
+        public void Set<T>(string group, string key, T value) {
+            if (!CustomData.ContainsKey(group)) {
+                CustomData.Add(group, new Dictionary<string, object>());
             }
 
-            Dictionary<string, object> storage = CustomData[owner];
+            Dictionary<string, object> storage = CustomData[group];
             if (storage.ContainsKey(key)) {
                 storage.Add(key, value);
             } else {
@@ -68,12 +68,12 @@ namespace Packsly3.Core.FileSystem.Impl {
             }
         }
 
-        public void Remove(IMinecraftInstance owner, string key) {
-            if (!CustomData.ContainsKey(owner)) {
+        public void Remove(string group, string key) {
+            if (!CustomData.ContainsKey(group)) {
                 return;
             }
 
-            Dictionary<string, object> storage = CustomData[owner];
+            Dictionary<string, object> storage = CustomData[group];
             if (!storage.ContainsKey(key)) {
                 return;
             }

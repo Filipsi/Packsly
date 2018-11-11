@@ -98,8 +98,9 @@ namespace Packsly3.Core.Launcher.Instance {
             // Configure instance using compatible environment settings
             foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
                 string name = environmentEntry.Key;
-                if (name != Packsly.Launcher.Name)
+                if (name != Packsly.Launcher.Name) {
                     continue;
+                }
 
                 string settings = environmentEntry.Value.ToString();
                 Logger.Debug($"Configuring minecraft instance {instance.Id} from modpack environment settings: {settings}");

@@ -4,11 +4,8 @@ using Packsly3.Core.Launcher.Instance;
 using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.Server.FileSystem;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Packsly3.Server.Launcher {
 
@@ -26,13 +23,13 @@ namespace Packsly3.Server.Launcher {
             => Location.Name;
 
         public string Name {
-            get => PackslyConfig.Get<string>(this, "name");
-            set => PackslyConfig.Set(this, "name", value);
+            get => PackslyConfig.Get<string>(configGroup, "name");
+            set => PackslyConfig.Set(configGroup, "name", value);
         }
 
         public string MinecraftVersion {
-            get => PackslyConfig.Get<string>(this, "minecraft");
-            set => PackslyConfig.Set(this, "minecraft", value);
+            get => PackslyConfig.Get<string>(configGroup, "minecraft");
+            set => PackslyConfig.Set(configGroup, "minecraft", value);
         }
 
         public Icon Icon { get; }
@@ -42,6 +39,12 @@ namespace Packsly3.Server.Launcher {
         public FileManager Files { get; }
 
         internal ServerPropertiesFile ServerProperties { get; }
+
+        #endregion
+
+        #region Fields
+
+        private static readonly string configGroup = "serverConfig";
 
         #endregion
 
@@ -73,6 +76,8 @@ namespace Packsly3.Server.Launcher {
             // TODO: Server launch script
         }
 
+        #region Logic
+
         public void Configure(string json) {
             JsonConvert.PopulateObject(json, ServerProperties);
         }
@@ -101,6 +106,8 @@ namespace Packsly3.Server.Launcher {
                 }
             }
         }
+
+        #endregion
 
     }
 

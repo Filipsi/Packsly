@@ -1,4 +1,5 @@
-﻿using Packsly3.Core;
+﻿using NLog;
+using Packsly3.Core;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
 using Packsly3.Core.Launcher.Modloader;
@@ -17,8 +18,10 @@ namespace Packsly3.Server.Launcher.Modloader {
 
         #region Fields
 
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly Regex forgeJarFilePattern = new Regex(
-            pattern: @"forge-(\d{1,2}\.\d{1,2}\.\d{1,2}-\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,4})-\w+\.jar",
+            pattern: @"forge-(\d{1,2}\.\d{1,2}\.\d{1,2})-(\d{1,2}\.\d{1,2}\.\d{1,2}\.\d{1,4})-\w+\.jar",
             options: RegexOptions.Compiled
         );
 
@@ -35,9 +38,8 @@ namespace Packsly3.Server.Launcher.Modloader {
             if (forgeJar != null) {
                 modLoaders.Add(
                     new ModLoaderInfo(
-                        manager: instance.ModLoaderManager,
                         name: Packsly.Constants.ForgeModlaoder,
-                        version: forgeJarFilePattern.Match(forgeJar.Name).Groups[1].Value
+                        version: forgeJarFilePattern.Match(forgeJar.Name).Groups[2].Value
                     )
                 );
             }
@@ -45,42 +47,78 @@ namespace Packsly3.Server.Launcher.Modloader {
 
         public override void Install(ServerMinecraftInstance instance, string modLoader, string version) {
             if (modLoader != Packsly.Constants.ForgeModlaoder) {
+                Logger.Error($"Mod loader handler is not compatible with modloader with name '{modLoader}'");
                 return;
             }
 
+            // Download forge installer
             string installerPath = Path.Combine(
                 instance.Location.FullName,
                 $"forge-{version}-installer.jar"
             );
 
             using (WebClient client = new WebClient()) {
+                Logger.Info($"Downloading forge installer for version {version}...");
                 client.DownloadFile(
                     address: GetForgeInstallerUrl(instance.MinecraftVersion, version),
                     fileName: installerPath
                 );
             }
 
-            Process terminalProcess = new Process {
-                StartInfo = new ProcessStartInfo {
-                    WindowStyle = ProcessWindowStyle.Normal,
+            // Run forge installer in separate process
+            bool installationError = false;
+            using(Process terminalProcess = new Process()) {
+                terminalProcess.EnableRaisingEvents = true;
+                terminalProcess.StartInfo = new ProcessStartInfo {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     WorkingDirectory = Packsly.Launcher.Workspace.FullName,
                     FileName = "cmd.exe",
                     Arguments = $"/c java -jar \"{installerPath}\" --installServer nogui"
-                }
+                };
+
+                // Add hooks for output messages and errors
+                terminalProcess.ErrorDataReceived += (sender, args) => {
+                    Logger.Error("There was an error while installing forge", args.Data);
+                    installationError = true;
+                };
+
+                terminalProcess.OutputDataReceived += (sender, args) => {
+                    Logger.Info(args.Data);
+                };
+
+                // Wait for installation to finish
+                Logger.Info($"Starting installation process...");
+                terminalProcess.Start();
+                terminalProcess.BeginOutputReadLine();
+                terminalProcess.WaitForExit();
             };
 
-            terminalProcess.Start();
-            terminalProcess.WaitForExit();
+            // Remove installer and it's logs
+            Logger.Info($"Removing temporally installer files");
+            File.Delete(installerPath);
+            FileInfo installerLogs = new FileInfo($"forge-{version}-installer.jar.log");
+            if (installerLogs.Exists) {
+                installerLogs.Delete();
+            }
 
-            // TODO: Remove installer and forge-{version}-installer.jar.log
+            // Throw an error if installation failed
+            if (installationError) {
+                throw new Exception("Forge installation failed");
+            }
         }
 
         public override void Uninstall(ServerMinecraftInstance instance, string modLoader) {
             if (modLoader != Packsly.Constants.ForgeModlaoder) {
+                Logger.Error($"Mod loader handler is not compatible with modloader with name '{modLoader}'");
                 return;
             }
 
             FileInfo forgeJar = GetForgeJarFile(instance);
+
+            // Uninstall forge if there is any
             if (forgeJar != null && forgeJar.Exists) {
                 forgeJar.Delete();
             }

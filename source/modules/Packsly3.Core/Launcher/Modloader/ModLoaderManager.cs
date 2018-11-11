@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using Newtonsoft.Json;
+using NLog;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
 
@@ -9,35 +11,48 @@ namespace Packsly3.Core.Launcher.Modloader {
 
     public class ModLoaderManager {
 
-        public static readonly IModLoaderHandler[] InstalationSchemas =
-            RegisterAttribute.GetOccurrencesFor<IModLoaderHandler>();
+        #region Properties
 
-        public readonly ReadOnlyCollection<ModLoaderInfo> ModLoaders;
+        public static IModLoaderHandler[] InstalationSchemas { get; } = RegisterAttribute.GetOccurrencesFor<IModLoaderHandler>();
 
-        private readonly List<ModLoaderInfo> _modLoaders;
-        private readonly IMinecraftInstance _mcInstance;
-        private readonly IModLoaderHandler[] _compatibleSchemata;
+        public ReadOnlyCollection<ModLoaderInfo> ModLoaders { get; }
+
+        #endregion
+
+        #region Fields
+
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        private readonly List<ModLoaderInfo> modLoaders;
+        private readonly IMinecraftInstance mcInstance;
+        private readonly IModLoaderHandler[] compatibleSchemata;
+
+        #endregion
 
         public ModLoaderManager(IMinecraftInstance mcInstnace) {
-            _mcInstance = mcInstnace;
-            _modLoaders = new List<ModLoaderInfo>();
-            ModLoaders = _modLoaders.AsReadOnly();
+            mcInstance = mcInstnace;
+            modLoaders = new List<ModLoaderInfo>();
+            ModLoaders = modLoaders.AsReadOnly();
 
-            _compatibleSchemata = InstalationSchemas.Where(s => s.IsCompatible(mcInstnace)).ToArray();
-            foreach (IModLoaderHandler handler in _compatibleSchemata) {
-                handler.DetectModLoaders(mcInstnace, _modLoaders);
+            compatibleSchemata = InstalationSchemas.Where(s => s.IsCompatible(mcInstnace)).ToArray();
+            foreach (IModLoaderHandler handler in compatibleSchemata) {
+                handler.DetectModLoaders(mcInstnace, modLoaders);
             }
+
+            Logger.Debug($"Detected mod loaders for instance {mcInstnace.GetType()} with name {mcInstance.Name}: {JsonConvert.SerializeObject(ModLoaders, Formatting.Indented)}");
         }
 
+        #region Logic
+
         public void Install(string name, string version) {
-            IModLoaderHandler schema = _compatibleSchemata.FirstOrDefault(s => s.IsCompatible(name));
+            IModLoaderHandler schema = compatibleSchemata.FirstOrDefault(s => s.IsCompatible(name));
 
             if (schema == null) {
-                throw new InvalidOperationException($"No modloader installation schema compatible with modloader with name '{name}' for minecraft instance type '{_mcInstance.GetType().FullName}' found!");
+                throw new InvalidOperationException($"No modloader installation schema compatible with modloader with name '{name}' for minecraft instance type '{mcInstance.GetType().FullName}' found!");
             }
 
-            schema.Install(_mcInstance, name, version);
-            _modLoaders.Add(new ModLoaderInfo(this, name, version));
+            schema.Install(mcInstance, name, version);
+            modLoaders.Add(new ModLoaderInfo(name, version));
         }
 
         public void Uninstall(string name) {
@@ -47,14 +62,16 @@ namespace Packsly3.Core.Launcher.Modloader {
                 throw new KeyNotFoundException($"This instance does not have any modloader with name '{name}'.");
             }
 
-            IModLoaderHandler schema = _compatibleSchemata.FirstOrDefault(s => s.IsCompatible(name));
+            IModLoaderHandler schema = compatibleSchemata.FirstOrDefault(s => s.IsCompatible(name));
             if (schema == null) {
-                throw new InvalidOperationException($"No modloader installation schema compatible with modloader with name '{name}' for minecraft instance type '{_mcInstance.GetType().FullName}' found!");
+                throw new InvalidOperationException($"No modloader installation schema compatible with modloader with name '{name}' for minecraft instance type '{mcInstance.GetType().FullName}' found!");
             }
 
-            schema.Uninstall(_mcInstance, name);
-            _modLoaders.Remove(modLoaderInfo);
+            schema.Uninstall(mcInstance, name);
+            modLoaders.Remove(modLoaderInfo);
         }
+
+        #endregion
 
     }
 

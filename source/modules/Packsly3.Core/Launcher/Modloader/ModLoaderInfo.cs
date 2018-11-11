@@ -6,16 +6,10 @@
 
         public string Version { get; }
 
-        public ModLoaderManager Manager { get; }
-
-        public ModLoaderInfo(ModLoaderManager manager, string name, string version) {
-            Manager = manager;
+        public ModLoaderInfo(string name, string version) {
             Name = name;
             Version = version;
         }
-
-        public void Uninstall()
-            => Manager.Uninstall(Name);
 
     }
 
