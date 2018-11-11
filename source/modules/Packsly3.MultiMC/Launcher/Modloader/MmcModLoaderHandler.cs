@@ -47,7 +47,7 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
 
             modLoaders.AddRange(
                 compatibleComponents.Select(component =>
-                    new ModLoaderInfo(instance.ModLoaderManager, component.Name.ToLower(), component.Version))
+                    new ModLoaderInfo(component.Name.ToLower(), component.Version))
             );
         }
 
