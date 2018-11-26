@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher;
@@ -8,6 +9,11 @@ using Packsly3.Core.Launcher.Instance.Logic;
 namespace Packsly3.Core {
 
     public static class Packsly {
+
+        static Packsly() {
+            // https://stackoverflow.com/questions/4926676/mono-https-webrequest-fails-with-the-authentication-or-decryption-has-failed/30548129#30548129
+            ServicePointManager.ServerCertificateValidationCallback += (p1, p2, p3, p4) => true;
+        }
 
         public static class Constants {
 
