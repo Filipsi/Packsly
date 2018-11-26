@@ -75,8 +75,8 @@ namespace Packsly3.Server.Launcher.Modloader {
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     WorkingDirectory = Packsly.Launcher.Workspace.FullName,
-                    FileName = "cmd.exe",
-                    Arguments = $"/c java -jar \"{installerPath}\" --installServer nogui"
+                    FileName = Packsly.IsLinux ? "sh" : "cmd.exe",
+                    Arguments = (Packsly.IsLinux ? "-c" : "/c") + $"java -jar \"{installerPath}\" --installServer nogui"
                 };
 
                 // Add hooks for output messages and errors
