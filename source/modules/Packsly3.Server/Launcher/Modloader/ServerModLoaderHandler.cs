@@ -136,7 +136,7 @@ namespace Packsly3.Server.Launcher.Modloader {
 
         private string GetForgeInstallerUrl(string minecraftVersion, string forgeVersion) {
             string version = $"{minecraftVersion}-{forgeVersion}";
-            return $"https://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar";
+            return $"http://files.minecraftforge.net/maven/net/minecraftforge/forge/{version}/forge-{version}-installer.jar";
         }
 
         #endregion
