@@ -45,9 +45,9 @@ namespace Packsly3.MultiMC.Launcher {
             Location = location;
 
             EnvironmentVariables = new EnvironmentVariables(this, new Dictionary<string, string> {
-                { EnvironmentVariables.MinecraftFolder, Path.Combine(Location.FullName, ".minecraft")           },
-                { EnvironmentVariables.ModsFolder,      Path.Combine(Location.FullName, ".minecraft", "mods")   },
-                { EnvironmentVariables.ConfigFolder,    Path.Combine(Location.FullName, ".minecraft", "config") }
+                { EnvironmentVariables.RootFolder,   Path.Combine(Location.FullName, ".minecraft")           },
+                { EnvironmentVariables.ModsFolder,   Path.Combine(Location.FullName, ".minecraft", "mods")   },
+                { EnvironmentVariables.ConfigFolder, Path.Combine(Location.FullName, ".minecraft", "config") }
             });
 
             PackslyConfig = new PackslyInstanceFile(Path.Combine(Location.FullName));

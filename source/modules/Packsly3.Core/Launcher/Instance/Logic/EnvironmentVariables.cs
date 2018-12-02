@@ -17,7 +17,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
         public static readonly string InstnaceFolder = "instanceFolder";
 
-        public static readonly string MinecraftFolder = "minecraftFolder";
+        public static readonly string RootFolder = "rootFolder";
 
         private static readonly Regex PattenNamedParameter = new Regex("{([^}]+)}", RegexOptions.Compiled);
 
@@ -38,8 +38,8 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 properties.Add(InstnaceFolder, instance.Location.FullName);
             }
 
-            if (!properties.ContainsKey(MinecraftFolder)) {
-                properties.Add(MinecraftFolder, Path.Combine(instance.Location.FullName, "minecraft"));
+            if (!properties.ContainsKey(RootFolder)) {
+                properties.Add(RootFolder, Path.Combine(instance.Location.FullName, "minecraft"));
             }
 
             Logger.Debug($"Environment variables of minecraft instance {instance} were set to: {Properties}");

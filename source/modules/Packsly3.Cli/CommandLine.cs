@@ -24,9 +24,10 @@ namespace Packsly3.Cli {
                 Logger.Info("Welcome to Packsly3!");
                 Run(args);
                 Logger.Info("Thank you for using Packsly3!");
-            }
-            catch (Exception exception) {
+
+            } catch (Exception exception) {
                 Logger.Fatal(exception);
+
                 if (PauseWhenFinished) {
                     Console.ReadKey();
                 }
@@ -34,8 +35,7 @@ namespace Packsly3.Cli {
 
             Packsly.Lifecycle.EventBus.Publish(null, Core.Launcher.Instance.Logic.Lifecycle.PackslyExit);
 
-            // While in debug mode, prevent closing after everything is finished
-            if (PauseWhenFinished) {
+            if (PauseWhenFinished || Debugger.IsAttached) {
                 Console.ReadKey();
             }
         }
@@ -71,10 +71,6 @@ namespace Packsly3.Cli {
                 Logger.Info("This application is designed to be used as a command line tool.");
                 Logger.Info("Please run it using terminal.");
                 Logger.Info("Or you can run default installation procedure by dragging the launcher executable to this file.");
-
-                if (!Debugger.IsAttached) {
-                    Console.ReadKey();
-                }
             }
         }
 

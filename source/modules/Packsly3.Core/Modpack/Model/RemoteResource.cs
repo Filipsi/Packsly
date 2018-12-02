@@ -45,7 +45,7 @@ namespace Packsly3.Core.Modpack.Model {
                 return;
 
             if (string.IsNullOrEmpty(FilePath)) {
-                FilePath = "{" + EnvironmentVariables.MinecraftFolder + "}\\" + Path.GetDirectoryName(Url.AbsolutePath);
+                FilePath = "{" + EnvironmentVariables.RootFolder + "}\\" + Path.GetDirectoryName(Url.AbsolutePath);
             }
 
             if (string.IsNullOrEmpty(FileName)) {

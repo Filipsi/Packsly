@@ -56,6 +56,21 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                     Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateStarted);
                     Logger.Info($"Updating modpack from revision {config.Revision} to {remoteConfig.Revision}!");
 
+                    // Update instance config
+                    // TODO: Add config option to the update adapter for this
+                    /*
+                    foreach (KeyValuePair<string, object> environmentEntry in remoteModpack.Environments) {
+                        if (environmentEntry.Key != Packsly.Launcher.Name) {
+                            continue;
+                        }
+
+                        string settings = environmentEntry.Value.ToString();
+                        Logger.Debug($"Updating configuration of minecraft instance {instance.Id} from modpack environment settings: {settings}");
+                        instance.Configure(settings);
+                        break;
+                    }
+                    */
+
                     // Update modloaders and mods
                     UpdateModloaders(instance, remoteModpack);
                     UpdateMods(instance, remoteModpack);
@@ -88,7 +103,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
             IEnumerable<ModLoaderInfo> oldModLoaders = instance.ModLoaderManager.ModLoaders.Where(ml => !modpack.ModLoaders.ContainsKey(ml.Name));
             foreach (ModLoaderInfo modLoader in oldModLoaders) {
                 Logger.Info($"Uninstalling modloader '{modLoader.Name}' version '{modLoader.Version}'");
-                modLoader.Uninstall();
+                instance.ModLoaderManager.Uninstall(modLoader.Name);
             }
         }
 
