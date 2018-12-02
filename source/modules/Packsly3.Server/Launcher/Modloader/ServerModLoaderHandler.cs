@@ -59,10 +59,16 @@ namespace Packsly3.Server.Launcher.Modloader {
 
             using (WebClient client = new WebClient()) {
                 Logger.Info($"Downloading forge installer for version {version}...");
+
+                string forgeInstallerUrl = GetForgeInstallerUrl(instance.MinecraftVersion, version);
+                Logger.Info($" - Source url address: {forgeInstallerUrl}");
+
                 client.DownloadFile(
-                    address: GetForgeInstallerUrl(instance.MinecraftVersion, version),
+                    address: forgeInstallerUrl,
                     fileName: installerPath
                 );
+
+                Logger.Info($"Forge installer was saved to {installerPath}");
             }
 
             // Run forge installer in separate process
@@ -76,12 +82,12 @@ namespace Packsly3.Server.Launcher.Modloader {
                     RedirectStandardError = true,
                     WorkingDirectory = Packsly.Launcher.Workspace.FullName,
                     FileName = Packsly.IsLinux ? "/bin/bash" : "cmd.exe",
-                    Arguments = (Packsly.IsLinux ? "-c" : "/c") + $" java -jar \"{installerPath}\" --installServer nogui"
+                    Arguments = (Packsly.IsLinux ? "-c" : "/c") + $" \"java -jar {installerPath} --installServer nogui\""
                 };
 
                 // Add hooks for output messages and errors
                 terminalProcess.ErrorDataReceived += (sender, args) => {
-                    Logger.Error("There was an error while installing forge", args.Data);
+                    Logger.Error("There was an error while running forge installer: ", args.Data);
                     installationError = true;
                 };
 
@@ -90,21 +96,26 @@ namespace Packsly3.Server.Launcher.Modloader {
                 };
 
                 // Wait for installation to finish
-                Logger.Info($"Starting installation process...");
+                Logger.Info($"Starting forge installer process...");
                 terminalProcess.Start();
                 terminalProcess.BeginOutputReadLine();
                 terminalProcess.WaitForExit();
+                Logger.Info($"Forge installer process finished.");
             };
 
-            // Remove installer and it's logs
-            Logger.Info($"Removing temporally installer files");
+            // Remove temporally files
+            Logger.Info($"Removing temporally files...");
+            Logger.Info($" - Removing {installerPath}");
             File.Delete(installerPath);
-            FileInfo installerLogs = new FileInfo($"forge-{version}-installer.jar.log");
-            if (installerLogs.Exists) {
-                installerLogs.Delete();
+            foreach(FileInfo logFile in instance.Location.GetFiles("forge-*-installer.jar.log")) {
+                if (logFile.Exists) {
+                    Logger.Info($" - Removing {logFile.FullName}");
+                    logFile.Delete();
+                }
             }
 
             // Throw an error if installation failed
+            // Exception is thrown here to also remove temporally files if there is an error
             if (installationError) {
                 throw new Exception("Forge installation failed");
             }

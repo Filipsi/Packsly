@@ -17,7 +17,7 @@ namespace Packsly3.Core.FileSystem.Impl {
         #region Properties
 
         [JsonProperty("workspace")]
-        public DirectoryInfo Workspace { set; get; } = Packsly.AplicationDirectory;
+        public DirectoryInfo Workspace { set; get; } = new DirectoryInfo("./..");
 
         [JsonProperty("modpack")]
         public string DefaultModpackSource { set; get; }
