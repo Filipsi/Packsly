@@ -56,7 +56,7 @@ namespace Packsly3.MultiMC.Launcher {
             if (!MmcConfig.Exists) {
                 MmcConfig.WithDefaults();
 
-                const string runner = "$INST_DIR/../../packsly/Packsly3.Cli.exe lifecycle $INST_ID";
+                string runner = (Packsly.IsLinux ? "mono " : string.Empty) + "$INST_DIR/../../packsly/Packsly3.Cli.exe lifecycle $INST_ID";
                 MmcConfig.PreLaunchCommand = $"{runner} {Lifecycle.PreLaunch}";
                 MmcConfig.PostExitCommand = $"{runner} {Lifecycle.PostExit}";
             }
