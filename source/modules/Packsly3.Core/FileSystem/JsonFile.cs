@@ -9,7 +9,7 @@ namespace Packsly3.Core.FileSystem {
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class JsonFile : FileBase {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new LowercaseContractResolver(),

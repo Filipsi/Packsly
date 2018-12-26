@@ -22,7 +22,7 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         #endregion
 
-        public PackslyInstanceFile(string path) : base(Path.Combine(path, "instnace.packsly")) {
+        public PackslyInstanceFile(string path) : base(Path.Combine(path, "instance.packsly")) {
             CustomData =  new Dictionary<string, Dictionary<string, object>>();
             Adapters = new AdaptersConfig();
             ManagedFiles = new Dictionary<FileManager.GroupType, List<FileInfo>>();
@@ -37,7 +37,19 @@ namespace Packsly3.Core.FileSystem.Impl {
                 }
             };
 
+            FixFilenameTypo();
             Load();
+        }
+
+        /// <summary>
+        /// Checks and fixes filename typo in older versions of Packsly3
+        /// </summary>
+        private void FixFilenameTypo() {
+            FileInfo typoFile = new FileInfo(Path.Combine(File.DirectoryName, "instnace.packsly"));
+            if (typoFile.Exists) {
+                Logger.Info($"Bad instance file detected, fixing naming typo by renaming '{typoFile.Name}' to 'instance.packsly'");
+                typoFile.MoveTo(Path.Combine(File.DirectoryName, "instance.packsly"));
+            }
         }
 
         #region Custom data
