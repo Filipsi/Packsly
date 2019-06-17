@@ -8,7 +8,6 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.Core.Modpack;
 using Packsly3.Core.Modpack.Model;
@@ -18,7 +17,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
     [Register]
     public class RevisionUpdateAdapter : Adapter<RevisionUpdateSchemaConfig> {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         #region Adapter
 
@@ -36,7 +35,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 throw new FormatException($"Revision based updater '{GetType().FullName}' could not resolve update url '{config.UpdateUrl}' provided by configuration.");
             }
 
-            Logger.Info("Checking for modpack updates...");
+            logger.Info("Checking for modpack updates...");
 
             using (WebClient client = new WebClient()) {
                 ModpackDefinition remoteModpack = JsonConvert.DeserializeObject<ModpackDefinition>(client.DownloadString(config.UpdateUrl));
@@ -54,7 +53,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 // If there is an update available
                 if (config.Revision != remoteConfig.Revision) {
                     Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.UpdateStarted);
-                    Logger.Info($"Updating modpack from revision {config.Revision} to {remoteConfig.Revision}!");
+                    logger.Info($"Updating modpack from revision {config.Revision} to {remoteConfig.Revision}!");
 
                     // Update instance config
                     // TODO: Add config option to the update adapter for this
@@ -81,7 +80,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 }
             }
 
-            Logger.Info("Modpack is up to date.");
+            logger.Info("Modpack is up to date.");
         }
 
         #endregion
@@ -95,14 +94,14 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 if (!instance.ModLoaderManager.ModLoaders.Any(ml => ml.Name == name && ml.Version != version))
                     continue;
 
-                Logger.Info($"Installing modloader '{name}' version '{version}'...");
+                logger.Info($"Installing modloader '{name}' version '{version}'...");
                 instance.ModLoaderManager.Install(name, version);
             }
 
             // Remove unused modloaders
             IEnumerable<ModLoaderInfo> oldModLoaders = instance.ModLoaderManager.ModLoaders.Where(ml => !modpack.ModLoaders.ContainsKey(ml.Name));
             foreach (ModLoaderInfo modLoader in oldModLoaders) {
-                Logger.Info($"Uninstalling modloader '{modLoader.Name}' version '{modLoader.Version}'");
+                logger.Info($"Uninstalling modloader '{modLoader.Name}' version '{modLoader.Version}'");
                 instance.ModLoaderManager.Uninstall(modLoader.Name);
             }
         }
@@ -113,7 +112,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                     continue;
                 }
 
-                Logger.Info($"Removing mod {modFile.Name}...");
+                logger.Info($"Removing mod {modFile.Name}...");
                 instance.Files.Remove(modFile, FileManager.GroupType.Mod);
                 modFile.Delete();
             }
@@ -124,24 +123,22 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                     continue;
                 }
 
-                Logger.Info($"Removing mod resource {modResourceFile.Name}...");
+                logger.Info($"Removing mod resource {modResourceFile.Name}...");
                 instance.Files.Remove(modResourceFile, FileManager.GroupType.ModResource);
                 modResourceFile.Delete();
             }
 
             foreach (ModSource modpackMod in modpack.Mods.Where(mod => mod.ShouldDownload)) {
                 if (!instance.Files.GroupContains(FileManager.GroupType.Mod, modpackMod)) {
-                    Logger.Info($"Downloading mod {modpackMod.FileName}...");
+                    logger.Info($"Downloading mod {modpackMod.FileName}...");
                     instance.Files.Download(modpackMod, FileManager.GroupType.Mod);
                 }
 
                 foreach (RemoteResource modpackModResource in modpackMod.Resources.Where(resource => resource.ShouldDownload)) {
-                    Logger.Info($"Downloading mod resource {modpackModResource.FileName}...");
+                    logger.Info($"Downloading mod resource {modpackModResource.FileName}...");
                     instance.Files.Download(modpackModResource, FileManager.GroupType.ModResource);
                 }
             }
-
-            instance.Files.Save();
         }
 
     }

@@ -7,21 +7,29 @@ using System.Net;
 using NLog;
 using Packsly3.Core.Modpack.Model;
 
-namespace Packsly3.Core.Launcher.Instance.Logic {
+namespace Packsly3.Core.Launcher.Instance {
 
     public class FileManager {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        #region Properties
 
         public readonly ReadOnlyDictionary<GroupType, List<FileInfo>> FileMap;
 
-        private readonly IMinecraftInstance _instance;
-
         public bool IsDirty { private set; get; }
+
+        #endregion
+
+        #region Fields
+
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private readonly IMinecraftInstance instance;
+
+        #endregion
 
         public FileManager(IMinecraftInstance instance) {
             FileMap = new ReadOnlyDictionary<GroupType, List<FileInfo>>(instance.PackslyConfig.ManagedFiles);
-            _instance = instance;
+            this.instance = instance;
 
             // Remove missing or non-existent files
             foreach (GroupType group in Enum.GetValues(typeof(GroupType))) {
@@ -31,12 +39,10 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                     continue;
 
                 foreach (FileInfo file in missingFiles) {
-                    Logger.Debug("Removing non-existing tracked file.");
+                    logger.Debug("Removing non-existing tracked file.");
                     Remove(file, group);
                 }
             }
-
-            Save();
         }
 
         public void Add(FileInfo file, GroupType group) {
@@ -49,11 +55,11 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                    return;
                 }
             } else {
-                _instance.PackslyConfig.ManagedFiles.Add(group, new List<FileInfo>());
+                instance.PackslyConfig.ManagedFiles.Add(group, new List<FileInfo>());
             }
 
-            _instance.PackslyConfig.ManagedFiles[group].Add(file);
-            Logger.Debug($"Tracked file {file.FullName} was added to minecraft instance {_instance.Id}");
+            instance.PackslyConfig.ManagedFiles[group].Add(file);
+            logger.Debug($"Tracked file {file.FullName} was added to minecraft instance {instance.Id}");
             IsDirty = true;
         }
 
@@ -67,7 +73,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 destinationFile.Directory.Create();
             }
 
-            Logger.Debug($"Downloading file from {url}...");
+            logger.Debug($"Downloading file from {url}...");
             using (WebClient client = new WebClient()) {
                 client.DownloadFile(url, destination);
             }
@@ -76,7 +82,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
         }
 
         public void Download(RemoteResource resource, GroupType group) =>
-            Download(resource.Url.ToString(), _instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)), group);
+            Download(resource.Url.ToString(), instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)), group);
 
         public void Remove(FileInfo file, GroupType group) {
             if (!FileMap.ContainsKey(group)) {
@@ -95,11 +101,11 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             }
 
             fileGroup.Remove(toRemove);
-            Logger.Debug($"Tracked file {file.FullName} was removed from minecraft instance {_instance.Id}");
+            logger.Debug($"Tracked file {file.FullName} was removed from minecraft instance {instance.Id}");
 
             if (fileGroup.Count == 0) {
-                Logger.Debug($"Removing tracking group {group} from minecraft instance {_instance.Id}, because it is empty.");
-                _instance.PackslyConfig.ManagedFiles.Remove(group);
+                logger.Debug($"Removing tracking group {group} from minecraft instance {instance.Id}, because it is empty.");
+                instance.PackslyConfig.ManagedFiles.Remove(group);
             }
 
             IsDirty = true;
@@ -109,22 +115,12 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             => Remove(new FileInfo(path), group);
 
         public void Remove(RemoteResource resource, GroupType group)
-            => Remove(new FileInfo(_instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName))), group);
-
-        #region IO
-
-        public void Save() {
-            if (!IsDirty) return;
-            _instance.PackslyConfig.Save();
-            IsDirty = false;
-        }
-
-        #endregion
+            => Remove(new FileInfo(instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName))), group);
 
         #region Utilities
 
         public bool GroupContains(GroupType group, RemoteResource resource)
-            => GetGroup(group).Any(m => m.FullName == _instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)));
+            => GetGroup(group).Any(m => m.FullName == instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)));
 
         public bool GroupContains(GroupType group, FileInfo file)
             => GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());

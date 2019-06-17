@@ -1,0 +1,33 @@
+{
+	"name": "LiteTest",
+	"minecraft": "1.12.2",
+	"icon": "gear",
+	"adapters": {
+	},
+	"modloader": {
+		"forge": "14.23.5.2838"
+	},
+	"environment": {
+		"multimc": {
+			"minMemoryAllocation": 3072,
+			"maxMemoryAllocation": 8192,
+			"notes": "Hello world!",
+			"javaArguments": "-XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+UseNUMA -XX:+CMSParallelRemarkEnabled -XX:MaxTenuringThreshold=15 -XX:MaxGCPauseMillis=30 -XX:GCPauseIntervalMillis=150 -XX:+UseAdaptiveGCBoundary -XX:-UseGCOverheadLimit -XX:+UseBiasedLocking -XX:SurvivorRatio=8 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=15 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -XX:+UseFastAccessorMethods -XX:+UseCompressedOops -XX:+OptimizeStringConcat -XX:+AggressiveOpts -XX:ReservedCodeCacheSize=2048m -XX:+UseCodeCacheFlushing -XX:SoftRefLRUPolicyMSPerMB=2000 -XX:ParallelGCThreads=10"
+		}
+	},
+	"mods": [
+		{
+			"url": "https://minecraft.curseforge.com/projects/jei/files/2566347/download",
+			"filename": "jei-1.12.2-4.9.2.196.jar"
+		},
+		{
+			"url": "https://minecraft.curseforge.com/projects/forestry/files/2567022/download",
+			"filename": "forestry-1.12.2-5.8.0.295.jar",
+		},
+		{
+			"url": 	"https://minecraft.curseforge.com/projects/crafttweaker/files/2554607/download",
+			"filename": "crafttweaker2-1.12-4.1.8.jar",
+		}
+	]
+}
+

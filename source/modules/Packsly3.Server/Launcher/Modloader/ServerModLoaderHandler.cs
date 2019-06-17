@@ -10,11 +10,12 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Packsly3.Core.Launcher.Modloader.Impl;
 
 namespace Packsly3.Server.Launcher.Modloader {
 
     [Register]
-    public class ServerModLoaderHandler : InstanceModLoaderHandler<ServerMinecraftInstance> {
+    public class ServerModLoaderHandler : BasicModLoaderHandler<ServerMinecraftInstance> {
 
         #region Fields
 
@@ -30,7 +31,7 @@ namespace Packsly3.Server.Launcher.Modloader {
         #region IModLoaderHandler
 
         public override bool IsCompatible(string modLoader)
-           => modLoader == Packsly.Constants.ForgeModlaoder;
+           => modLoader == Packsly.Constants.ForgeModloader;
 
         public override void DetectModLoaders(ServerMinecraftInstance instance, List<ModLoaderInfo> modLoaders) {
             FileInfo forgeJar = GetForgeJarFile(instance);
@@ -38,7 +39,7 @@ namespace Packsly3.Server.Launcher.Modloader {
             if (forgeJar != null) {
                 modLoaders.Add(
                     new ModLoaderInfo(
-                        name: Packsly.Constants.ForgeModlaoder,
+                        name: Packsly.Constants.ForgeModloader,
                         version: forgeJarFilePattern.Match(forgeJar.Name).Groups[2].Value
                     )
                 );
@@ -46,7 +47,7 @@ namespace Packsly3.Server.Launcher.Modloader {
         }
 
         public override void Install(ServerMinecraftInstance instance, string modLoader, string version) {
-            if (modLoader != Packsly.Constants.ForgeModlaoder) {
+            if (modLoader != Packsly.Constants.ForgeModloader) {
                 Logger.Error($"Mod loader handler is not compatible with modloader with name '{modLoader}'");
                 return;
             }
@@ -122,7 +123,7 @@ namespace Packsly3.Server.Launcher.Modloader {
         }
 
         public override void Uninstall(ServerMinecraftInstance instance, string modLoader) {
-            if (modLoader != Packsly.Constants.ForgeModlaoder) {
+            if (modLoader != Packsly.Constants.ForgeModloader) {
                 Logger.Error($"Mod loader handler is not compatible with modloader with name '{modLoader}'");
                 return;
             }

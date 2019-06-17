@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using Packsly3.Core.FileSystem.Impl;
-using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 
 namespace Packsly3.Core.Launcher.Instance {
@@ -26,6 +25,8 @@ namespace Packsly3.Core.Launcher.Instance {
         FileManager Files { get; }
 
         void Configure(string json);
+
+        void Load();
 
         void Save();
 

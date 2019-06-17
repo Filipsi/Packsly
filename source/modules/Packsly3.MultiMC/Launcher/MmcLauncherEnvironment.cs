@@ -61,8 +61,9 @@ namespace Packsly3.MultiMC.Launcher {
                     .GetDirectories()
                     .FirstOrDefault(dir => dir.Name == id) != null;
 
-                if (hasInstanceWithId)
+                if (hasInstanceWithId) {
                     throw new DuplicateNameException($"Instance with id '{id}' already exists!");
+                }
             }
 
             DirectoryInfo instanceFolder = new DirectoryInfo(Path.Combine(instancesFolder.FullName, id));

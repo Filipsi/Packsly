@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Packsly3.Core.Launcher.Instance.Logic;
+using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Modpack.Model {
 

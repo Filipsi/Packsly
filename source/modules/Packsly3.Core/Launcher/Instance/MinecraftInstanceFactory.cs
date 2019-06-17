@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 using NLog;
-using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Modpack;
 using Packsly3.Core.Modpack.Model;
 
@@ -13,7 +12,7 @@ namespace Packsly3.Core.Launcher.Instance {
 
     internal static class MinecraftInstanceFactory {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static IMinecraftInstance CreateFromModpack(FileInfo modpackFile) {
             if (!modpackFile.Exists) {
@@ -21,7 +20,7 @@ namespace Packsly3.Core.Launcher.Instance {
             }
 
             using (StreamReader reader = modpackFile.OpenText()) {
-                Logger.Debug($"Reading modpack definition file from {modpackFile.FullName}");
+                logger.Debug($"Reading modpack definition file from {modpackFile.FullName}");
                 return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFile.FullName), reader.ReadToEnd());
             }
         }
@@ -29,15 +28,15 @@ namespace Packsly3.Core.Launcher.Instance {
         public static IMinecraftInstance CreateFromModpack(Uri modpackFileUrl) {
             using (WebClient client = new WebClient()) {
                 client.Encoding = Encoding.UTF8;
-                Logger.Debug($"Downloading modpack definition from {modpackFileUrl}");
+                logger.Debug($"Downloading modpack definition from {modpackFileUrl}");
                 return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFileUrl.AbsolutePath), client.DownloadString(modpackFileUrl));
             }
         }
 
         public static IMinecraftInstance CreateFromModpack(string instanceId, string modpackJson) {
             ModpackDefinition modpackDefinition = JsonConvert.DeserializeObject<ModpackDefinition>(modpackJson);
-            IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);
 
+            IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);
             Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PreInstallation);
 
             // Install modloaders
@@ -45,33 +44,33 @@ namespace Packsly3.Core.Launcher.Instance {
                 string name = modloaderEntry.Key;
                 string version = modloaderEntry.Value;
 
-                Logger.Info($"Installing modloader '{name}' with version '{version}'...");
+                logger.Info($"Installing modloader '{name}' with version '{version}'...");
                 instance.ModLoaderManager.Install(name, version);
             }
 
             // Download mods
             foreach (ModSource mod in modpackDefinition.Mods) {
                 if (mod.ShouldDownload) {
-                    Logger.Info($"Downloading mod '{mod.FileName}' to '{mod.FilePath}'...");
+                    logger.Info($"Downloading mod '{mod.FileName}' to '{mod.FilePath}'...");
                     instance.Files.Download(mod, FileManager.GroupType.Mod);
-                }
-                else {
-                    Logger.Info($"Skipping downloading of mod '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+
+                } else {
+                    logger.Info($"Skipping downloading of mod '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
                 }
 
                 // Download mod resources
                 foreach (RemoteResource resource in mod.Resources) {
                     if (resource.ShouldDownload) {
-                        Logger.Info($"Downloading resource '{resource.FileName}' to '{resource.FilePath}'...");
+                        logger.Info($"Downloading resource '{resource.FileName}' to '{resource.FilePath}'...");
                         instance.Files.Download(resource, FileManager.GroupType.ModResource);
-                    }
-                    else {
-                        Logger.Info($"Skipping downloading of resource '{resource.FileName}' since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
+
+                    } else {
+                        logger.Info($"Skipping downloading of resource '{resource.FileName}' since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
                     }
                 }
             }
 
-            instance.Files.Save();
+            instance.Save();
             Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PostInstallation);
             return instance;
         }
@@ -83,17 +82,19 @@ namespace Packsly3.Core.Launcher.Instance {
             instance.Name = modpackDefinition.Name;
             instance.MinecraftVersion = modpackDefinition.MinecraftVersion;
             instance.Icon.Source = modpackDefinition.Icon;
-            Logger.Debug($"Setting minecraft instance properties id={instance.Id} name={instance.Name} mc={instance.MinecraftVersion} icon={instance.Icon.Source}");
+            logger.Debug($"Setting minecraft instance properties id={instance.Id} name={instance.Name} mc={instance.MinecraftVersion} icon={instance.Icon.Source}");
+
+            // Load defaults
+            instance.Load();
 
             // Save adapters defined in modpack along with configuration to packsly instance config file
             foreach (KeyValuePair<string, object> adapterDefinition in modpackDefinition.Adapters) {
                 string adapterName = adapterDefinition.Key;
                 object adapterSettings = adapterDefinition.Value;
 
-                Logger.Debug($"Setting adapter config for {adapterName} for minecraft instance {instance.Id}");
+                logger.Debug($"Setting adapter config for {adapterName} for minecraft instance {instance.Id}");
                 instance.PackslyConfig.Adapters.SetConfigFor(adapterName, adapterSettings);
             }
-            instance.PackslyConfig.Save();
 
             // Configure instance using compatible environment settings
             foreach (KeyValuePair<string, object> environmentEntry in modpackDefinition.Environments) {
@@ -103,12 +104,11 @@ namespace Packsly3.Core.Launcher.Instance {
                 }
 
                 string settings = environmentEntry.Value.ToString();
-                Logger.Debug($"Configuring minecraft instance {instance.Id} from modpack environment settings: {settings}");
+                logger.Debug($"Configuring minecraft instance {instance.Id} from modpack environment settings: {settings}");
                 instance.Configure(settings);
                 break;
             }
 
-            instance.Save();
             return instance;
         }
 

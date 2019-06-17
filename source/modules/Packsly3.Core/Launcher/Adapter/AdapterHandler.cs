@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Packsly3.Core.Common.Register;
-using Packsly3.Core.Launcher.Instance.Logic;
+using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.Launcher.Adapter {
 

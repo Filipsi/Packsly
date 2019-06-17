@@ -9,9 +9,9 @@ namespace Packsly3.Core.FileSystem {
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class JsonFile : FileBase {
 
-        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        protected static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private static readonly JsonSerializerSettings DefaultSerializerSettings = new JsonSerializerSettings {
+        private static readonly JsonSerializerSettings defaultSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new LowercaseContractResolver(),
             ObjectCreationHandling = ObjectCreationHandling.Replace
         };
@@ -22,30 +22,31 @@ namespace Packsly3.Core.FileSystem {
         }
 
         protected virtual JsonSerializerSettings GetSerializerSettings() {
-            return SerializerSettings ?? DefaultSerializerSettings;
+            return SerializerSettings ?? defaultSerializerSettings;
         }
 
         #region IO
 
         public override void Load() {
-            if (!File.Exists)
+            if (!file.Exists) {
                 return;
+            }
 
-            using (StreamReader reader = File.OpenText()) {
+            using (StreamReader reader = file.OpenText()) {
                 string content = reader.ReadToEnd();
-                Logger.Debug($"Loaded JSON file '{File.Name}' with content {JToken.Parse(content).ToString()}");
+                logger.Debug($"Loaded JSON file '{file.Name}' with content {JToken.Parse(content).ToString()}");
                 JsonConvert.PopulateObject(content, this, GetSerializerSettings());
             }
         }
 
         public override void Save() {
-            if (!File.Exists && File.DirectoryName != null) {
-                Directory.CreateDirectory(File.DirectoryName);
+            if (!file.Exists && file.DirectoryName != null) {
+                Directory.CreateDirectory(file.DirectoryName);
             }
 
-            using (StreamWriter writer = File.CreateText()) {
+            using (StreamWriter writer = file.CreateText()) {
                 string content = JsonConvert.SerializeObject(this, Formatting.Indented, GetSerializerSettings());
-                Logger.Debug($"Saved JSON file '{File.Name}' with content {content}");
+                logger.Debug($"Saved JSON file '{file.Name}' with content {content}");
                 writer.Write(content);
             }
         }

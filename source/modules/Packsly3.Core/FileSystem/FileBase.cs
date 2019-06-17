@@ -7,23 +7,23 @@ namespace Packsly3.Core.FileSystem {
         #region Properties
 
         public string FileName
-            => File.Name;
+            => file.Name;
 
         public string FilePath
-            => File.FullName;
+            => file.FullName;
 
         public string DirectoryPath
             => Path.GetDirectoryName(FilePath);
 
         public bool Exists
-            => File.Exists;
+            => file.Exists;
 
         #endregion
 
-        protected readonly FileInfo File;
+        protected readonly FileInfo file;
 
         protected FileBase(string path) {
-            File = new FileInfo(path);
+            file = new FileInfo(path);
         }
 
         #region IO
@@ -33,8 +33,8 @@ namespace Packsly3.Core.FileSystem {
         public abstract void Save();
 
         public void Delete() {
-            if (File.Exists) {
-                File.Delete();
+            if (file.Exists) {
+                file.Delete();
             }
         }
 

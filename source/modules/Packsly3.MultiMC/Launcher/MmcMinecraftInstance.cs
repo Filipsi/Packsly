@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Packsly3.Core;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.MultiMC.FileSystem;
 
@@ -53,16 +52,8 @@ namespace Packsly3.MultiMC.Launcher {
             PackslyConfig = new PackslyInstanceFile(Path.Combine(Location.FullName));
 
             MmcConfig = new MmcConfigFile(Location.FullName);
-            if (!MmcConfig.Exists) {
-                MmcConfig.WithDefaults();
-
-                string runner = (Packsly.IsLinux ? "mono " : string.Empty) + "$INST_DIR/../../packsly/Packsly3.Cli.exe lifecycle $INST_ID";
-                MmcConfig.PreLaunchCommand = $"{runner} {Lifecycle.PreLaunch}";
-                MmcConfig.PostExitCommand = $"{runner} {Lifecycle.PostExit}";
-            }
 
             PackFile = new MmcPackFile(Location.FullName);
-            PackFile.Load();
 
             Icon = new Icon(Path.Combine(Packsly.Launcher.Workspace.FullName, "icons"), MmcConfig.IconName);
             Icon.IconChanged += (sender, args) => MmcConfig.IconName = (sender as Icon)?.Source;
@@ -81,7 +72,31 @@ namespace Packsly3.MultiMC.Launcher {
                 Location.Create();
             }
 
+            PackslyConfig.Save();
             MmcConfig.Save();
+            PackFile.Save();
+        }
+
+        public void Load() {
+            PackslyConfig.Load();
+
+            if (MmcConfig.Exists) {
+                MmcConfig.Load();
+
+            } else {
+                MmcConfig.WithDefaults();
+                MmcConfig.IconName = Icon.Source;
+
+                string runner = (Packsly.IsLinux ? "mono " : string.Empty) + "$INST_DIR/../../packsly/Packsly3.Cli.exe lifecycle $INST_ID";
+                MmcConfig.PreLaunchCommand = $"{runner} {Lifecycle.PreLaunch}";
+                MmcConfig.PostExitCommand = $"{runner} {Lifecycle.PostExit}";
+            }
+
+            if (PackFile.Exists) {
+                PackFile.Load();
+            } else {
+                PackFile.WithDefaults(MinecraftVersion);
+            }
         }
 
         public void Delete() {

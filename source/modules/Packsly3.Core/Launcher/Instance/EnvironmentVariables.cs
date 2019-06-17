@@ -5,23 +5,27 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NLog;
 
-namespace Packsly3.Core.Launcher.Instance.Logic {
+namespace Packsly3.Core.Launcher.Instance {
 
     public class EnvironmentVariables {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        public static readonly string ModsFolder = "modsFolder";
-
-        public static readonly string ConfigFolder = "configFolder";
-
-        public static readonly string InstnaceFolder = "instanceFolder";
-
-        public static readonly string RootFolder = "rootFolder";
-
-        private static readonly Regex PattenNamedParameter = new Regex("{([^}]+)}", RegexOptions.Compiled);
+        #region Properties
 
         public readonly ReadOnlyDictionary<string, string> Properties;
+
+        #endregion
+
+        #region Fields
+
+        public static readonly string ModsFolder = "modsFolder";
+        public static readonly string ConfigFolder = "configFolder";
+        public static readonly string InstnaceFolder = "instanceFolder";
+        public static readonly string RootFolder = "rootFolder";
+
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Regex pattenNamedParameter = new Regex("{([^}]+)}", RegexOptions.Compiled);
+
+        #endregion
 
         public EnvironmentVariables(IMinecraftInstance instance, IDictionary<string, string> properties) {
             Properties = new ReadOnlyDictionary<string, string>(properties);
@@ -42,7 +46,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 properties.Add(RootFolder, Path.Combine(instance.Location.FullName, "minecraft"));
             }
 
-            Logger.Debug($"Environment variables of minecraft instance {instance} were set to: {Properties}");
+            logger.Debug($"Environment variables of minecraft instance {instance} were set to: {Properties}");
         }
 
         public string GetProperty(string name) {
@@ -51,7 +55,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
         public string Format(string input) {
             List<string> namedParameters = new List<string>();
-            MatchCollection matches = PattenNamedParameter.Matches(input);
+            MatchCollection matches = pattenNamedParameter.Matches(input);
             for (int i = 0; i < matches.Count; i++) {
                 Match match = matches[i];
                 namedParameters.Add(match.Groups[1].Value);
@@ -62,7 +66,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 .ToDictionary(namedParameter => namedParameter, namedParameter => Properties[namedParameter]);
 
             string result = localMap.Aggregate(input, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value.ToString()));
-            Logger.Debug($"String '{input}' was transcribed as '{result}'");
+            logger.Debug($"String '{input}' was transcribed as '{result}'");
             return result;
         }
 

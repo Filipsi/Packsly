@@ -39,7 +39,6 @@ namespace Packsly3.Core.Launcher.Adapter {
             PackslyInstanceFile cfg = instance.PackslyConfig;
             cfg.Adapters.SetConfigFor(this, config);
             cfg.Save();
-            instance.Save();
         }
 
     }

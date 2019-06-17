@@ -69,6 +69,12 @@ namespace Packsly3.MultiMC.FileSystem {
             set => Set("InstanceType", value);
         }
 
+        [JsonProperty(PropertyName = "LogPrePostOutput")]
+        public bool LogPrePostOutput {
+            get => Get<bool>("LogPrePostOutput");
+            set => Set("LogPrePostOutput", value);
+        }
+
         [JsonProperty(PropertyName = "mcLaunchMethod")]
         public string McLaunchMethod {
             get => Get<string>("MCLaunchMethod");

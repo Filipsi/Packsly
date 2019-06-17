@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using NLog;
 
-namespace Packsly3.Core.Launcher.Instance.Logic {
+namespace Packsly3.Core.Launcher.Instance {
 
     public class Icon {
 
@@ -12,9 +13,14 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             get => source;
             set {
                 bool isUri = Uri.IsWellFormedUriString(value, UriKind.Absolute);
+
                 source = isUri
                     ? Path.GetFileNameWithoutExtension(value)
                     : value;
+
+                if (string.IsNullOrEmpty(source)) {
+                    return;
+                }
 
                 IconFile = new FileInfo(
                     Path.Combine(iconFolder.FullName, $"{nameOverride ?? source}.png")
@@ -22,6 +28,8 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
                 if (!IconFile.Exists && isUri) {
                     Download(value);
+                } else {
+                    logger.Info($"Using local modpack icon '{source}'.");
                 }
 
                 IconChanged?.Invoke(this, EventArgs.Empty);
@@ -43,6 +51,8 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
         #region Fields
 
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly DirectoryInfo iconFolder;
         private readonly string nameOverride;
         private string source;
@@ -62,8 +72,10 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
                 iconFolder.Create();
             }
 
-            using (WebClient clinet = new WebClient())
-                clinet.DownloadFile(url, IconFile.FullName);
+            using (WebClient client = new WebClient()) {
+                logger.Info($"Downloading modpack icon from '{url}'...");
+                client.DownloadFile(url, IconFile.FullName);
+            }
         }
 
         #endregion

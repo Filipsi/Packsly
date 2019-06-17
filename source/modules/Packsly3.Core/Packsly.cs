@@ -4,7 +4,7 @@ using System.Net;
 using System.Reflection;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher;
-using Packsly3.Core.Launcher.Instance.Logic;
+using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core {
 
@@ -12,8 +12,9 @@ namespace Packsly3.Core {
 
         public static class Constants {
 
-            public const string ForgeModlaoder = "forge";
-            public const string LiteloaderModlaoder = "liteloader";
+            public const string ForgeModloader = "forge";
+            public const string LiteloaderModloader = "liteloader";
+            public const string FabricModloader = "fabric";
 
         }
 
@@ -25,12 +26,16 @@ namespace Packsly3.Core {
         }
 
         public static readonly DirectoryInfo AplicationDirectory = new DirectoryInfo(
-            Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)
+            Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? throw new InvalidOperationException()
         );
 
         public static readonly PackslyConfig Configuration = new PackslyConfig(AplicationDirectory);
         public static readonly MinecraftLauncher Launcher = new MinecraftLauncher();
         public static readonly Lifecycle Lifecycle = new Lifecycle();
+
+        static Packsly() {
+            Configuration.Load();
+        }
 
     }
 

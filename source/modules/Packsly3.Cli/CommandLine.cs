@@ -33,7 +33,7 @@ namespace Packsly3.Cli {
                 }
             }
 
-            Packsly.Lifecycle.EventBus.Publish(null, Core.Launcher.Instance.Logic.Lifecycle.PackslyExit);
+            Packsly.Lifecycle.EventBus.Publish(null, Core.Launcher.Instance.Lifecycle.PackslyExit);
 
             if (PauseWhenFinished || Debugger.IsAttached) {
                 Console.ReadKey();

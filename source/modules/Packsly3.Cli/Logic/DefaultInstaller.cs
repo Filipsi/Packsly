@@ -6,15 +6,15 @@ namespace Packsly3.Cli.Logic {
 
     internal static class DefaultInstaller {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static void Run() {
             if (Packsly.Configuration.Workspace != null && Packsly.Configuration.Workspace.Exists) {
                 Packsly.Launcher.Workspace = Packsly.Configuration.Workspace;
-                Logger.Info($"Workspace was set from configuration file to: {Packsly.Launcher.Workspace.FullName}");
+                logger.Info($"Workspace was set from configuration file to: {Packsly.Launcher.Workspace.FullName}");
             }
 
-            Logger.Info($"Using modpack source from configuration: {Packsly.Configuration.DefaultModpackSource}");
+            logger.Info($"Using modpack source from configuration: {Packsly.Configuration.DefaultModpackSource}");
 
             Installer.Run(new InstallOptions {
                 Source = Packsly.Configuration.DefaultModpackSource,

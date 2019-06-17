@@ -3,7 +3,6 @@ using System.IO;
 using Newtonsoft.Json;
 using Packsly3.Core.Common.Json;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.Core.Launcher.Instance.Logic;
 
 namespace Packsly3.Core.FileSystem.Impl {
 
@@ -45,10 +44,10 @@ namespace Packsly3.Core.FileSystem.Impl {
         /// Checks and fixes filename typo in older versions of Packsly3
         /// </summary>
         private void FixFilenameTypo() {
-            FileInfo typoFile = new FileInfo(Path.Combine(File.DirectoryName, "instnace.packsly"));
+            FileInfo typoFile = new FileInfo(Path.Combine(file.DirectoryName, "instnace.packsly"));
             if (typoFile.Exists) {
-                Logger.Info($"Bad instance file detected, fixing naming typo by renaming '{typoFile.Name}' to 'instance.packsly'");
-                typoFile.MoveTo(Path.Combine(File.DirectoryName, "instance.packsly"));
+                logger.Info($"Bad instance file detected, fixing naming typo by renaming '{typoFile.Name}' to 'instance.packsly'");
+                typoFile.MoveTo(Path.Combine(file.DirectoryName, "instance.packsly"));
             }
         }
 

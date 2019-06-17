@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using NLog;
 using Packsly3.Core.Launcher.Adapter;
 
-namespace Packsly3.Core.Launcher.Instance.Logic {
+namespace Packsly3.Core.Launcher.Instance {
 
     public class Lifecycle {
 
-        #region Constants
+        #region Properties
+
+        public Dispatcher EventBus { get; } = new Dispatcher();
+
+        #endregion
+
+        #region Fields
 
         public static readonly string PreInstallation = "preinstallation";
 
@@ -24,8 +30,6 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
         public static readonly string PackslyExit = "packslyexit";
 
         #endregion
-
-        public readonly Dispatcher EventBus = new Dispatcher();
 
         internal Lifecycle() {
         }
@@ -46,7 +50,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
 
         public class Dispatcher {
 
-            private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+            private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
             public event EventHandler<Changed> LifecycleEvent;
 
@@ -55,7 +59,7 @@ namespace Packsly3.Core.Launcher.Instance.Logic {
             }
 
             public void Publish(IMinecraftInstance instance, string eventName) {
-                Logger.Debug($"Publishing lifecycle event '{eventName}' {(instance == null ? "..." : " for minecraft instance '{instance.Id}'...")}");
+                logger.Debug($"Publishing lifecycle event '{eventName}' {(instance == null ? "..." : " for minecraft instance '{instance.Id}'...")}");
                 LifecycleEvent?.Invoke(this, new Changed(instance, eventName));
             }
 

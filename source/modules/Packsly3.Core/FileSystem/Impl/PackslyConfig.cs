@@ -29,13 +29,6 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         public PackslyConfig(string path) : base(Path.Combine(path, "packsly.json")) {
             SerializerSettings = ConfigSerializerSettings;
-
-            if (Exists) {
-                Load();
-            }
-            else {
-                Save();
-            }
         }
 
         #region IO

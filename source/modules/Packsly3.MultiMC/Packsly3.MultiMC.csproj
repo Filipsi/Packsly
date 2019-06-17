@@ -55,7 +55,11 @@
     <Compile Include="Launcher\MmcLauncherEnvironment.cs" />
     <Compile Include="Launcher\MmcMinecraftInstance.cs" />
     <Compile Include="FileSystem\MmcConfigFile.cs" />
+    <Compile Include="Launcher\Modloader\FabricInstallationStrategy.cs" />
+    <Compile Include="Launcher\Modloader\LiteloaderInstallationStrategy.cs" />
+    <Compile Include="Launcher\Modloader\ForgeInstallationStrategy.cs" />
     <Compile Include="Launcher\Modloader\MmcModLoaderHandler.cs" />
+    <Compile Include="Launcher\Modloader\MmcModLoaderInstallationStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

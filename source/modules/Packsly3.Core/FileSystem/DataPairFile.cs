@@ -10,7 +10,7 @@ namespace Packsly3.Core.FileSystem {
 
     public abstract class DataPairFile : FileBase {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         #region Properties
 
@@ -18,10 +18,10 @@ namespace Packsly3.Core.FileSystem {
 
         #endregion
 
-        private readonly Dictionary<string, string> _data;
+        private readonly Dictionary<string, string> data;
 
         protected DataPairFile(string path) : base(path) {
-            _data = new Dictionary<string, string>();
+            data = new Dictionary<string, string>();
         }
 
         #region Helpers
@@ -31,7 +31,7 @@ namespace Packsly3.Core.FileSystem {
         }
 
         public bool HasKey(string key) {
-            return _data.ContainsKey(key);
+            return data.ContainsKey(key);
         }
 
         #endregion
@@ -40,7 +40,7 @@ namespace Packsly3.Core.FileSystem {
 
         protected T Get<T>(string key) {
             return HasKey(key) ?
-                (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(_data[key])
+                (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(data[key])
                 : default(T);
         }
 
@@ -55,12 +55,12 @@ namespace Packsly3.Core.FileSystem {
             }
 
             if (HasKey(key)) {
-                if (_data[key] == strValue)
+                if (data[key] == strValue)
                     return;
 
-                _data[key] = strValue;
+                data[key] = strValue;
             } else {
-                _data.Add(key, strValue);
+                data.Add(key, strValue);
             }
 
             MarkDirty();
@@ -75,9 +75,9 @@ namespace Packsly3.Core.FileSystem {
                 return;
             }
 
-            _data.Clear();
+            data.Clear();
 
-            using (StreamReader reader = File.OpenText())
+            using (StreamReader reader = file.OpenText())
                 while (!reader.EndOfStream) {
                     string line = reader.ReadLine();
                     if (line == null)
@@ -87,10 +87,10 @@ namespace Packsly3.Core.FileSystem {
                         throw new Exception("Error while reading data pair file. Equal sign is missing on line.");
 
                     string[] parts = line.Split(new[] { '=' }, 2);
-                    _data.Add(parts[0], parts[1]);
+                    data.Add(parts[0], parts[1]);
                 }
 
-            Logger.Debug($"Loaded data pair file '{File.Name}' with content {_data}");
+            logger.Debug($"Loaded data pair file '{file.Name}' with content {data}");
         }
 
         public override void Save() {
@@ -101,15 +101,15 @@ namespace Packsly3.Core.FileSystem {
                 Directory.CreateDirectory(DirectoryPath);
 
             StringBuilder builder = new StringBuilder();
-            foreach (KeyValuePair<string, string> entry in _data)
+            foreach (KeyValuePair<string, string> entry in data)
                 builder.AppendLine($"{entry.Key}={entry.Value}");
 
-            using (FileStream writer = File.Open(FileMode.Create)) {
+            using (FileStream writer = file.Open(FileMode.Create)) {
                 byte[] raw = Encoding.UTF8.GetBytes(builder.ToString());
                 writer.Write(raw, 0, raw.Length);
             }
 
-            Logger.Debug($"Saved data pair file '{File.Name}' with content {builder}");
+            logger.Debug($"Saved data pair file '{file.Name}' with content {builder}");
         }
 
         #endregion

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher.Instance;
-using Packsly3.Core.Launcher.Instance.Logic;
 using Packsly3.Core.Launcher.Modloader;
 using Packsly3.Server.FileSystem;
 using System.Collections.Generic;
@@ -69,9 +68,6 @@ namespace Packsly3.Server.Launcher {
             Files = new FileManager(this);
 
             ServerProperties = new ServerPropertiesFile(Location.FullName);
-            if (!ServerProperties.Exists) {
-                ServerProperties.WithDefaults();
-            }
 
             // TODO: Server launch script
         }
@@ -82,8 +78,19 @@ namespace Packsly3.Server.Launcher {
             JsonConvert.PopulateObject(json, ServerProperties);
         }
 
+        public void Load() {
+            if (ServerProperties.Exists) {
+                ServerProperties.Load();
+            } else {
+                ServerProperties.WithDefaults();
+            }
+
+            PackslyConfig.Load();
+        }
+
         public void Save() {
             ServerProperties.Save();
+            PackslyConfig.Save();
         }
 
         public void Delete() {

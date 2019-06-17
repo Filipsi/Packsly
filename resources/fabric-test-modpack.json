@@ -1,0 +1,43 @@
+{
+	"name": "PackslyFabric",
+	"minecraft": "1.14.3-pre3",
+	"icon": "https://fabricmc.net/assets/logo.png",
+	"adapters": {
+	},
+	"modloader": {
+		"fabric": "0.4.8+build.155"
+	},
+	"environment": {
+		"multimc": {
+			"minMemoryAllocation": 3072,
+			"maxMemoryAllocation": 8192
+		}
+	},
+	"mods": [
+		{
+			"url": "https://minecraft.curseforge.com/projects/fabric/files/2724594/download",
+			"filename": "fabric-api-0.3.0+build.185.jar"
+		},
+		{
+			"url": 	"https://minecraft.curseforge.com/projects/roughly-enough-items/files/2722790/download",
+			"filename": "roughly-enough-items-2.9.4+build.129.jar",
+		},
+		{
+			"url": "https://minecraft.curseforge.com/projects/modmenu/files/2719901/download",
+			"filename": "mod-menu-1.6.2-92.jar",
+			"environment": {
+				"on": [ "server" ],
+				"isBlacklist": true
+			}
+		},
+		{
+			"url": "https://minecraft.curseforge.com/projects/voxelmap/files/2725549/download",
+			"filename": "voxel-map-1.9.9.jar",
+			"environment": {
+				"on": [ "server" ],
+				"isBlacklist": true
+			}
+		}
+	]
+}
+
