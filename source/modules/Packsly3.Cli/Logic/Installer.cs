@@ -20,9 +20,11 @@ namespace Packsly3.Cli.Logic {
         public static void Run(InstallOptions options) {
             ApplySettings(options);
 
-            if (!IsPackslyEmbeded(options.Workspace)) {
-                logger.Info("Embedding packsly to launcher directory...");
-                EmbedPacksly(options.Workspace);
+            if (Packsly.Launcher.CanEmbed) {
+                if (!IsPackslyEmbeded(options.Workspace)) {
+                    logger.Info("Embedding packsly to launcher directory...");
+                    EmbedPacksly(options.Workspace);
+                }
             }
 
             logger.Info($"Using modpack definition from '{options.Source}'...");
@@ -39,7 +41,7 @@ namespace Packsly3.Cli.Logic {
                 );
 
             } else {
-                throw new ConfigurationErrorsException("Specified Modpack source is not valid file path or url address.");
+                throw new ConfigurationErrorsException($"Specified modpack source '{options.Source}' is not valid file path or url address.");
             }
         }
 

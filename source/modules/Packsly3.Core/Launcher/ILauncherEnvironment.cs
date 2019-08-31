@@ -7,6 +7,8 @@ namespace Packsly3.Core.Launcher {
 
         string Name { get; }
 
+        bool AllowEmbeding { get; }
+
         bool IsCompatible(DirectoryInfo workspace);
 
         IMinecraftInstance[] GetInstances(DirectoryInfo workspace);

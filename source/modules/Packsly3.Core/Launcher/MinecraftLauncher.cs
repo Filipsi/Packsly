@@ -26,6 +26,9 @@ namespace Packsly3.Core.Launcher {
         public string Name
             => CurrentEnvironment.Name;
 
+        public bool CanEmbed
+            => CurrentEnvironment.AllowEmbeding;
+
         private ILauncherEnvironment CurrentEnvironment {
             get {
                 if (currentEnviroment != null) {

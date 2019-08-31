@@ -12,6 +12,8 @@ namespace Packsly3.MultiMC.Launcher {
 
         public string Name { get; } = "multimc";
 
+        public bool AllowEmbeding { get; } = true;
+
         public bool IsCompatible(DirectoryInfo workspace)
             => File.Exists(Path.Combine(workspace.FullName, "MultiMC.exe")) ||
                File.Exists(Path.Combine(workspace.FullName, "bin", "MultiMC"));
