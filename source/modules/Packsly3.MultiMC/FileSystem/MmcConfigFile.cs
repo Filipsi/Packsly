@@ -225,7 +225,7 @@ namespace Packsly3.MultiMC.FileSystem {
 
         #endregion
 
-        public MmcConfigFile(string path) : base(Path.Combine(path, "instance.cfg")) {
+        public MmcConfigFile(string path) : base(path: Path.Combine(path, "instance.cfg"), commentSign: "#", delimiters: '=') {
         }
 
         public MmcConfigFile WithDefaults() {

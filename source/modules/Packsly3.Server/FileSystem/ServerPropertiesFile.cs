@@ -220,7 +220,7 @@ namespace Packsly3.Server.FileSystem {
 
         #endregion
 
-        public ServerPropertiesFile(string path) : base(Path.Combine(path, "server.properties")) {
+        public ServerPropertiesFile(string path) : base(path: Path.Combine(path, "server.properties"), commentSign: "#", delimiters: '=') {
         }
 
         public ServerPropertiesFile WithDefaults() {

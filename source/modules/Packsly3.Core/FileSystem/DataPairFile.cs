@@ -18,9 +18,17 @@ namespace Packsly3.Core.FileSystem {
 
         #endregion
 
+        #region Fields
+
+        private readonly char[] delimiters;
+        private readonly string commentSign;
         private readonly Dictionary<string, string> data;
 
-        protected DataPairFile(string path) : base(path) {
+        #endregion
+
+        protected DataPairFile(string path, string commentSign, params char[] delimiters) : base(path) {
+            this.delimiters = delimiters;
+            this.commentSign = commentSign;
             data = new Dictionary<string, string>();
         }
 
@@ -77,18 +85,33 @@ namespace Packsly3.Core.FileSystem {
 
             data.Clear();
 
-            using (StreamReader reader = file.OpenText())
+            using (StreamReader reader = file.OpenText()) {
+                int lineIndex = 0;
+
                 while (!reader.EndOfStream) {
                     string line = reader.ReadLine();
-                    if (line == null)
-                        throw new Exception("An error occurred while reading the file.");
+                    lineIndex++;
 
-                    if (!line.Contains('='))
-                        throw new Exception("Error while reading data pair file. Equal sign is missing on line.");
+                    // Skip empty lines
+                    if (string.IsNullOrWhiteSpace(line)) {
+                        continue;
+                    }
 
-                    string[] parts = line.Split(new[] { '=' }, 2);
+                    // Skip comments
+                    if (line.StartsWith(commentSign)) {
+                        continue;
+                    }
+
+                    // Skip lines without delimiter
+                    if (!line.Any(ch => delimiters.Contains(ch))) {
+                        logger.Warn($"Unable to parse line {lineIndex} since it does not have any valid delimiter '{string.Join(", ", delimiters)}'. Skipping.");
+                        continue;
+                    }
+
+                    string[] parts = line.Split(delimiters, 2);
                     data.Add(parts[0], parts[1]);
                 }
+            }
 
             logger.Debug($"Loaded data pair file '{file.Name}' with content {data}");
         }
