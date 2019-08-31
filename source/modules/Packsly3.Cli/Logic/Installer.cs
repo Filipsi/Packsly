@@ -27,6 +27,11 @@ namespace Packsly3.Cli.Logic {
                 }
             }
 
+            if (!options.IsSourceSpecified) {
+                logger.Info($"Using modpack source from configuration: {Packsly.Configuration.DefaultModpackSource}");
+                options.Source = Packsly.Configuration.DefaultModpackSource;
+            }
+
             logger.Info($"Using modpack definition from '{options.Source}'...");
             if (options.IsSourceLocalFile) {
                 logger.Info("Beginning installation from local modpack definition file...");

@@ -15,7 +15,7 @@ namespace Packsly3.Cli {
     internal class CommandLine {
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static bool PauseWhenFinished = false;
+        private static bool pauseWhenFinished;
 
         private static void Main(string[] args) {
             Logo.Print();
@@ -28,14 +28,14 @@ namespace Packsly3.Cli {
             } catch (Exception exception) {
                 Logger.Fatal(exception);
 
-                if (PauseWhenFinished) {
+                if (pauseWhenFinished) {
                     Console.ReadKey();
                 }
             }
 
             Packsly.Lifecycle.EventBus.Publish(null, Core.Launcher.Instance.Lifecycle.PackslyExit);
 
-            if (PauseWhenFinished || Debugger.IsAttached) {
+            if (pauseWhenFinished || Debugger.IsAttached) {
                 Console.ReadKey();
             }
         }
@@ -45,8 +45,8 @@ namespace Packsly3.Cli {
                 // Allows for drag & drop of the launcher onto Packsly executable to initiate installation
                 FileInfo launcher = new FileInfo(args[0]);
                 if (launcher.Exists) {
-                    Logger.Debug("Running in drag & drop mode");
-                    PauseWhenFinished = true;
+                    Logger.Debug("Running in drag & drop mode!");
+                    pauseWhenFinished = true;
 
                     DirectoryInfo workspace = launcher.Extension.ToLower() == ".lnk"
                         ? ShortcutHelper.GetShortcutTarget(launcher).Directory
@@ -59,7 +59,7 @@ namespace Packsly3.Cli {
                 }
                 // Run usage as a CLI tool
                 else {
-                    Logger.Debug("Running in command line mode");
+                    Logger.Debug("Running in command line mode!");
                     Parser.Default.ParseArguments<InstallOptions, LifecycleOptions>(args)
                         .WithParsed<InstallOptions>(Installer.Run)
                         .WithParsed<LifecycleOptions>(Lifecycle.Publish);
@@ -67,10 +67,9 @@ namespace Packsly3.Cli {
             }
             // Run running as a application
             else {
-                Logger.Debug("Running in application mode");
-                Logger.Info("This application is designed to be used as a command line tool.");
-                Logger.Info("Please run it using terminal.");
-                Logger.Info("Or you can run default installation procedure by dragging the launcher executable to this file.");
+                Logger.Debug("Running in application mode!");
+                Logger.Info("Run with argument --help to see how to use this tool.");
+                Logger.Info("Or you can start default installer by dragging the launcher executable onto this file.");
             }
         }
 
