@@ -10,10 +10,10 @@ namespace Packsly3.Cli.Verbs {
         [Value(0, HelpText = "Address of a modpack definition (file path or url)")]
         public string Source { get; set; }
 
-        [Option('e', "environment", HelpText = "Manually override launcher auto detection and force environment usage by specifying handler's name")]
+        [Option('e', "environment", HelpText = "Override launcher auto detection and force environment usage by specifying handler's name")]
         public string Environment { get; set; }
 
-        [Option('w', "workspace", HelpText = "Set workspace by specifying path to new workspace folder")]
+        [Option('w', "workspace", HelpText = "Override workspace set in local configuration by specifying path to new workspace folder")]
         public string Workspace { get; set; }
 
         #region Helpers

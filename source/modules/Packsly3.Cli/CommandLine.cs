@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using CommandLine;
 using NLog;
 using Packsly3.Cli.Common;
@@ -14,19 +16,22 @@ namespace Packsly3.Cli {
 
     internal class CommandLine {
 
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static bool pauseWhenFinished;
 
         private static void Main(string[] args) {
-            Logo.Print();
-
             try {
-                Logger.Info("Welcome to Packsly3!");
+                // Fix current directory path to make it same on Windows and Linux
+                string currentAssemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                logger.Debug($"Root path of executing assembly is: {currentAssemblyPath}");
+                logger.Debug("Overriding current folder with executing assembly path...");
+                Directory.SetCurrentDirectory(currentAssemblyPath ?? throw new InvalidOperationException("Unable get executing assembly location!"));
+                logger.Debug($"Current directory is: {Directory.GetCurrentDirectory()}");
+
                 Run(args);
-                Logger.Info("Thank you for using Packsly3!");
 
             } catch (Exception exception) {
-                Logger.Fatal(exception);
+                logger.Fatal(exception);
 
                 if (pauseWhenFinished) {
                     Console.ReadKey();
@@ -44,8 +49,9 @@ namespace Packsly3.Cli {
             if (args.Any()) {
                 // Allows for drag & drop of the launcher onto Packsly executable to initiate installation
                 FileInfo launcher = new FileInfo(args[0]);
+
                 if (launcher.Exists) {
-                    Logger.Debug("Running in drag & drop mode!");
+                    logger.Debug("Running in drag & drop mode!");
                     pauseWhenFinished = true;
 
                     DirectoryInfo workspace = launcher.Extension.ToLower() == ".lnk"
@@ -59,7 +65,7 @@ namespace Packsly3.Cli {
                 }
                 // Run usage as a CLI tool
                 else {
-                    Logger.Debug("Running in command line mode!");
+                    logger.Debug("Running in command line mode!");
                     Parser.Default.ParseArguments<InstallOptions, LifecycleOptions>(args)
                         .WithParsed<InstallOptions>(Installer.Run)
                         .WithParsed<LifecycleOptions>(Lifecycle.Publish);
@@ -67,9 +73,11 @@ namespace Packsly3.Cli {
             }
             // Run running as a application
             else {
-                Logger.Debug("Running in application mode!");
-                Logger.Info("Run with argument --help to see how to use this tool.");
-                Logger.Info("Or you can start default installer by dragging the launcher executable onto this file.");
+                logger.Debug("Running in application mode!");
+                pauseWhenFinished = true;
+                Installer.Run(new InstallOptions {
+                    Source = Packsly.Configuration.DefaultModpackSource
+                });
             }
         }
 

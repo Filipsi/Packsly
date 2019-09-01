@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Reflection;
+using NLog;
 using Packsly3.Core.FileSystem.Impl;
 using Packsly3.Core.Launcher;
 using Packsly3.Core.Launcher.Instance;
@@ -21,7 +22,7 @@ namespace Packsly3.Core {
         public static bool IsLinux {
             get {
                 int p = (int)Environment.OSVersion.Platform;
-                return (p == 4) || (p == 6) || (p == 128);
+                return p == 4 || p == 6 || p == 128;
             }
         }
 

@@ -9,6 +9,14 @@ namespace Packsly3.Core.FileSystem {
     [JsonObject(MemberSerialization.OptIn)]
     public abstract class JsonFile : FileBase {
 
+        #region Properties
+
+        public JsonSerializerSettings SerializerSettings { get; set; }
+
+        #endregion
+
+        #region Fields
+
         protected static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private static readonly JsonSerializerSettings defaultSerializerSettings = new JsonSerializerSettings {
@@ -16,14 +24,21 @@ namespace Packsly3.Core.FileSystem {
             ObjectCreationHandling = ObjectCreationHandling.Replace
         };
 
-        public JsonSerializerSettings SerializerSettings { get; set; }
+        #endregion
 
         protected JsonFile(string path) : base(path) {
+            SetDefaultValues();
         }
+
+        #region Logic
+
+        public abstract void SetDefaultValues();
 
         protected virtual JsonSerializerSettings GetSerializerSettings() {
             return SerializerSettings ?? defaultSerializerSettings;
         }
+
+        #endregion
 
         #region IO
 

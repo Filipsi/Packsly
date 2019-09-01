@@ -39,6 +39,7 @@ namespace Packsly3.Core.Launcher.Instance {
             char[] invalidChars = Path.GetInvalidFileNameChars();
             // TODO: Allow name overrides
             string instanceId = new string(modpackDefinition.Name.ToLowerInvariant().Where(m => !invalidChars.Contains(m)).ToArray());
+            instanceId = instanceId.Replace(" ", "-");
             logger.Info($"Modpack name is '{modpackDefinition.Name}' using instance id '{instanceId}'.");
 
             IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);

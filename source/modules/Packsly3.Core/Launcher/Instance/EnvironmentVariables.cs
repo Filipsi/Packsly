@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -28,8 +29,7 @@ namespace Packsly3.Core.Launcher.Instance {
         #endregion
 
         public EnvironmentVariables(IMinecraftInstance instance, IDictionary<string, string> properties) {
-            Properties = new ReadOnlyDictionary<string, string>(properties);
-
+            // Register defaults
             if (!properties.ContainsKey(ModsFolder)) {
                 properties.Add(ModsFolder, Path.Combine(instance.Location.FullName, "mods"));
             }
@@ -46,19 +46,24 @@ namespace Packsly3.Core.Launcher.Instance {
                 properties.Add(RootFolder, Path.Combine(instance.Location.FullName, "minecraft"));
             }
 
-            logger.Debug($"Environment variables of minecraft instance {instance} were set to: {Properties}");
+            // Order by longest value string (this is important when converting from paths)
+            Properties = new ReadOnlyDictionary<string, string>(
+                properties.OrderByDescending(prop => prop.Value.Length).ToDictionary(k => k.Key, v => v.Value)
+            );
+
+            logger.Debug($"Environment variables of minecraft instance {instance} were set to: {Environment.NewLine + string.Join(Environment.NewLine, Properties.Select(pair => $"{pair.Key} <-> {pair.Value}"))}");
         }
 
         public string GetProperty(string name) {
             return Properties.ContainsKey(name) ? Properties[name] : string.Empty;
         }
 
-        public string Format(string input) {
-            List<string> namedParameters = new List<string>();
+        public string ToFormatedString(string input) {
             MatchCollection matches = pattenNamedParameter.Matches(input);
+
+            List<string> namedParameters = new List<string>();
             for (int i = 0; i < matches.Count; i++) {
-                Match match = matches[i];
-                namedParameters.Add(match.Groups[1].Value);
+                namedParameters.Add(matches[i].Groups[1].Value);
             }
 
             Dictionary<string, string> localMap = namedParameters
@@ -66,7 +71,23 @@ namespace Packsly3.Core.Launcher.Instance {
                 .ToDictionary(namedParameter => namedParameter, namedParameter => Properties[namedParameter]);
 
             string result = localMap.Aggregate(input, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value.ToString()));
-            logger.Debug($"String '{input}' was transcribed as '{result}'");
+            logger.Debug($"{input} -> {result}");
+            return result;
+        }
+
+        public string FromFormatedString(string input) {
+            string result = input;
+
+            foreach (KeyValuePair<string, string> property in Properties) {
+                if (!result.Contains(property.Value)) {
+                    continue;
+                }
+
+                string propertyKey = "{" + property.Key + "}";
+                result = result.Replace(property.Value, propertyKey);
+            }
+
+            logger.Debug($"{result} <- {input}");
             return result;
         }
 

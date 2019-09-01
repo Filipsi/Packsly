@@ -51,7 +51,7 @@ namespace Packsly3.Core.Launcher {
         private static readonly Uri launcherMetaUrl = new Uri("https://launchermeta.mojang.com/mc/game/version_manifest.json");
 
         private ILauncherEnvironment currentEnviroment;
-        private DirectoryInfo workspace = Packsly.Configuration.Workspace;
+        private DirectoryInfo workspace = new DirectoryInfo(Packsly.Configuration.Workspace);
 
         #endregion
 

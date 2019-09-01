@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using NLog;
+using Packsly3.Cli.Common;
 using Packsly3.Cli.Verbs;
 using Packsly3.Core;
 using Packsly3.Core.Common.Json;
@@ -18,6 +19,7 @@ namespace Packsly3.Cli.Logic {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static void Run(InstallOptions options) {
+            Logo.Print();
             ApplySettings(options);
 
             if (Packsly.Launcher.CanEmbed) {
@@ -48,6 +50,8 @@ namespace Packsly3.Cli.Logic {
             } else {
                 throw new ConfigurationErrorsException($"Specified modpack source '{options.Source}' is not valid file path or url address.");
             }
+
+            logger.Info("Thank you for using Packsly3!");
         }
 
         private static void ApplySettings(InstallOptions options) {
@@ -57,12 +61,17 @@ namespace Packsly3.Cli.Logic {
                     logger.Info($"Workspace was set to: {Packsly.Launcher.Workspace}");
 
                 } else {
-                    throw new DirectoryNotFoundException("Specified workspace folder does not exist.");
+                    throw new DirectoryNotFoundException($"Specified '{options.Workspace}' workspace folder does not exist.");
                 }
             } else {
-                Packsly.Launcher.Workspace = Packsly.Configuration.Workspace;
-                options.Workspace = Packsly.Launcher.Workspace.FullName;
-                logger.Info($"Using workspace from configuration file: {Packsly.Launcher.Workspace}");
+                DirectoryInfo workspaceFolder = new DirectoryInfo(Packsly.Configuration.Workspace);
+                if (workspaceFolder.Exists) {
+                    Packsly.Launcher.Workspace = workspaceFolder;
+                    options.Workspace = Packsly.Launcher.Workspace.FullName;
+                    logger.Info($"Using workspace from configuration file: {Packsly.Launcher.Workspace}");
+                } else {
+                    throw new DirectoryNotFoundException($"Workspace '{workspaceFolder.FullName}' specified in configuration file does not exists.");
+                }
             }
 
             if (options.IsEnvironmentSpecified) {
@@ -113,16 +122,7 @@ namespace Packsly3.Cli.Logic {
 
             logger.Debug("Creating configuration file for embedded copy...");
             PackslyConfig embeddConfig = new PackslyConfig(destination) {
-                SerializerSettings =  new JsonSerializerSettings {
-                    ContractResolver = new LowercaseContractResolver(),
-                    ObjectCreationHandling = ObjectCreationHandling.Replace,
-                    Converters = {
-                        new RelativePathConverter {
-                            Root = destination.FullName
-                        }
-                    }
-                },
-                Workspace = new DirectoryInfo(workspace)
+                Workspace = "./.."
             };
 
             embeddConfig.Save();

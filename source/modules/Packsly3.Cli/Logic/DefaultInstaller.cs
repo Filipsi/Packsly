@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System.IO;
+using NLog;
 using Packsly3.Cli.Verbs;
 using Packsly3.Core;
 
@@ -9,9 +10,11 @@ namespace Packsly3.Cli.Logic {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public static void Run() {
-            if (Packsly.Configuration.Workspace != null && Packsly.Configuration.Workspace.Exists) {
-                Packsly.Launcher.Workspace = Packsly.Configuration.Workspace;
-                logger.Info($"Workspace was set from configuration file to: {Packsly.Launcher.Workspace.FullName}");
+            DirectoryInfo worksapceFolder = new DirectoryInfo(Packsly.Configuration.Workspace);
+
+            if (worksapceFolder.Exists) {
+                Packsly.Launcher.Workspace = worksapceFolder;
+                logger.Info($"Workspace was set from configuration file to: {worksapceFolder.FullName}");
             }
 
             logger.Info($"Using modpack source from configuration: {Packsly.Configuration.DefaultModpackSource}");

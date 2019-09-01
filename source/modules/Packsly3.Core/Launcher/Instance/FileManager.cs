@@ -13,7 +13,7 @@ namespace Packsly3.Core.Launcher.Instance {
 
         #region Properties
 
-        public readonly ReadOnlyDictionary<GroupType, List<FileInfo>> FileMap;
+        public readonly ReadOnlyDictionary<GroupType, List<string>> FileMap;
 
         public bool IsDirty { private set; get; }
 
@@ -28,8 +28,12 @@ namespace Packsly3.Core.Launcher.Instance {
         #endregion
 
         public FileManager(IMinecraftInstance instance) {
-            FileMap = new ReadOnlyDictionary<GroupType, List<FileInfo>>(instance.PackslyConfig.ManagedFiles);
             this.instance = instance;
+
+            // Setup file map
+            FileMap = new ReadOnlyDictionary<GroupType, List<string>>(
+                instance.PackslyConfig.ManagedFiles
+            );
 
             // Remove missing or non-existent files
             foreach (GroupType group in Enum.GetValues(typeof(GroupType))) {
@@ -51,15 +55,17 @@ namespace Packsly3.Core.Launcher.Instance {
             }
 
             if (FileMap.ContainsKey(group)) {
-                if (FileMap[group].Any(f => f.FullName.GetHashCode() == file.FullName.GetHashCode())) {
+                if (FileMap[group].Any(f => f.GetHashCode() == file.FullName.GetHashCode())) {
                    return;
                 }
             } else {
-                instance.PackslyConfig.ManagedFiles.Add(group, new List<FileInfo>());
+                instance.PackslyConfig.ManagedFiles.Add(group, new List<string>());
             }
 
-            instance.PackslyConfig.ManagedFiles[group].Add(file);
-            logger.Debug($"Tracked file {file.FullName} was added to minecraft instance {instance.Id}");
+            string environmentPath = instance.EnvironmentVariables.FromFormatedString(file.FullName);
+            instance.PackslyConfig.ManagedFiles[group].Add(environmentPath);
+
+            logger.Debug($"Tracked file {file.FullName} was added to minecraft instance {instance.Id} as {environmentPath}.");
             IsDirty = true;
         }
 
@@ -82,25 +88,25 @@ namespace Packsly3.Core.Launcher.Instance {
         }
 
         public void Download(RemoteResource resource, GroupType group) =>
-            Download(resource.Url.ToString(), instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)), group);
+            Download(resource.Url.ToString(), instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName)), group);
 
         public void Remove(FileInfo file, GroupType group) {
             if (!FileMap.ContainsKey(group)) {
                 return;
             }
 
-            List<FileInfo> fileGroup = FileMap[group];
-            FileInfo toRemove = file;
+            List<string> fileGroup = FileMap[group];
+            string environmentPath = instance.EnvironmentVariables.FromFormatedString(file.FullName);
 
-            if (!fileGroup.Contains(file)) {
-                toRemove = fileGroup.FirstOrDefault(f => f.FullName.GetHashCode() == file.FullName.GetHashCode());
+            if (!fileGroup.Contains(environmentPath)) {
+                environmentPath = fileGroup.FirstOrDefault(f => f.GetHashCode() == file.GetHashCode());
             }
 
-            if (toRemove == null) {
+            if (environmentPath == null) {
                 throw new FileNotFoundException($"Group '{group}' does not contain file with path '{file.FullName}'");
             }
 
-            fileGroup.Remove(toRemove);
+            fileGroup.Remove(environmentPath);
             logger.Debug($"Tracked file {file.FullName} was removed from minecraft instance {instance.Id}");
 
             if (fileGroup.Count == 0) {
@@ -115,23 +121,37 @@ namespace Packsly3.Core.Launcher.Instance {
             => Remove(new FileInfo(path), group);
 
         public void Remove(RemoteResource resource, GroupType group)
-            => Remove(new FileInfo(instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName))), group);
+            => Remove(new FileInfo(instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName))), group);
 
         #region Utilities
 
         public bool GroupContains(GroupType group, RemoteResource resource)
-            => GetGroup(group).Any(m => m.FullName == instance.EnvironmentVariables.Format(Path.Combine(resource.FilePath, resource.FileName)));
+            => GetGroup(group).Any(m => m.FullName == instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName)));
 
         public bool GroupContains(GroupType group, FileInfo file)
             => GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());
 
-        public FileInfo[] GetGroup(GroupType group)
-            => !FileMap.ContainsKey(group) ? new FileInfo[0] : FileMap[group].ToArray();
+        public FileInfo[] GetGroup(GroupType group) {
+            if (FileMap.ContainsKey(group)) {
+                return FileMap[group]
+                    .Select(environmentPath => instance.EnvironmentVariables.ToFormatedString(environmentPath))
+                    .Select(path => new FileInfo(path))
+                    .ToArray();
+            }
+
+            return new FileInfo[0];
+        }
 
         private FileInfo[] GetNotExistingFiles(GroupType group) {
-            return !FileMap.ContainsKey(group)
-                ? new FileInfo[0]
-                : FileMap[group].Where(f => !f.Exists).ToArray();
+            if (FileMap.ContainsKey(group)) {
+                return FileMap[group]
+                    .Select(environmentPath => instance.EnvironmentVariables.ToFormatedString(environmentPath))
+                    .Where(path => !File.Exists(path))
+                    .Select(path => new FileInfo(path))
+                    .ToArray();
+            }
+
+            return new FileInfo[0];
         }
 
         #endregion

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using Newtonsoft.Json;
 using Packsly3.Core;
-using Packsly3.Core.Common.Json;
 using Packsly3.Core.FileSystem;
 
 namespace Packsly3.MultiMC.FileSystem {
@@ -14,10 +12,10 @@ namespace Packsly3.MultiMC.FileSystem {
         #region Properties
 
         [JsonProperty("formatVersion")]
-        public int FormatVersion { private set; get; } = 1;
+        public int FormatVersion { private set; get; }
 
         [JsonProperty("components")]
-        public List<Component> Components { private set; get; } = new List<Component>();
+        public List<Component> Components { private set; get; }
 
         #endregion
 
@@ -33,6 +31,11 @@ namespace Packsly3.MultiMC.FileSystem {
         }
 
         #region Logic
+
+        public override void SetDefaultValues() {
+            FormatVersion = 1;
+            Components = new List<Component>();
+        }
 
         protected override JsonSerializerSettings GetSerializerSettings() {
             return mmcPackSerializerSettings;

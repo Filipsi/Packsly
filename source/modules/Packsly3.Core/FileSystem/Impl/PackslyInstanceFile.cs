@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using Packsly3.Core.Common.Json;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.FileSystem.Impl {
@@ -17,39 +17,39 @@ namespace Packsly3.Core.FileSystem.Impl {
         internal AdaptersConfig Adapters { private set; get; }
 
         [JsonProperty("files")]
-        internal Dictionary<FileManager.GroupType, List<FileInfo>> ManagedFiles { private set; get; }
+        internal Dictionary<FileManager.GroupType, List<string>> ManagedFiles { private set; get; }
 
         #endregion
 
         public PackslyInstanceFile(string path) : base(Path.Combine(path, "instance.packsly")) {
             CustomData =  new Dictionary<string, Dictionary<string, object>>();
             Adapters = new AdaptersConfig();
-            ManagedFiles = new Dictionary<FileManager.GroupType, List<FileInfo>>();
-
-            SerializerSettings = new JsonSerializerSettings {
-                ContractResolver = new LowercaseContractResolver(),
-                ObjectCreationHandling = ObjectCreationHandling.Replace,
-                Converters = {
-                    new RelativePathConverter {
-                        Root = DirectoryPath
-                    }
-                }
-            };
+            ManagedFiles = new Dictionary<FileManager.GroupType, List<string>>();
 
             FixFilenameTypo();
             Load();
+        }
+
+
+        #region Logic
+
+        public override void SetDefaultValues() {
         }
 
         /// <summary>
         /// Checks and fixes filename typo in older versions of Packsly3
         /// </summary>
         private void FixFilenameTypo() {
-            FileInfo typoFile = new FileInfo(Path.Combine(file.DirectoryName, "instnace.packsly"));
-            if (typoFile.Exists) {
-                logger.Info($"Bad instance file detected, fixing naming typo by renaming '{typoFile.Name}' to 'instance.packsly'");
-                typoFile.MoveTo(Path.Combine(file.DirectoryName, "instance.packsly"));
+            FileInfo typoFile = new FileInfo(Path.Combine(file.DirectoryName ?? throw new InvalidOperationException(), "instnace.packsly"));
+            if (!typoFile.Exists) {
+                return;
             }
+
+            logger.Info($"Bad instance file detected, fixing naming typo by renaming '{typoFile.Name}' to 'instance.packsly'");
+            typoFile.MoveTo(Path.Combine(file.DirectoryName, "instance.packsly"));
         }
+
+        #endregion
 
         #region Custom data
 
