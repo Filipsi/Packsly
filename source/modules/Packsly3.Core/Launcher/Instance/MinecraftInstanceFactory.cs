@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using Newtonsoft.Json;
@@ -21,7 +22,7 @@ namespace Packsly3.Core.Launcher.Instance {
 
             using (StreamReader reader = modpackFile.OpenText()) {
                 logger.Debug($"Reading modpack definition file from {modpackFile.FullName}");
-                return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFile.FullName), reader.ReadToEnd());
+                return CreateFromModpack(reader.ReadToEnd());
             }
         }
 
@@ -29,54 +30,61 @@ namespace Packsly3.Core.Launcher.Instance {
             using (WebClient client = new WebClient()) {
                 client.Encoding = Encoding.UTF8;
                 logger.Debug($"Downloading modpack definition from {modpackFileUrl}");
-                return CreateFromModpack(Path.GetFileNameWithoutExtension(modpackFileUrl.AbsolutePath), client.DownloadString(modpackFileUrl));
+                return CreateFromModpack(client.DownloadString(modpackFileUrl));
             }
         }
 
-        public static IMinecraftInstance CreateFromModpack(string instanceId, string modpackJson) {
+        public static IMinecraftInstance CreateFromModpack(string modpackJson) {
             ModpackDefinition modpackDefinition = JsonConvert.DeserializeObject<ModpackDefinition>(modpackJson);
+            char[] invalidChars = Path.GetInvalidFileNameChars();
+            // TODO: Allow name overrides
+            string instanceId = new string(modpackDefinition.Name.ToLowerInvariant().Where(m => !invalidChars.Contains(m)).ToArray());
+            logger.Info($"Modpack name is '{modpackDefinition.Name}' using instance id '{instanceId}'.");
 
             IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);
             Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PreInstallation);
 
             // Install modloaders
+            logger.Info("Setting up modloaders...");
             foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
                 string name = modloaderEntry.Key;
                 string version = modloaderEntry.Value;
 
-                logger.Info($"Installing modloader '{name}' with version '{version}'...");
+                logger.Info($"Installing modloader '{name}' with version {version}.");
                 instance.ModLoaderManager.Install(name, version);
             }
 
             // Download mods
+            logger.Info("Downloading required files...");
             foreach (ModSource mod in modpackDefinition.Mods) {
                 if (mod.ShouldDownload) {
-                    logger.Info($"Downloading mod '{mod.FileName}' to '{mod.FilePath}'...");
+                    logger.Info($"Downloading mod {mod.FileName}...");
                     instance.Files.Download(mod, FileManager.GroupType.Mod);
 
                 } else {
-                    logger.Info($"Skipping downloading of mod '{mod.FileName}' since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                    logger.Info($"Skipping downloading mod {mod.FileName} since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
                 }
 
                 // Download mod resources
                 foreach (RemoteResource resource in mod.Resources) {
                     if (resource.ShouldDownload) {
-                        logger.Info($"Downloading resource '{resource.FileName}' to '{resource.FilePath}'...");
+                        logger.Info($" - Downloading resource {resource.FileName}...");
                         instance.Files.Download(resource, FileManager.GroupType.ModResource);
 
                     } else {
-                        logger.Info($"Skipping downloading of resource '{resource.FileName}' since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
+                        logger.Info($" - Skipping downloading resource {resource.FileName} since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
                     }
                 }
             }
 
             instance.Save();
+            logger.Info("Finishing installation.");
             Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PostInstallation);
             return instance;
         }
 
         private static IMinecraftInstance CreateMinecraftInstnace(string instanceId, ModpackDefinition modpackDefinition) {
-            IMinecraftInstance instance = Packsly.Launcher.CreateInstance(instanceId);
+            IMinecraftInstance instance = Packsly.Launcher.CreateInstance(instanceId, modpackDefinition);
 
             // Set base minecraft instance properties
             instance.Name = modpackDefinition.Name;

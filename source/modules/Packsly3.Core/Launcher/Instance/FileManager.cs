@@ -139,8 +139,7 @@ namespace Packsly3.Core.Launcher.Instance {
         public enum GroupType {
             PackslyInternal,
             Mod,
-            ModResource,
-            Miscellaneous
+            ModResource
         }
 
     }

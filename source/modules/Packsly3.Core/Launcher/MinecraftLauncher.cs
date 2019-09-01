@@ -8,6 +8,7 @@ using NLog;
 using Packsly3.Core.Common.Register;
 using Packsly3.Core.Launcher.Instance;
 using Packsly3.Core.Launcher.Model;
+using Packsly3.Core.Modpack;
 
 namespace Packsly3.Core.Launcher {
 
@@ -141,9 +142,9 @@ namespace Packsly3.Core.Launcher {
         public IMinecraftInstance GetInstance(string id)
             => CurrentEnvironment.GetInstance(Workspace, id);
 
-        public IMinecraftInstance CreateInstance(string id) {
+        public IMinecraftInstance CreateInstance(string id, ModpackDefinition modpack) {
             logger.Debug($"Launcher using {currentEnviroment} environment is creating new minecraft instance with id {id}");
-            return CurrentEnvironment.CreateInstance(Workspace, id);
+            return CurrentEnvironment.CreateInstance(Workspace, id, modpack);
         }
 
         public IMinecraftInstance CreateInstanceFromModpack(FileInfo modpackFile)
@@ -152,8 +153,8 @@ namespace Packsly3.Core.Launcher {
         public IMinecraftInstance CreateInstanceFromModpack(Uri modpackFileUrl)
             => MinecraftInstanceFactory.CreateFromModpack(modpackFileUrl);
 
-        public IMinecraftInstance CreateInstanceFromModpack(string instanceId, string modpackJson)
-            => MinecraftInstanceFactory.CreateFromModpack(instanceId, modpackJson);
+        public IMinecraftInstance CreateInstanceFromModpack(string modpackJson)
+            => MinecraftInstanceFactory.CreateFromModpack(modpackJson);
 
         #endregion
     }

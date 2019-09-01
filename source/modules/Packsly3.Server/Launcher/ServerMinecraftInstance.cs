@@ -102,7 +102,7 @@ namespace Packsly3.Server.Launcher {
                 ServerProperties.Delete();
             }
 
-            string[] foldersToDelete = new[] {
+            string[] foldersToDelete = {
                 EnvironmentVariables.GetProperty(EnvironmentVariables.ModsFolder),
                 EnvironmentVariables.GetProperty(EnvironmentVariables.ConfigFolder)
             };
