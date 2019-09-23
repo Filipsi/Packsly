@@ -27,20 +27,20 @@
 
 ## Key Features
 
-#### Launchers
+### Launchers
 * Compatible with multiple Minecraft Launchers.
 * Default [MultiMC](https://multimc.org/) launcher support via [MmcLauncherEnvironment](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.MultiMC/Launcher/MmcLauncherEnvironment.cs).
 * Default [server](https://minecraft.gamepedia.com/Server) environment support via [ServerLauncherEnvironment](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Server/Launcher/ServerLauncherEnvironment.cs).
 * Extensibility provided by [ILauncherEnvironment](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/ILauncherEnvironment.cs) implementations.
 
-#### ModLoaders
+### ModLoaders
 * MultiMC launcher supports Forge, LittleLoader and Fabric modloaders.
 * Server environment supports only Forge modloader for now.
 * Extensibility provided by [IModLoaderHandler](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Modloader/IModLoaderHandler.cs) implementations.
   * [BasicModLoaderHandler](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Modloader/Impl/BasicModLoaderHandler.cs) is base class tied to particular Minecraft instance type.
   * [MultiModLoaderHandler](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Modloader/Impl/MultiModLoaderHandler.cs) is a helper providing multiple installation strategies via [IModLoaderInstallationStrategy](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Modloader/IModLoaderInstallationStrategy.cs).
 
-#### Modpacks
+### Modpacks
 * Download of individual mods and configuration files.
 * Modpack content can be specified in [modpack definition](https://github.com/Filipsi/Packsly/blob/master/resources/modpack-definition-example.json#L26) file that can be ether on disk or obtained from URL address.
 * Download locations are abstracted by [environmental variables](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Instance/EnvironmentVariables.cs) that are specified by [instances](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.MultiMC/Launcher/MmcMinecraftInstance.cs#L46).
@@ -48,12 +48,12 @@
   * For example MiniMap mod only on client-side can be black-listed in server environments.
   * Or server-side mod like [Morpheus](https://www.curseforge.com/minecraft/mc-mods/morpheus) can be white-listed only in server environments.
 
-#### Minecraft instances
+### Minecraft instances
 * Ability to create and configure launcher instances.
 * Instances can be configured in modpack [definition](definition) file.
 * Configuration is controlled by modpack [instance](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.MultiMC/Launcher/MmcMinecraftInstance.cs#L66) which is providing it's own handling logic - for example a [file wrapper](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.MultiMC/FileSystem/MmcConfigFile.cs).
 
-#### Updating
+### Updating
 * Following behavior is default implementation and can be changed by using your own adapter.
 * Modpack has a numerical version and on each change, the updater compares names of all mod files.
 * Mods that are not in newest revision are downloaded and mods that are missing are deleted.
@@ -61,12 +61,12 @@
 * Update adapter is enabled and configured in [modpack definition](https://github.com/Filipsi/Packsly/blob/master/resources/modpack-definition-example.json#L6).
 * Default updating strategy is provided by [RevisionUpdateAdapter](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Adapter/Impl/RevisionUpdateAdapter.cs).
 
-#### Custom behavior
+### Custom behavior
 * [Adapters](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Adapter/IAdapter.cs) can be used to execute custom logic.
 * Execution is tied to Minecraft instance [lifecycle](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Launcher/Instance/Lifecycle.cs) events.
 * Adapter has to be enabled in [modpack definition](https://github.com/Filipsi/Packsly/blob/master/resources/modpack-definition-example.json#L5) in order to be used.
 
-#### Modularity
+### Modularity
 * Support for loading module DLLs that can provide their own implementations.
 * Automatic registration by annotating classes with [Register](https://github.com/Filipsi/Packsly/blob/master/source/modules/Packsly3.Core/Common/Register/RegisterAttribute.cs) attribute.
 

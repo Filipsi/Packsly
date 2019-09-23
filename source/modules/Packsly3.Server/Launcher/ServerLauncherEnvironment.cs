@@ -23,8 +23,8 @@ namespace Packsly3.Server.Launcher {
 
         #region Fields
 
-        public static readonly Regex ServerJarNamePattern = new Regex(
-            pattern: @"minecraft_server\.(\d+\.\d+\.\d+)\.jar",
+        private static readonly Regex serverJarNamePattern = new Regex(
+            pattern: @"minecraft_server.*\.jar",
             options: RegexOptions.Compiled
         );
 
@@ -35,7 +35,7 @@ namespace Packsly3.Server.Launcher {
         public bool IsCompatible(DirectoryInfo workspace) {
             return workspace
                 .EnumerateFiles()
-                .Any(file => ServerJarNamePattern.IsMatch(file.Name));
+                .Any(file => serverJarNamePattern.IsMatch(file.Name));
         }
 
         public IMinecraftInstance CreateInstance(DirectoryInfo workspace, string id, ModpackDefinition modpack) {
