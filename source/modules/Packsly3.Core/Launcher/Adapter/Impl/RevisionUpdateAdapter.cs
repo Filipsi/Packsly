@@ -118,13 +118,13 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
             }
 
             RemoteResource[] modResourceBlob = modpack.Mods.SelectMany(m => m.Resources).ToArray();
-            foreach (FileInfo modResourceFile in instance.Files.GetGroup(FileManager.GroupType.ModResource)) {
+            foreach (FileInfo modResourceFile in instance.Files.GetGroup(FileManager.GroupType.Resource)) {
                 if (modResourceBlob.Any(mr => mr.FileName == modResourceFile.Name && mr.ShouldDownload)) {
                     continue;
                 }
 
                 logger.Info($"Removing mod resource {modResourceFile.Name}...");
-                instance.Files.Remove(modResourceFile, FileManager.GroupType.ModResource);
+                instance.Files.Remove(modResourceFile, FileManager.GroupType.Resource);
                 modResourceFile.Delete();
             }
 
@@ -136,7 +136,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
 
                 foreach (RemoteResource modpackModResource in modpackMod.Resources.Where(resource => resource.ShouldDownload)) {
                     logger.Info($"Downloading mod resource {modpackModResource.FileName}...");
-                    instance.Files.Download(modpackModResource, FileManager.GroupType.ModResource);
+                    instance.Files.Download(modpackModResource, FileManager.GroupType.Resource);
                 }
             }
         }

@@ -45,42 +45,51 @@ namespace Packsly3.Core.Launcher.Instance {
             IMinecraftInstance instance = CreateMinecraftInstnace(instanceId, modpackDefinition);
             Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PreInstallation);
 
-            // Install modloaders
-            logger.Info("Setting up modloaders...");
-            foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
-                string name = modloaderEntry.Key;
-                string version = modloaderEntry.Value;
+            try {
+                // Install modloaders
+                logger.Info("Setting up modloaders...");
+                foreach (KeyValuePair<string, string> modloaderEntry in modpackDefinition.ModLoaders) {
+                    string name = modloaderEntry.Key;
+                    string version = modloaderEntry.Value;
 
-                logger.Info($"Installing modloader '{name}' with version {version}.");
-                instance.ModLoaderManager.Install(name, version);
-            }
-
-            // Download mods
-            logger.Info("Downloading required files...");
-            foreach (ModSource mod in modpackDefinition.Mods) {
-                if (mod.ShouldDownload) {
-                    logger.Info($"Downloading mod {mod.FileName}...");
-                    instance.Files.Download(mod, FileManager.GroupType.Mod);
-
-                } else {
-                    logger.Info($"Skipping downloading mod {mod.FileName} since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                    logger.Info($"Installing modloader '{name}' with version {version}.");
+                    instance.ModLoaderManager.Install(name, version);
                 }
 
-                // Download mod resources
-                foreach (RemoteResource resource in mod.Resources) {
-                    if (resource.ShouldDownload) {
-                        logger.Info($" - Downloading resource {resource.FileName}...");
-                        instance.Files.Download(resource, FileManager.GroupType.ModResource);
+                // Download mods
+                logger.Info("Downloading required files...");
+                foreach (ModSource mod in modpackDefinition.Mods) {
+                    if (mod.ShouldDownload) {
+                        logger.Info($"Downloading mod {mod.FileName}...");
+                        instance.Files.Download(mod, FileManager.GroupType.Mod);
 
                     } else {
-                        logger.Info($" - Skipping downloading resource {resource.FileName} since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
+                        logger.Info($"Skipping downloading mod {mod.FileName} since it is {(mod.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", mod.EnvironmentOnly.Entries)}'...");
+                    }
+
+                    // Download mod resources
+                    foreach (RemoteResource resource in mod.Resources) {
+                        if (resource.ShouldDownload) {
+                            logger.Info($" - Downloading resource {resource.FileName}...");
+                            instance.Files.Download(resource, FileManager.GroupType.Resource);
+
+                        } else {
+                            logger.Info($" - Skipping downloading resource {resource.FileName} since it is {(resource.EnvironmentOnly.IsBlacklist ? "blacklisted" : "whitelisted")} at '{string.Join(", ", resource.EnvironmentOnly.Entries)}'...");
+                        }
                     }
                 }
+
+                instance.Save();
+                logger.Info("Finishing installation.");
+                Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PostInstallation);
+
+            } catch (Exception) {
+                // Delete the instance if creation fails
+                logger.Warn("Modpack installation failed, removing instance files.");
+                instance.Delete();
+                throw;
             }
 
-            instance.Save();
-            logger.Info("Finishing installation.");
-            Packsly.Lifecycle.EventBus.Publish(instance, Lifecycle.PostInstallation);
             return instance;
         }
 

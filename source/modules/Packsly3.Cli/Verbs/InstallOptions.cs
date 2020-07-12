@@ -4,10 +4,10 @@ using CommandLine;
 
 namespace Packsly3.Cli.Verbs {
 
-    [Verb("install", HelpText = "Installs modpack into current workspace from config file or url address")]
+    [Verb("install", HelpText = "Installs modpack into current workspace from config file or URL address")]
     internal class InstallOptions {
 
-        [Value(0, HelpText = "Address of a modpack definition (file path or url)")]
+        [Value(0, HelpText = "Address of a modpack definition (file path or URL)")]
         public string Source { get; set; }
 
         [Option('e', "environment", HelpText = "Override launcher auto detection and force environment usage by specifying handler's name")]

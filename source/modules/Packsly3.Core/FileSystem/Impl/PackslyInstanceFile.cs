@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Newtonsoft.Json;
 using Packsly3.Core.Launcher.Instance;
 
 namespace Packsly3.Core.FileSystem.Impl {
 
-    public partial class PackslyInstanceFile : JsonFile {
+    [SuppressMessage("Design", "RCS1170:Use read-only auto-implemented property.", Justification = "Newtonsoft.Json is populating object properties.")]
+    public class PackslyInstanceFile : JsonFile {
 
         #region Properties
 
-        [JsonProperty("data")]
+        [JsonProperty("instance")]
         internal Dictionary<string, Dictionary<string, object>> CustomData { private set; get; }
 
         [JsonProperty("adapters")]
@@ -29,7 +31,6 @@ namespace Packsly3.Core.FileSystem.Impl {
             FixFilenameTypo();
             Load();
         }
-
 
         #region Logic
 
@@ -96,8 +97,13 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         #region IO
 
-        public sealed override void Load()
-            => base.Load();
+        public sealed override void Load() {
+            base.Load();
+        }
+
+        public sealed override void Save() {
+            base.Save();
+        }
 
         #endregion
 

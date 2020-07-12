@@ -59,7 +59,7 @@ namespace Packsly3.Core.Launcher.Instance {
             }
 
             public void Publish(IMinecraftInstance instance, string eventName) {
-                logger.Debug($"Publishing lifecycle event '{eventName}' {(instance == null ? "..." : " for minecraft instance '{instance.Id}'...")}");
+                logger.Debug($"Publishing lifecycle event '{eventName}' {(instance == null ? "..." : $" for minecraft instance '{instance.Id}'...")}");
                 LifecycleEvent?.Invoke(this, new Changed(instance, eventName));
             }
 

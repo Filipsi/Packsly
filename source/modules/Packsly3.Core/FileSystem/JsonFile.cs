@@ -49,7 +49,7 @@ namespace Packsly3.Core.FileSystem {
 
             using (StreamReader reader = file.OpenText()) {
                 string content = reader.ReadToEnd();
-                logger.Debug($"Loaded JSON file '{file.Name}' with content {JToken.Parse(content).ToString()}");
+                logger.Debug($"Loaded JSON file '{file.Name}' with content {JToken.Parse(content)}");
                 JsonConvert.PopulateObject(content, this, GetSerializerSettings());
             }
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,7 +13,7 @@ using Packsly3.Core;
 
 namespace Packsly3.Cli {
 
-    internal class CommandLine {
+    internal static class CommandLine {
 
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static bool pauseWhenFinished;
@@ -46,7 +45,7 @@ namespace Packsly3.Cli {
         }
 
         private static void Run(IReadOnlyList<string> args) {
-            if (args.Any()) {
+            if (args.Count > 0) {
                 // Allows for drag & drop of the launcher onto Packsly executable to initiate installation
                 FileInfo launcher = new FileInfo(args[0]);
 
@@ -54,7 +53,7 @@ namespace Packsly3.Cli {
                     logger.Debug("Running in drag & drop mode!");
                     pauseWhenFinished = true;
 
-                    DirectoryInfo workspace = launcher.Extension.ToLower() == ".lnk"
+                    DirectoryInfo workspace = string.Equals(launcher.Extension, ".lnk", StringComparison.OrdinalIgnoreCase)
                         ? ShortcutHelper.GetShortcutTarget(launcher).Directory
                         : launcher.Directory;
 

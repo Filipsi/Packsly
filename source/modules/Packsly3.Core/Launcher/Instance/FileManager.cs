@@ -39,8 +39,9 @@ namespace Packsly3.Core.Launcher.Instance {
             foreach (GroupType group in Enum.GetValues(typeof(GroupType))) {
                 FileInfo[] missingFiles = GetNotExistingFiles(group);
 
-                if (missingFiles.Length <= 0)
+                if (missingFiles.Length == 0) {
                     continue;
+                }
 
                 foreach (FileInfo file in missingFiles) {
                     logger.Debug("Removing non-existing tracked file.");
@@ -69,26 +70,28 @@ namespace Packsly3.Core.Launcher.Instance {
             IsDirty = true;
         }
 
-        public void Add(string path, GroupType group)
-            => Add(new FileInfo(path), group);
+        public void Add(string path, GroupType group) {
+            Add(new FileInfo(path), group);
+        }
 
-        public void Download(string url, string destination, GroupType group) {
+        public void Download(Uri source, string destination, GroupType group) {
             FileInfo destinationFile = new FileInfo(destination);
 
-            if (destinationFile.Directory != null && !destinationFile.Directory.Exists) {
+            if (destinationFile.Directory?.Exists == false) {
                 destinationFile.Directory.Create();
             }
 
-            logger.Debug($"Downloading file from {url}...");
+            logger.Debug($"Downloading file from {source}...");
             using (WebClient client = new WebClient()) {
-                client.DownloadFile(url, destination);
+                client.DownloadFile(source, destinationFile.FullName);
             }
 
             Add(destinationFile, group);
         }
 
-        public void Download(RemoteResource resource, GroupType group) =>
-            Download(resource.Url.ToString(), instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName)), group);
+        public void Download(RemoteResource resource, GroupType group) {
+            Download(resource.Url, instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName)), group);
+        }
 
         public void Remove(FileInfo file, GroupType group) {
             if (!FileMap.ContainsKey(group)) {
@@ -99,7 +102,7 @@ namespace Packsly3.Core.Launcher.Instance {
             string environmentPath = instance.EnvironmentVariables.FromFormatedString(file.FullName);
 
             if (!fileGroup.Contains(environmentPath)) {
-                environmentPath = fileGroup.FirstOrDefault(f => f.GetHashCode() == file.GetHashCode());
+                environmentPath = fileGroup.Find(f => f.GetHashCode() == file.GetHashCode());
             }
 
             if (environmentPath == null) {
@@ -117,19 +120,23 @@ namespace Packsly3.Core.Launcher.Instance {
             IsDirty = true;
         }
 
-        public void Remove(string path, GroupType group)
-            => Remove(new FileInfo(path), group);
+        public void Remove(string path, GroupType group) {
+            Remove(new FileInfo(path), group);
+        }
 
-        public void Remove(RemoteResource resource, GroupType group)
-            => Remove(new FileInfo(instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName))), group);
+        public void Remove(RemoteResource resource, GroupType group) {
+            Remove(new FileInfo(instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName))), group);
+        }
 
         #region Utilities
 
-        public bool GroupContains(GroupType group, RemoteResource resource)
-            => GetGroup(group).Any(m => m.FullName == instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName)));
+        public bool GroupContains(GroupType group, RemoteResource resource) {
+            return GetGroup(group).Any(m => m.FullName == instance.EnvironmentVariables.ToFormatedString(Path.Combine(resource.FilePath, resource.FileName)));
+        }
 
-        public bool GroupContains(GroupType group, FileInfo file)
-            => GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());
+        public bool GroupContains(GroupType group, FileInfo file) {
+            return GetGroup(group).Any(m => m.FullName.GetHashCode() == file.FullName.GetHashCode());
+        }
 
         public FileInfo[] GetGroup(GroupType group) {
             if (FileMap.ContainsKey(group)) {
@@ -157,9 +164,8 @@ namespace Packsly3.Core.Launcher.Instance {
         #endregion
 
         public enum GroupType {
-            PackslyInternal,
-            Mod,
-            ModResource
+            Mod = 1,
+            Resource = 2
         }
 
     }

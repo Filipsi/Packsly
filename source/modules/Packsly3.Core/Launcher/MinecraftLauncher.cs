@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -128,7 +129,7 @@ namespace Packsly3.Core.Launcher {
                 throw new Exception("There are no environments registered.");
             }
 
-            ILauncherEnvironment env = enviroments.FirstOrDefault(e => e.IsCompatible(Workspace));
+            ILauncherEnvironment env = Array.Find(enviroments, e => e.IsCompatible(Workspace));
             if (env == null) {
                 throw new Exception($"No compatible environment found in workspace '{Workspace.FullName}'!");
             }
@@ -136,25 +137,30 @@ namespace Packsly3.Core.Launcher {
             return env;
         }
 
-        public IMinecraftInstance[] GetInstances()
-            => CurrentEnvironment.GetInstances(Workspace).ToArray();
+        public IEnumerable<IMinecraftInstance> GetInstances() {
+            return CurrentEnvironment.GetInstances(Workspace);
+        }
 
-        public IMinecraftInstance GetInstance(string id)
-            => CurrentEnvironment.GetInstance(Workspace, id);
+        public IMinecraftInstance GetInstance(string id) {
+            return CurrentEnvironment.GetInstance(Workspace, id);
+        }
 
         public IMinecraftInstance CreateInstance(string id, ModpackDefinition modpack) {
             logger.Debug($"Launcher using {currentEnviroment} environment is creating new minecraft instance with id {id}");
             return CurrentEnvironment.CreateInstance(Workspace, id, modpack);
         }
 
-        public IMinecraftInstance CreateInstanceFromModpack(FileInfo modpackFile)
-            => MinecraftInstanceFactory.CreateFromModpack(modpackFile);
+        public IMinecraftInstance CreateInstanceFromModpack(FileInfo modpackFile) {
+            return MinecraftInstanceFactory.CreateFromModpack(modpackFile);
+        }
 
-        public IMinecraftInstance CreateInstanceFromModpack(Uri modpackFileUrl)
-            => MinecraftInstanceFactory.CreateFromModpack(modpackFileUrl);
+        public IMinecraftInstance CreateInstanceFromModpack(Uri modpackFileUrl) {
+            return MinecraftInstanceFactory.CreateFromModpack(modpackFileUrl);
+        }
 
-        public IMinecraftInstance CreateInstanceFromModpack(string modpackJson)
-            => MinecraftInstanceFactory.CreateFromModpack(modpackJson);
+        public IMinecraftInstance CreateInstanceFromModpack(string modpackJson) {
+            return MinecraftInstanceFactory.CreateFromModpack(modpackJson);
+        }
 
         #endregion
     }

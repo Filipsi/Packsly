@@ -109,7 +109,7 @@ namespace Packsly3.Server.Launcher {
 
             foreach (string folder in foldersToDelete) {
                 if (Directory.Exists(folder)) {
-                    Directory.Delete(folder);
+                    Directory.Delete(folder, true);
                 }
             }
         }

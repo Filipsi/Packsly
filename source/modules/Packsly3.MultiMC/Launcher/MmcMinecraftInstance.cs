@@ -101,7 +101,7 @@ namespace Packsly3.MultiMC.Launcher {
 
         public void Delete() {
             if (Location.Exists) {
-                Location.Delete();
+                Location.Delete(true);
             }
         }
 

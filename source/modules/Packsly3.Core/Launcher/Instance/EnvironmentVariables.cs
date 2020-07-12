@@ -70,7 +70,7 @@ namespace Packsly3.Core.Launcher.Instance {
                 .Where(namedParameter => Properties.ContainsKey(namedParameter))
                 .ToDictionary(namedParameter => namedParameter, namedParameter => Properties[namedParameter]);
 
-            string result = localMap.Aggregate(input, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value.ToString()));
+            string result = localMap.Aggregate(input, (current, parameter) => current.Replace("{" + parameter.Key + "}", parameter.Value));
             logger.Debug($"{input} -> {result}");
             return result;
         }

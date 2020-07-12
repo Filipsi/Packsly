@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Newtonsoft.Json;
 using NLog;
 using Packsly3.Cli.Common;
 using Packsly3.Cli.Verbs;
 using Packsly3.Core;
-using Packsly3.Core.Common.Json;
 using Packsly3.Core.FileSystem.Impl;
 
 namespace Packsly3.Cli.Logic {
@@ -22,11 +19,9 @@ namespace Packsly3.Cli.Logic {
             Logo.Print();
             ApplySettings(options);
 
-            if (Packsly.Launcher.CanEmbed) {
-                if (!IsPackslyEmbeded(options.Workspace)) {
-                    logger.Info("Embedding packsly to launcher directory...");
-                    EmbedPacksly(options.Workspace);
-                }
+            if (Packsly.Launcher.CanEmbed && !IsPackslyEmbeded(options.Workspace)) {
+                logger.Info("Embedding packsly to launcher directory...");
+                EmbedPacksly(options.Workspace);
             }
 
             if (!options.IsSourceSpecified) {
@@ -37,18 +32,14 @@ namespace Packsly3.Cli.Logic {
             logger.Info($"Current modpack source: {options.Source}");
             if (options.IsSourceLocalFile) {
                 logger.Info("Beginning installation from local modpack definition file...");
-                Packsly.Launcher.CreateInstanceFromModpack(
-                    new FileInfo(options.Source)
-                );
+                Packsly.Launcher.CreateInstanceFromModpack(new FileInfo(options.Source));
 
             } else if (options.IsSourceUrl) {
                 logger.Info("Beginning installation from remote modpack definition source...");
-                Packsly.Launcher.CreateInstanceFromModpack(
-                    new Uri(options.Source)
-                );
+                Packsly.Launcher.CreateInstanceFromModpack(new Uri(options.Source));
 
             } else {
-                throw new ConfigurationErrorsException($"Specified modpack source '{options.Source}' is not valid file path or url address.");
+                throw new ConfigurationErrorsException($"Specified modpack source '{options.Source}' is not valid file path or URL address.");
             }
 
             logger.Info("Thank you for using Packsly3!");

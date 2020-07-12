@@ -1,47 +1,24 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System.Collections.Generic;
 using Packsly3.Core.Launcher.Adapter;
 
 namespace Packsly3.Core.FileSystem.Impl {
 
-    public partial class PackslyInstanceFile {
+    internal class AdaptersConfig : Dictionary<string, object> {
 
-        [JsonObject(MemberSerialization.OptIn)]
-        internal class AdaptersConfig : IEnumerable<string> {
-
-            [JsonProperty("entries")]
-            protected Dictionary<string, object> Entries { set; get; } = new Dictionary<string, object>();
-
-            internal object GetConfigFor(IAdapter adapter) {
-                if (adapter.Id == null || !Entries.ContainsKey(adapter.Id)) {
-                    return null;
-                }
-
-                return Entries[adapter.Id];
+        internal object GetConfigFor(IAdapter adapter) {
+            if (adapter.Id == null || !ContainsKey(adapter.Id)) {
+                return null;
             }
 
-            internal void SetConfigFor(IAdapter adapter, object config)
-                => SetConfigFor(adapter.Id, config);
+            return this[adapter.Id];
+        }
 
-            internal void SetConfigFor(string name, object config) {
-                Entries[name ?? throw new InvalidOperationException()] = config;
-            }
+        internal void SetConfigFor(IAdapter adapter, object config) {
+            SetConfigFor(adapter.Id, config);
+        }
 
-            #region IEnumerable
-
-            public IEnumerator<string> GetEnumerator()
-                => Entries.Keys.GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator()
-                => GetEnumerator();
-
-            #endregion
-
+        internal void SetConfigFor(string name, object config) {
+            this[name] = config;
         }
 
     }
