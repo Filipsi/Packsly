@@ -11,8 +11,8 @@ namespace Packsly3.Core.Modpack.Model {
         public RemoteResource[] Resources { private set; get; } = new RemoteResource[0];
 
         protected override void HandleOnDeserialized(StreamingContext context) {
-            if (string.IsNullOrEmpty(FilePath)) {
-                FilePath = "{" + EnvironmentVariables.ModsFolder + "}";
+            if (string.IsNullOrEmpty(EnvironmentalPath)) {
+                EnvironmentalPath = "{" + EnvironmentVariables.ModsFolder + "}";
             }
 
             if (Url != null && string.IsNullOrEmpty(FileName)) {

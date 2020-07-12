@@ -59,7 +59,7 @@ namespace Packsly3.Core.Launcher.Instance {
                 // Download mods
                 logger.Info("Downloading required files...");
                 foreach (ModSource mod in modpackDefinition.Mods) {
-                    if (mod.ShouldDownload) {
+                    if (mod.CanDownload) {
                         logger.Info($"Downloading mod {mod.FileName}...");
                         instance.Files.Download(mod, FileManager.GroupType.Mod);
 
@@ -69,7 +69,7 @@ namespace Packsly3.Core.Launcher.Instance {
 
                     // Download mod resources
                     foreach (RemoteResource resource in mod.Resources) {
-                        if (resource.ShouldDownload) {
+                        if (resource.CanDownload) {
                             logger.Info($" - Downloading resource {resource.FileName}...");
                             instance.Files.Download(resource, FileManager.GroupType.Resource);
 

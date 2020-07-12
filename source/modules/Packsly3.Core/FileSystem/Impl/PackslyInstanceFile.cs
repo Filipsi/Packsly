@@ -95,18 +95,6 @@ namespace Packsly3.Core.FileSystem.Impl {
 
         #endregion
 
-        #region IO
-
-        public sealed override void Load() {
-            base.Load();
-        }
-
-        public sealed override void Save() {
-            base.Save();
-        }
-
-        #endregion
-
     }
 
 }

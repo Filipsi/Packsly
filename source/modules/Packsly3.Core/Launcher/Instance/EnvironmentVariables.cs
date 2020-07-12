@@ -58,7 +58,7 @@ namespace Packsly3.Core.Launcher.Instance {
             return Properties.ContainsKey(name) ? Properties[name] : string.Empty;
         }
 
-        public string ToFormatedString(string input) {
+        public string FromEnviromentalPath(string input) {
             MatchCollection matches = pattenNamedParameter.Matches(input);
 
             List<string> namedParameters = new List<string>();
@@ -75,7 +75,7 @@ namespace Packsly3.Core.Launcher.Instance {
             return result;
         }
 
-        public string FromFormatedString(string input) {
+        public string ToEnviromentalPath(string input) {
             string result = input;
 
             foreach (KeyValuePair<string, string> property in Properties) {

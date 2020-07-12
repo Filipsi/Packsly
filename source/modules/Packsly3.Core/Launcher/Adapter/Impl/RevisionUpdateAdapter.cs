@@ -99,44 +99,47 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
             }
 
             // Remove unused modloaders
-            IEnumerable<ModLoaderInfo> oldModLoaders = instance.ModLoaderManager.ModLoaders.Where(ml => !modpack.ModLoaders.ContainsKey(ml.Name));
-            foreach (ModLoaderInfo modLoader in oldModLoaders) {
+            foreach (ModLoaderInfo modLoader in instance.ModLoaderManager.ModLoaders.Where(ml => !modpack.ModLoaders.ContainsKey(ml.Name))) {
                 logger.Info($"Uninstalling modloader '{modLoader.Name}' version '{modLoader.Version}'");
                 instance.ModLoaderManager.Uninstall(modLoader.Name);
             }
         }
 
         private static void UpdateMods(IMinecraftInstance instance, ModpackDefinition modpack) {
+            // Remove local mods that are no longer in modpack
             foreach (FileInfo modFile in instance.Files.GetGroup(FileManager.GroupType.Mod)) {
-                if (modpack.Mods.Any(mm => mm.FileName == modFile.Name && mm.ShouldDownload)) {
+                if (modpack.Mods.Any(mod => mod.GetFilePath(instance.EnvironmentVariables) == modFile.FullName)) {
                     continue;
                 }
 
                 logger.Info($"Removing mod {modFile.Name}...");
                 instance.Files.Remove(modFile, FileManager.GroupType.Mod);
-                modFile.Delete();
             }
 
-            RemoteResource[] modResourceBlob = modpack.Mods.SelectMany(m => m.Resources).ToArray();
-            foreach (FileInfo modResourceFile in instance.Files.GetGroup(FileManager.GroupType.Resource)) {
-                if (modResourceBlob.Any(mr => mr.FileName == modResourceFile.Name && mr.ShouldDownload)) {
+            // Remove local resource files (configuration) that are no longer in modpack
+            RemoteResource[] modpackResources = modpack.Mods.SelectMany(m => m.Resources).ToArray();
+            foreach (FileInfo resourceFile in instance.Files.GetGroup(FileManager.GroupType.Resource)) {
+                if (modpackResources.Any(res => res.GetFilePath(instance.EnvironmentVariables) == resourceFile.FullName)) {
                     continue;
                 }
 
-                logger.Info($"Removing mod resource {modResourceFile.Name}...");
-                instance.Files.Remove(modResourceFile, FileManager.GroupType.Resource);
-                modResourceFile.Delete();
+                logger.Info($"Removing resource {resourceFile.Name}...");
+                instance.Files.Remove(resourceFile, FileManager.GroupType.Resource);
             }
 
-            foreach (ModSource modpackMod in modpack.Mods.Where(mod => mod.ShouldDownload)) {
+            // Download mods that are defined in modpack but aren't available locally
+            // NOTE: CanDownload property handles environment specific restrictions
+            foreach (ModSource modpackMod in modpack.Mods.Where(mod => mod.CanDownload)) {
+                // Download new mods based on file name
                 if (!instance.Files.GroupContains(FileManager.GroupType.Mod, modpackMod)) {
                     logger.Info($"Downloading mod {modpackMod.FileName}...");
                     instance.Files.Download(modpackMod, FileManager.GroupType.Mod);
                 }
 
-                foreach (RemoteResource modpackModResource in modpackMod.Resources.Where(resource => resource.ShouldDownload)) {
-                    logger.Info($"Downloading mod resource {modpackModResource.FileName}...");
-                    instance.Files.Download(modpackModResource, FileManager.GroupType.Resource);
+                // Re-downland all resource files, no matter if they changed or not
+                foreach (RemoteResource modpackResource in modpackMod.Resources.Where(resource => resource.CanDownload)) {
+                    logger.Info($"Downloading resource {modpackResource.FileName}...");
+                    instance.Files.Download(modpackResource, FileManager.GroupType.Resource);
                 }
             }
         }

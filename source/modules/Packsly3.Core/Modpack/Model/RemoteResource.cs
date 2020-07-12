@@ -10,11 +10,13 @@ namespace Packsly3.Core.Modpack.Model {
     [JsonObject(MemberSerialization.OptIn)]
     public class RemoteResource {
 
+        #region Properties
+
         [JsonProperty("url")]
         public Uri Url { protected set; get; }
 
         [JsonProperty("path")]
-        public string FilePath { protected set; get; }
+        public string EnvironmentalPath { protected set; get; }
 
         [JsonProperty("filename")]
         public string FileName { protected set; get; }
@@ -22,18 +24,27 @@ namespace Packsly3.Core.Modpack.Model {
         [JsonProperty("environment", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public EnvironmentSpecific EnvironmentOnly { private set; get; } = new EnvironmentSpecific();
 
-        public bool ShouldDownload {
+        #endregion
+
+        public bool CanDownload {
             get {
-                if (!EnvironmentOnly.IsEnvironmentSpecific)
+                if (!EnvironmentOnly.IsEnvironmentSpecific) {
                     return true;
+                }
 
-                bool containsEntry = EnvironmentOnly.Entries.Any(entry => entry == Packsly.Launcher.Name);
-                if (EnvironmentOnly.IsWhitelist && !containsEntry)
+                bool isCompatibleEnvironment = EnvironmentOnly.Entries.Any(
+                    entry => entry == Packsly.Launcher.Name
+                );
+
+                if (EnvironmentOnly.IsWhitelist && !isCompatibleEnvironment) {
                     return false;
+                }
 
-                return !EnvironmentOnly.IsBlacklist || !containsEntry;
+                return !EnvironmentOnly.IsBlacklist || !isCompatibleEnvironment;
             }
         }
+
+        #region Logic
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context) {
@@ -41,17 +52,28 @@ namespace Packsly3.Core.Modpack.Model {
         }
 
         protected virtual void HandleOnDeserialized(StreamingContext context) {
-            if (Url == null)
+            if (Url == null) {
                 return;
+            }
 
-            if (string.IsNullOrEmpty(FilePath)) {
-                FilePath = "{" + EnvironmentVariables.RootFolder + "}\\" + Path.GetDirectoryName(Url.AbsolutePath);
+            if (string.IsNullOrEmpty(EnvironmentalPath)) {
+                EnvironmentalPath = Path.Combine("{" + EnvironmentVariables.RootFolder + "}", Path.GetDirectoryName(Url.AbsolutePath));
             }
 
             if (string.IsNullOrEmpty(FileName)) {
                 FileName = Path.GetFileName(Url.AbsolutePath);
             }
         }
+
+        #endregion
+
+        #region Helpers
+
+        public string GetFilePath(EnvironmentVariables environment) {
+            return Path.GetFullPath(Path.Combine(environment.FromEnviromentalPath(EnvironmentalPath), FileName));
+        }
+
+        #endregion
 
     }
 
