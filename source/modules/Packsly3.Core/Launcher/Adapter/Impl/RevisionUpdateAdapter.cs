@@ -43,12 +43,10 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 // Check if remote modpack has configuration for this adapter type
                 // Without this we can't check for revision number changes and perform the update
                 if (!remoteModpack.Adapters.ContainsKey(Id)) {
-                    throw new InvalidOperationException(
-                        $"Revision based updater '{GetType().FullName}' failed to obtain revision number from update source because adapter configuration is missing.");
+                    throw new InvalidOperationException($"Revision based updater '{GetType().FullName}' failed to obtain revision number from update source because adapter configuration is missing.");
                 }
 
-                RevisionUpdateSchemaConfig remoteConfig =
-                    JObject.FromObject(remoteModpack.Adapters[Id]).ToObject<RevisionUpdateSchemaConfig>();
+                RevisionUpdateSchemaConfig remoteConfig =JObject.FromObject(remoteModpack.Adapters[Id]).ToObject<RevisionUpdateSchemaConfig>();
 
                 // If there is an update available
                 if (config.Revision != remoteConfig.Revision) {
@@ -86,7 +84,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
         #endregion
 
         private static void UpdateModloaders(IMinecraftInstance instance, ModpackDefinition modpack) {
-            // Install or update modloaders
+            // Install or update mod-loaders
             foreach (KeyValuePair<string, string> modloaderEntry in modpack.ModLoaders) {
                 string name = modloaderEntry.Key;
                 string version = modloaderEntry.Value;
@@ -98,7 +96,7 @@ namespace Packsly3.Core.Launcher.Adapter.Impl {
                 instance.ModLoaderManager.Install(name, version);
             }
 
-            // Remove unused modloaders
+            // Remove unused mod-loaders
             foreach (ModLoaderInfo modLoader in instance.ModLoaderManager.ModLoaders.Where(ml => !modpack.ModLoaders.ContainsKey(ml.Name))) {
                 logger.Info($"Uninstalling modloader '{modLoader.Name}' version '{modLoader.Version}'");
                 instance.ModLoaderManager.Uninstall(modLoader.Name);
