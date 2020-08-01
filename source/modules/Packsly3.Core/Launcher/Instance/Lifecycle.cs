@@ -36,12 +36,12 @@ namespace Packsly3.Core.Launcher.Instance {
 
         #region Events
 
-        public class Changed : EventArgs {
+        public class ChangedEventArgs : EventArgs {
 
             public readonly IMinecraftInstance Instance;
             public readonly string EventName;
 
-            protected internal Changed(IMinecraftInstance instance, string eventName) {
+            protected internal ChangedEventArgs(IMinecraftInstance instance, string eventName) {
                 Instance = instance;
                 EventName = eventName;
             }
@@ -52,15 +52,15 @@ namespace Packsly3.Core.Launcher.Instance {
 
             private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-            public event EventHandler<Changed> LifecycleEvent;
+            public event EventHandler<ChangedEventArgs> LifecycleEvent;
 
             internal Dispatcher() {
-                LifecycleEvent += AdapterHandler.OnLifecycleChanged;
+                LifecycleEvent += AdapterHandler.HandleLifecycleChange;
             }
 
             public void Publish(IMinecraftInstance instance, string eventName) {
                 logger.Debug($"Publishing lifecycle event '{eventName}' {(instance == null ? "..." : $" for minecraft instance '{instance.Id}'...")}");
-                LifecycleEvent?.Invoke(this, new Changed(instance, eventName));
+                LifecycleEvent?.Invoke(this, new ChangedEventArgs(instance, eventName));
             }
 
             public void Publish(IMinecraftInstance instance, IEnumerable<string> eventNames) {

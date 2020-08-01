@@ -18,7 +18,7 @@ namespace Packsly3.Core.Launcher.Adapter {
 
     }
 
-    public abstract class Adapter<T> : IAdapter {
+    public abstract class Adapter<TConfig> : IAdapter {
 
         #region IAdapter
 
@@ -28,12 +28,13 @@ namespace Packsly3.Core.Launcher.Adapter {
 
         public abstract bool IsCompatible(string lifecycleEvent);
 
-        public void Execute(JObject config, string lifecycleEvent, IMinecraftInstance instance)
-            => Execute(config.ToObject<T>(), lifecycleEvent, instance);
+        public void Execute(JObject config, string lifecycleEvent, IMinecraftInstance instance) {
+            Execute((TConfig)config?.ToObject(typeof(TConfig)), lifecycleEvent, instance);
+        }
 
         #endregion
 
-        public abstract void Execute(T config, string lifecycleEvent, IMinecraftInstance instance);
+        public abstract void Execute(TConfig config, string lifecycleEvent, IMinecraftInstance instance);
 
         public void Save(IMinecraftInstance instance, object config) {
             PackslyInstanceFile cfg = instance.PackslyConfig;
@@ -43,10 +44,11 @@ namespace Packsly3.Core.Launcher.Adapter {
 
     }
 
-    public abstract class InstanceAdapter<TC, TI> : Adapter<TC> {
+    public abstract class InstanceAdapter<TConfig, TInstance> : Adapter<TConfig> {
 
-        public override bool IsCompatible(IMinecraftInstance instance)
-            => instance.GetType() == typeof(TI);
+        public override bool IsCompatible(IMinecraftInstance instance) {
+            return instance.GetType() == typeof(TInstance);
+        }
 
     }
 
