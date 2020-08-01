@@ -25,7 +25,6 @@ namespace Packsly3.MultiMC.Launcher.Modloader {
 
             string[] ignored = {
                 "org.lwjgl",
-                "org.lwjgl3",
                 "net.minecraft",
                 "net.fabricmc.intermediary"
             };

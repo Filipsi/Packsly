@@ -59,11 +59,10 @@ namespace Packsly3.Core.Launcher.Modloader {
             ModLoaderInfo modLoaderInfo = ModLoaders.FirstOrDefault(ml => ml.Name == name);
 
             if (modLoaderInfo == null) {
-                Logger.Warn($"This instance does not have any modloader with name '{name}'");
-                return;
+                throw new KeyNotFoundException($"This instance does not have any modloader with name '{name}'.");
             }
 
-            IModLoaderHandler schema = Array.Find(compatibleSchemata, s => s.IsCompatible(name));
+            IModLoaderHandler schema = compatibleSchemata.FirstOrDefault(s => s.IsCompatible(name));
             if (schema == null) {
                 throw new InvalidOperationException($"No modloader installation schema compatible with modloader with name '{name}' for minecraft instance type '{mcInstance.GetType().FullName}' found!");
             }
