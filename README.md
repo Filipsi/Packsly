@@ -1,3 +1,14 @@
+---
+📌 **Deprecation Notice**
+
+This project is considered deprecated and the repository is archived only for reference purposes. 
+
+Consider using modern modpack distribution tools like [packwiz](https://github.com/packwiz/packwiz) and [packwiz-installer](https://github.com/packwiz/packwiz-installer).
+
+---
+
+<br><br>
+
 <h1 align="center">
 	<br>
 	Packsly3
